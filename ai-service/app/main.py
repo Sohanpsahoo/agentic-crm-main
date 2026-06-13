@@ -348,6 +348,7 @@ async def generate_segment_from_nl(req: SegmentRequest):
             "criteria": req.query,
             "channel": "any",
             "rag_context": "",
+            "current_date": __import__('datetime').datetime.utcnow().isoformat() + "Z",
         })
         pipeline_stages = plan_result.stages
         seg_name = plan_result.segment_name
@@ -357,6 +358,30 @@ async def generate_segment_from_nl(req: SegmentRequest):
         
     try:
         db = get_db()
+        
+        def convert_dates(obj):
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    if isinstance(v, str) and len(v) >= 19 and "T" in v and "-" in v and ":" in v:
+                        try:
+                            from dateutil import parser
+                            obj[k] = parser.isoparse(v)
+                        except Exception:
+                            pass
+                    else:
+                        convert_dates(v)
+            elif isinstance(obj, list):
+                for i, v in enumerate(obj):
+                    if isinstance(v, str) and len(v) >= 19 and "T" in v and "-" in v and ":" in v:
+                        try:
+                            from dateutil import parser
+                            obj[i] = parser.isoparse(v)
+                        except Exception:
+                            pass
+                    else:
+                        convert_dates(v)
+        
+        convert_dates(pipeline_stages)
         customers = list(db.customers.aggregate(pipeline_stages))
         customer_ids = [str(c["_id"]) for c in customers]
     except Exception as e:
@@ -365,19 +390,18 @@ async def generate_segment_from_nl(req: SegmentRequest):
     size = len(customer_ids)
     
     segment_id = None
-    if customer_ids:
-        try:
-            saved = json.loads(save_segment.invoke(json.dumps({
-                "name": seg_name,
-                "description": seg_desc,
-                "criteria_nl": req.query,
-                "criteria_json": pipeline_stages,
-                "customer_ids": customer_ids,
-                "size": size,
-            })))
-            segment_id = saved.get("segment_id")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to save segment: {str(e)}")
+    try:
+        saved = json.loads(save_segment.invoke(json.dumps({
+            "name": seg_name,
+            "description": seg_desc,
+            "criteria_nl": req.query,
+            "criteria_json": pipeline_stages,
+            "customer_ids": customer_ids,
+            "size": size,
+        }, default=str)))
+        segment_id = saved.get("segment_id")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save segment: {str(e)}")
             
     return {
         "segment_id": segment_id,

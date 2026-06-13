@@ -184,7 +184,7 @@ export default function Dashboard() {
     personasApi.distribution().then((d) => setRfmDist(d || [])).catch(() => {});
     
     // Fetch Suggested Segments
-    agentApi.chat("Identify 3 high-value target segments for campaigns this week based on typical e-commerce data. Return EXACTLY a JSON array of objects with keys: 'name', 'reason', 'action'. Do not return markdown. Just the raw JSON array.", [], "Marketer")
+    agentApi.chat("Generate 4 target segment recommendations based on recent activity: 'Dormant High Value Customers', 'Frequent Buyers This Month', 'First Purchase Users', and 'At Risk Customers'. Return EXACTLY a JSON array of objects with keys: 'name', 'reason', 'action'. Do not return markdown. Just the raw JSON array.", [], "Marketer")
       .then(res => {
         try {
            const match = res.data.reply.match(/\[.*\]/s);
@@ -199,9 +199,10 @@ export default function Dashboard() {
       })
       .catch((e) => {
          setSuggestedSegments([
-           { name: "Slipping Champions", reason: "Top 10% LTV customers who haven't purchased in 45 days.", action: "Exclusive Preview" },
-           { name: "Cart Abandoners", reason: "Added items to cart in last 48h but didn't checkout.", action: "10% Discount" },
-           { name: "Discount Seekers", reason: "Only buy during sales events. High conversion on promos.", action: "Flash Sale Alert" }
+           { name: "Dormant High Value Customers", reason: "High LTV customers who haven't made a purchase in 60 days.", action: "Win-back Offer" },
+           { name: "Frequent Buyers This Month", reason: "Highly engaged users with 3+ purchases in the last 30 days.", action: "Loyalty Reward" },
+           { name: "First Purchase Users", reason: "Newly acquired customers who made their first purchase recently.", action: "Onboarding Flow" },
+           { name: "At Risk Customers", reason: "Declining engagement and purchase frequency over the last 3 months.", action: "Check-in Campaign" }
          ]);
       })
       .finally(() => setLoadingSuggestions(false));

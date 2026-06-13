@@ -20,7 +20,7 @@ const customerSchema = new mongoose.Schema(
     demographics: {
       age_group: {
         type: String,
-        enum: ["18-24", "25-34", "35-44", "45-54", "55+"],
+        enum: ["<18", "18-24", "25-34", "35-44", "45-54", "55+"],
       },
       gender: { type: String, enum: ["male", "female", "other"] },
     },

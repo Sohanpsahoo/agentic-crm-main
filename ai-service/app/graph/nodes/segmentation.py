@@ -39,20 +39,21 @@ Customer schema:
 - total_orders: number
 - avg_order_value: number
 - top_categories: array of strings
-- demographics: {{age_group: "18-24" | "25-34" | "35-44" | "45-54" | "55+", gender}}
+- demographics: {{age_group: "<18" | "18-24" | "25-34" | "35-44" | "45-54" | "55+", gender}}
 - location: {{city, country}}
 
 Rules:
-1. The `stages` field MUST be a single JSON list of aggregation stage objects. All stages (such as `$match` and `$limit`) MUST be elements inside this list.
-2. For multiple filter criteria, combine them into a single `$match` stage.
-3. For "purchased in the last N months/days" (recent buyers): use `$expr: {{"$gte": ["$last_purchase_at", {{"$subtract": ["$$NOW", N_milliseconds]}}]}}`
-   - Example (last 2 months/60 days): `$expr: {{"$gte": ["$last_purchase_at", {{"$subtract": ["$$NOW", 5184000000]}}]}}`
-4. For "haven't purchased in N months/days" (churned): use `$expr: {{"$lt": ["$last_purchase_at", {{"$subtract": ["$$NOW", N_milliseconds]}}]}}`
-5. Always convert months to milliseconds! (1 month ≈ 30 days = 2592000000 ms, 2 months = 5184000000 ms, 3 months = 7776000000 ms, 6 months = 15552000000 ms).
-6. Channel filter format: {{"channel_preferences.<channel>": true}}.
-7. Always end the `stages` list with a limit stage: {{"$limit": 500}}.
-8. Return full customer documents, not just IDs.
-9. BE STRICT: If the user asks for a date range, you MUST include the `$expr` match condition! DO NOT JUST MATCH EVERYTHING.
+1. The `stages` field MUST be a single JSON list of aggregation stage objects. 
+2. CRITICAL: A pipeline stage specification object must contain exactly one field. For example, do NOT combine {{"$match": {{...}}, "$limit": 500}} into one object. They MUST be separate objects in the array: [{{"$match": {{...}}}}, {{"$limit": 500}}].
+3. For multiple filter criteria, combine them into a single `$match` stage.
+4. For date filters, the current date is {current_date}. 
+5. For "purchased in the last N months/days", use `$gte` with a calculated ISO string. For example: {{"last_purchase_at": {{"$gte": "2024-04-13T00:00:00Z"}}}}
+6. For "haven't purchased in N months/days" (churned), use `$lt` with a calculated ISO string. For example: {{"last_purchase_at": {{"$lt": "2024-04-13T00:00:00Z"}}}}
+7. For "didn't purchase in [Year]" (e.g. 2026), ensure last_purchase_at is strictly before the start of that Year: {{"last_purchase_at": {{"$lt": "2026-01-01T00:00:00Z"}}}}
+8. Channel filter format: {{"channel_preferences.<channel>": true}}.
+9. Always end the `stages` list with a separate limit stage: {{"$limit": 500}}.
+10. Return full customer documents, not just IDs.
+11. BE STRICT: DO NOT use `$expr` or `$$NOW` as it is not supported in this Atlas cluster. Use standard `$gte` and `$lt` matching.
 
 Past segment examples for reference:
 {rag_context}
@@ -85,6 +86,7 @@ def segmentation_node(state: CRMAgentState) -> dict:
             "criteria": json.dumps(criteria),
             "channel": channel,
             "rag_context": rag_context,
+            "current_date": __import__('datetime').datetime.utcnow().isoformat() + "Z",
         })
         pipeline_stages = plan_result.stages
         seg_name = plan_result.segment_name
@@ -96,6 +98,30 @@ def segmentation_node(state: CRMAgentState) -> dict:
     # Execute pipeline directly
     try:
         db = get_db()
+        
+        def convert_dates(obj):
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    if isinstance(v, str) and len(v) >= 19 and "T" in v and "-" in v and ":" in v:
+                        try:
+                            from dateutil import parser
+                            obj[k] = parser.isoparse(v)
+                        except Exception:
+                            pass
+                    else:
+                        convert_dates(v)
+            elif isinstance(obj, list):
+                for i, v in enumerate(obj):
+                    if isinstance(v, str) and len(v) >= 19 and "T" in v and "-" in v and ":" in v:
+                        try:
+                            from dateutil import parser
+                            obj[i] = parser.isoparse(v)
+                        except Exception:
+                            pass
+                    else:
+                        convert_dates(v)
+        
+        convert_dates(pipeline_stages)
         customers = list(db.customers.aggregate(pipeline_stages))
         customer_ids = [str(c["_id"]) for c in customers]
     except Exception as e:

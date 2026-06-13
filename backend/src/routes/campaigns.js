@@ -69,6 +69,106 @@ router.patch("/:id/status", async (req, res, next) => {
   }
 });
 
+// POST /api/campaigns/:id/send
+router.post("/:id/send", async (req, res, next) => {
+  try {
+    const campaign = await Campaign.findById(req.params.id).populate("segment_id");
+    if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+    if (campaign.status !== "draft") return res.status(400).json({ error: "Only draft campaigns can be sent" });
+
+    const Customer = require("../models/Customer");
+
+    let customerIds = [];
+    if (campaign.segment_id && campaign.segment_id.customer_ids) {
+      customerIds = campaign.segment_id.customer_ids;
+    }
+    const customers = await Customer.find({ _id: { $in: customerIds } }).lean();
+
+    const messages = [];
+    const ts = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    let template = "Hi {name}! We have an exclusive update for you.";
+    if (campaign.copy_variants && campaign.copy_variants.length > 0) {
+      template = campaign.copy_variants[0].body;
+    }
+
+    const channel = campaign.channel || "whatsapp";
+
+    for (const c of customers) {
+      const prefs = c.channel_preferences || {};
+      if (!prefs[channel] && channel !== "multi") continue;
+
+      const firstName = (c.name || "there").split(" ")[0];
+      const personalized = template.replace(/{name}/gi, firstName);
+      
+      messages.push({
+        customer_id: c._id,
+        customer_name: c.name,
+        phone: c.phone,
+        email: c.email,
+        channel: channel,
+        message: personalized,
+        sender: "Zari CRM"
+      });
+    }
+
+    if (messages.length === 0) {
+      return res.status(400).json({ error: "No opted-in customers found in segment for this channel." });
+    }
+
+    campaign.status = "running";
+    await campaign.save();
+    req.io.emit("campaign:status_changed", { campaign_id: campaign._id, status: "running" });
+
+    const comms = messages.map(m => ({
+      campaign_id: campaign._id,
+      customer_id: m.customer_id,
+      channel: m.channel,
+      personalized_body: m.message,
+      status: "sent",
+      sent_at: new Date(),
+      events: [{ event: "sent", timestamp: new Date() }],
+    }));
+    
+    const savedComms = await Communication.insertMany(comms);
+
+    messages.forEach((m, i) => {
+      const comm = savedComms.find(c => String(c.customer_id) === String(m.customer_id));
+      setTimeout(() => {
+        req.io.emit("device:message_added", {
+          customer_id: m.customer_id,
+          customer_name: m.customer_name || "Unnamed Customer",
+          phone: m.phone || "",
+          email: m.email || "",
+          communication_id: comm ? comm._id : null,
+          campaign_id: campaign._id,
+          channel: m.channel,
+          sender: m.sender,
+          message: m.message,
+          timestamp: ts,
+        });
+      }, i * 120);
+    });
+
+    campaign.metrics_summary = {
+      sent: messages.length,
+      delivered: 0,
+      opened: 0,
+      clicked: 0,
+      converted: 0,
+      failed: 0,
+    };
+    campaign.status = "completed";
+    await campaign.save();
+
+    req.io.emit("campaign:updated", campaign);
+
+    res.json({ ok: true, sent: messages.length });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/campaigns/:id/analytics
 router.get("/:id/analytics", async (req, res, next) => {
   try {

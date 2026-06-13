@@ -20,6 +20,7 @@ export const campaignsApi = {
   getAnalytics: (id) => api.get(`/campaigns/${id}/analytics`),
   getCommunications: (id, params) => api.get(`/campaigns/${id}/communications`, { params }),
   updateStatus: (id, status) => api.patch(`/campaigns/${id}/status`, { status }),
+  send: (id) => api.post(`/campaigns/${id}/send`),
   retryDLQ: () => api.post(`/campaigns/retry-dlq`),
 };
 
@@ -33,6 +34,7 @@ export const segmentsApi = {
   refresh: (id) => api.post(`/segments/${id}/refresh`),
   generatePersona: (id) => api.post(`/segments/${id}/generate-persona`),
   update: (id, data) => api.patch(`/segments/${id}`, data),
+  delete: (id) => api.delete(`/segments/${id}`),
 };
 
 export const analyticsApi = {

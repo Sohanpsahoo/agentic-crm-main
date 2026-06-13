@@ -189,13 +189,30 @@ export default function CampaignDetail() {
             )}
           </div>
         </div>
-        {/* Live indicator */}
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-950/20 border border-emerald-900/40 rounded-xl">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-          </span>
-          <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Live Sync</span>
+        {/* Live indicator & Actions */}
+        <div className="flex items-center gap-3">
+          {campaign.status === "draft" && (
+            <button
+              onClick={async () => {
+                try {
+                  await campaignsApi.send(campaign._id);
+                  // Socket will handle the UI update
+                } catch (e) {
+                  alert(e.response?.data?.error || "Failed to send campaign");
+                }
+              }}
+              className="btn-primary py-1.5 px-4 bg-purple-600 hover:bg-purple-500 flex items-center gap-2 font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+            >
+              🚀 Send Campaign Now
+            </button>
+          )}
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-950/20 border border-emerald-900/40 rounded-xl">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+            </span>
+            <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Live Sync</span>
+          </div>
         </div>
       </div>
 

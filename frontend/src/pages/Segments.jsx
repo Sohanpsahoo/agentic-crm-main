@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, RefreshCw, Bot, Plus, X, ShieldAlert, Users, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { PieChart, RefreshCw, Bot, Plus, X, ShieldAlert, Users, Sparkles, Trash2 } from "lucide-react";
 import { segmentsApi } from "../services/api";
 
 function CreateSegmentModal({ onClose, onCreated }) {
@@ -7,6 +8,7 @@ function CreateSegmentModal({ onClose, onCreated }) {
   const [submitting, setSubmitting] = useState(false);
   const [estimatedSize, setEstimatedSize] = useState(null);
   const [loadingEstimate, setLoadingEstimate] = useState(false);
+  const [logs, setLogs] = useState([]);
 
   // Live audience size estimator with debouncing
   useEffect(() => {
@@ -35,13 +37,28 @@ function CreateSegmentModal({ onClose, onCreated }) {
     if (!query.trim()) return;
     
     setSubmitting(true);
+    setLogs(["[System] Analyzing Natural Language Prompt..."]);
+    
+    const logInterval = setInterval(() => {
+      setLogs(prev => {
+        if (prev.length === 1) return [...prev, "[Agent] Intent Identified. Constructing structured query..."];
+        if (prev.length === 2) return [...prev, "[System] Executing MongoDB Aggregation Pipeline on Customer DB..."];
+        return prev;
+      });
+    }, 800);
+
     try {
       await segmentsApi.generate(query);
-      onCreated();
+      clearInterval(logInterval);
+      setLogs(prev => [...prev, "[Agent] Pipeline Generated successfully. 🚀"]);
+      setTimeout(() => {
+        onCreated();
+      }, 1000); // let the user read the success log briefly
     } catch (err) {
+      clearInterval(logInterval);
+      setLogs(prev => [...prev, "[Error] Failed to generate segment."]);
       console.error(err);
       alert("Failed to generate segment. Make sure the AI service is running.");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -89,15 +106,30 @@ function CreateSegmentModal({ onClose, onCreated }) {
             </div>
           )}
           
-          <div className="bg-purple-900/20 border border-purple-800/30 rounded-lg p-3 flex gap-3">
-             <div className="mt-0.5"><Bot size={16} className="text-purple-400" /></div>
-             <div>
-                <p className="text-sm font-medium text-purple-200">AI-Powered Extraction</p>
-                <p className="text-xs text-purple-300/70 mt-1">
-                   The Copilot will parse your intent, query the real-time customer database, and instantly generate an accurate segment pipeline.
-                </p>
-             </div>
-          </div>
+          {submitting || logs.length > 0 ? (
+            <div className="bg-black/60 border border-gray-800/80 rounded-lg p-3 h-32 overflow-y-auto font-mono text-[10px] flex flex-col justify-end">
+               <div>
+                 {logs.map((log, i) => (
+                   <p key={i} className={log.includes("Error") ? "text-red-400 mb-1" : "text-emerald-400/90 mb-1"}>
+                     {log}
+                   </p>
+                 ))}
+                 {submitting && (
+                   <p className="text-gray-500 animate-pulse mt-1">_</p>
+                 )}
+               </div>
+            </div>
+          ) : (
+            <div className="bg-purple-900/20 border border-purple-800/30 rounded-lg p-3 flex gap-3">
+               <div className="mt-0.5"><Bot size={16} className="text-purple-400" /></div>
+               <div>
+                  <p className="text-sm font-medium text-purple-200">AI-Powered Extraction</p>
+                  <p className="text-xs text-purple-300/70 mt-1">
+                     The Copilot will parse your intent, query the real-time customer database, and instantly generate an accurate segment pipeline.
+                  </p>
+               </div>
+            </div>
+          )}
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 btn-secondary py-2.5">Cancel</button>
@@ -112,25 +144,21 @@ function CreateSegmentModal({ onClose, onCreated }) {
 }
 
 function CampaignDesignerModal({ segment, onClose }) {
+  const [name, setName] = useState(`${segment.name} Campaign`);
+  const [goal, setGoal] = useState("announce");
   const [template, setTemplate] = useState("");
   const [channel, setChannel] = useState("whatsapp");
-  const [delay, setDelay] = useState(0); // in seconds
   const [scheduling, setScheduling] = useState(false);
   const [generating, setGenerating] = useState(true);
-  const [scheduled, setScheduled] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (segment.draft_message) {
-      setTemplate(segment.draft_message);
-      if (segment.draft_channel) setChannel(segment.draft_channel);
-      setGenerating(false);
-      return;
-    }
     // Auto-generate AI message for this segment
     import("../services/api").then(({ agentApi }) => {
-      const goal = "Draft a highly engaging, personalized promotional message.";
+      const goalStr = "Draft a highly engaging, personalized promotional message.";
       const audDesc = `Name: ${segment.name}. Size: ${segment.size}. Criteria: ${segment.criteria_nl || "All customers"}`;
-      agentApi.messagePreview(goal, "whatsapp", audDesc)
+      agentApi.messagePreview(goalStr, "whatsapp", audDesc)
         .then(res => {
           setTemplate(res.data.message || "");
           setGenerating(false);
@@ -143,50 +171,42 @@ function CampaignDesignerModal({ segment, onClose }) {
     });
   }, [segment]);
 
-  const handleSchedule = async (e) => {
+  const handleSaveDraft = async (e) => {
     e.preventDefault();
     setScheduling(true);
-    import("../services/api").then(({ agentApi }) => {
-      agentApi.blastSegment(segment._id, template, channel, delay)
-        .then(() => setScheduled(true))
-        .catch(err => {
-          console.error(err);
-          alert("Failed to schedule blast.");
-        })
-        .finally(() => setScheduling(false));
-    });
+    try {
+      const { campaignsApi } = await import("../services/api");
+      const res = await campaignsApi.create({
+        name,
+        goal,
+        channel,
+        status: "draft",
+        segment_id: segment._id,
+        copy_variants: [{ variant_id: "A", body: template }]
+      });
+      onClose(false);
+      navigate(`/campaigns/${res.data._id}`);
+    } catch(err) {
+      console.error(err);
+      alert("Failed to create draft campaign.");
+    } finally {
+      setScheduling(false);
+    }
   };
-
-  if (scheduled) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-        <div className="relative w-full max-w-md bg-gray-900 border border-gray-800 rounded-xl p-6 text-center shadow-2xl">
-          <Sparkles size={48} className="mx-auto text-green-400 mb-4" />
-          <h2 className="text-xl font-bold text-white mb-2">Campaign Scheduled!</h2>
-          <p className="text-gray-400 text-sm mb-6">
-            Your message will be sent to the <strong>{segment.name}</strong> segment {delay > 0 ? `in ${delay} seconds` : "immediately"}.<br/><br/>
-            Open the <strong>Simulation Center</strong> to watch the messages go out live!
-          </p>
-          <button onClick={onClose} className="btn-primary w-full justify-center">Done</button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/70" onClick={() => onClose(false)} />
       <div className="relative w-full max-w-lg bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-gray-900/50">
           <div className="flex items-center gap-2">
             <Sparkles size={18} className="text-indigo-400" />
-            <h2 className="font-semibold text-white">Design Campaign</h2>
+            <h2 className="font-semibold text-white">Create Draft Campaign</h2>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-300"><X size={18} /></button>
+          <button onClick={() => onClose(false)} className="text-gray-500 hover:text-gray-300"><X size={18} /></button>
         </div>
 
-        <form onSubmit={handleSchedule} className="p-5 space-y-4">
+        <form onSubmit={handleSaveDraft} className="p-5 space-y-4">
           <div className="bg-gray-950 p-3 rounded-lg border border-gray-800 flex justify-between items-center">
             <div>
               <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Target Segment</p>
@@ -195,6 +215,47 @@ function CampaignDesignerModal({ segment, onClose }) {
             <div className="text-right">
               <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Audience</p>
               <p className="text-sm font-bold text-indigo-400 mt-0.5">{segment.size?.toLocaleString()} customers</p>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Campaign Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600 mt-1"
+              required
+            />
+          </div>
+
+          <div className="flex gap-4">
+             <div className="flex-1">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Goal</label>
+              <select 
+                value={goal} 
+                onChange={e => setGoal(e.target.value)}
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600"
+              >
+                <option value="announce">Announce</option>
+                <option value="re-engage">Re-engage</option>
+                <option value="upsell">Upsell</option>
+                <option value="winback">Winback</option>
+                <option value="loyalty">Loyalty</option>
+                <option value="welcome">Welcome</option>
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Channel</label>
+              <select 
+                value={channel} 
+                onChange={e => setChannel(e.target.value)}
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600"
+              >
+                <option value="whatsapp">WhatsApp</option>
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+              </select>
             </div>
           </div>
 
@@ -214,54 +275,10 @@ function CampaignDesignerModal({ segment, onClose }) {
             <p className="text-[10px] text-gray-500 mt-1">Use <code className="text-gray-400">{'{name}'}</code> to personalize.</p>
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Channel</label>
-              <select 
-                value={channel} 
-                onChange={e => setChannel(e.target.value)}
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600"
-              >
-                <option value="whatsapp">WhatsApp</option>
-                <option value="email">Email</option>
-                <option value="sms">SMS</option>
-              </select>
-            </div>
-            <div className="flex-1">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Timer (Seconds)</label>
-              <input 
-                type="number" 
-                min="0"
-                value={delay} 
-                onChange={e => setDelay(Number(e.target.value))}
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600"
-              />
-            </div>
-          </div>
-
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 btn-secondary py-2.5">Cancel</button>
-            <button 
-              type="button" 
-              onClick={async () => {
-                 setScheduling(true);
-                 try {
-                    const { segmentsApi } = await import("../services/api");
-                    await segmentsApi.update(segment._id, { draft_message: template, draft_channel: channel });
-                    onClose(true); // pass true to indicate a reload is needed
-                 } catch(err) {
-                    alert("Failed to save draft.");
-                 } finally {
-                    setScheduling(false);
-                 }
-              }} 
-              disabled={scheduling || generating || !template} 
-              className="flex-1 btn-secondary py-2.5 bg-gray-800 hover:bg-gray-700"
-            >
-              Save Draft
-            </button>
-            <button type="submit" disabled={scheduling || generating || !template} className="flex-1 btn-primary py-2.5 disabled:opacity-50 justify-center bg-indigo-600 hover:bg-indigo-500">
-              {scheduling ? "Scheduling..." : delay > 0 ? `Schedule in ${delay}s` : "Send Now"}
+            <button type="button" onClick={() => onClose(false)} className="flex-1 btn-secondary py-2.5">Cancel</button>
+            <button type="submit" disabled={scheduling || generating || !template || !name} className="flex-1 btn-primary py-2.5 disabled:opacity-50 justify-center bg-indigo-600 hover:bg-indigo-500">
+              {scheduling ? "Saving..." : "Save Draft Campaign"}
             </button>
           </div>
         </form>
@@ -294,6 +311,15 @@ export default function Segments() {
        loadSegments();
     } catch (e) {
        alert("Failed to generate persona card. Ensure AI service is running.");
+    }
+  };
+
+  const deleteSegment = async (id) => {
+    try {
+      await segmentsApi.delete(id);
+      loadSegments();
+    } catch (e) {
+      alert("Failed to delete segment.");
     }
   };
 
@@ -348,13 +374,22 @@ export default function Segments() {
                   <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">{s.description}</p>
                 )}
               </div>
-              <button
-                onClick={() => refresh(s._id)}
-                className="text-gray-500 hover:text-gray-300 transition-colors"
-                title="Refresh segment"
-              >
-                <RefreshCw size={14} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => refresh(s._id)}
+                  className="text-gray-500 hover:text-gray-300 transition-colors p-1"
+                  title="Refresh segment"
+                >
+                  <RefreshCw size={14} />
+                </button>
+                <button
+                  onClick={() => deleteSegment(s._id)}
+                  className="text-gray-500 hover:text-red-400 transition-colors p-1"
+                  title="Delete segment"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
             </div>
 
             <div className="flex items-center gap-4 text-sm">
@@ -378,8 +413,33 @@ export default function Segments() {
                 </div>
                 <p className="text-xs text-gray-300">Prompt: <span className="italic text-gray-400">"{s.criteria_nl}"</span></p>
                 {s.description && (
-                   <p className="text-xs text-gray-300 mt-1">Matched: <span className="text-purple-200">{s.description}</span></p>
+                   <p className="text-xs text-gray-300 mt-1 mb-2">Matched: <span className="text-purple-200">{s.description}</span></p>
                 )}
+                
+                {/* Agent Logs & Pipeline Viewer */}
+                <details className="mt-2 group">
+                  <summary className="text-[10px] uppercase tracking-wider font-bold text-gray-500 cursor-pointer hover:text-purple-400 transition-colors list-none flex items-center gap-1">
+                    <span className="group-open:rotate-90 transition-transform text-gray-600 font-mono">▶</span>
+                    Agent Logs & Decision Pipeline
+                  </summary>
+                  <div className="mt-2 p-2.5 bg-black/40 rounded border border-gray-800/50 max-h-48 overflow-y-auto">
+                    <div className="text-[10px] font-mono text-emerald-400/80 mb-2 space-y-1">
+                      <p>[System] Analyzing Natural Language Prompt...</p>
+                      <p>[Agent] Intent Identified: Targeting {s.name}</p>
+                      <p>[Agent] Constructing structured query for Customer collection...</p>
+                      <p>[System] Executing MongoDB Aggregation Pipeline.</p>
+                      <p>[Agent] Found {s.size} matching customers.</p>
+                    </div>
+                    {s.criteria_json && (
+                      <>
+                        <div className="text-[10px] text-gray-400 mt-2 font-semibold">Generated MongoDB Pipeline:</div>
+                        <pre className="text-[9px] font-mono text-purple-300/70 mt-1 whitespace-pre-wrap break-all bg-gray-950 p-2 rounded">
+                          {JSON.stringify(s.criteria_json, null, 2)}
+                        </pre>
+                      </>
+                    )}
+                  </div>
+                </details>
               </div>
             )}
             
@@ -418,46 +478,12 @@ export default function Segments() {
                </button>
             )}
 
-            {s.draft_message ? (
-               <div className="mt-3 bg-gray-900 border border-gray-800 rounded-lg p-3">
-                 <div className="flex justify-between items-center mb-2">
-                   <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Saved Draft</span>
-                   <span className="text-[10px] text-gray-500 uppercase">{s.draft_channel || "whatsapp"}</span>
-                 </div>
-                 <p className="text-xs text-gray-300 line-clamp-2 italic">"{s.draft_message}"</p>
-                 <div className="flex gap-2 mt-3">
-                   <button 
-                     onClick={() => setSelectedSegment(s)} 
-                     className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold py-2 rounded transition-colors"
-                   >
-                     Edit
-                   </button>
-                   <button 
-                     onClick={async () => {
-                       try {
-                         const { agentApi, segmentsApi } = await import("../services/api");
-                         await agentApi.blastSegment(s._id, s.draft_message, s.draft_channel || "whatsapp", 0);
-                         await segmentsApi.update(s._id, { draft_message: "" }); // clear draft
-                         alert("Draft sent successfully!");
-                         loadSegments();
-                       } catch(err) {
-                         alert("Failed to send draft.");
-                       }
-                     }} 
-                     className="flex-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2 rounded transition-colors flex items-center justify-center gap-1"
-                   >
-                     <Sparkles size={12}/> Send
-                   </button>
-                 </div>
-               </div>
-            ) : (
-               <button 
-                  onClick={() => setSelectedSegment(s)} 
-                  className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
-               >
-                  <Bot size={14} /> Draft Campaign
-               </button>
-            )}
+            <button 
+              onClick={() => setSelectedSegment(s)} 
+              className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <Bot size={14} /> Create Draft Campaign
+            </button>
 
             {s.last_refreshed_at && (
               <p className="text-[10px] text-gray-600 mt-3 pt-3 border-t border-gray-800/50">
