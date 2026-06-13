@@ -1,0 +1,13 @@
+{
+  "name": "crm-seed",
+  "version": "1.0.0",
+  "scripts": {
+    "seed:customers": "node seed_customers.js",
+    "seed:orders": "node seed_orders.js",
+    "seed:all": "node seed_customers.js && node seed_orders.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "mongoose": "^8.24.0"
+  }
+}

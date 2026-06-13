@@ -1,0 +1,6 @@
+auth_info_baileys
+node_modules
+.git
+.gitignore
+README.md
+package-lock.json

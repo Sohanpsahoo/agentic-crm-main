@@ -1,0 +1,33 @@
+
+node:internal/modules/cjs/loader:1450
+  throw err;
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+  ^
+Error: Cannot find module 'D:\Downloads\agentic-crm-main(1)\agentic-crm-main\frontend\node_modules\npm\bin\npm-prefix.js'
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1447:15)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+  code: 'MODULE_NOT_FOUND',
+    at node:internal/main/run_main_module:33:47 {
+  requireStack: []
+}
+Node.js v25.4.0
+node:internal/modules/cjs/loader:1450
+  throw err;
+Error: Cannot find module 'D:\Downloads\agentic-crm-main(1)\agentic-crm-main\frontend\node_modules\npm\bin\npm-cli.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1447:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+  ^
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+  code: 'MODULE_NOT_FOUND',
+    at node:internal/main/run_main_module:33:47 {
+}
+  requireStack: []
+Node.js v25.4.0

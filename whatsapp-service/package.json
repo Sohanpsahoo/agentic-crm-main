@@ -1,0 +1,25 @@
+{
+  "name": "crm-whatsapp-service",
+  "version": "1.0.0",
+  "description": "Real WhatsApp integration via Baileys — QR scan, send messages, delivery status",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pino": "^8.0.0",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.6.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

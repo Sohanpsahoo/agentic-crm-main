@@ -1,0 +1,30 @@
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-dotenv>=1.0.0
+pydantic>=2.5.3
+pydantic-settings>=2.1.0
+httpx>=0.26.0
+
+# LangChain ecosystem
+langchain>=0.1.9
+langchain-core>=0.1.28
+langchain-community>=0.0.25
+langchain-google-genai>=0.0.9
+langchain-groq>=0.1.9
+langgraph>=0.0.37
+langchain-qdrant>=0.1.0
+langchain-huggingface>=0.0.3
+langchain-classic>=0.0.1
+
+# Vector DB
+qdrant-client>=1.7.3
+
+# MongoDB
+pymongo==4.6.1
+
+# Embeddings
+sentence-transformers==2.5.0
+
+# Utilities
+numpy>=1.26.3
+python-dateutil==2.8.2

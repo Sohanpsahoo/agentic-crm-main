@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER_VOID // Elite Gaming Hardware</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Parallax Background Elements -->
+    <div class="parallax-bg-layer deep-space"></div>
+    <div class="parallax-bg-layer cyber-grid"></div>
+    <div class="parallax-bg-layer glowing-dust"></div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo">
+                <span class="neon-text-cyan">AETHER</span><span class="neon-text-purple">_VOID</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#catalog" class="nav-link">ARCHIVE</a>
+                <a href="#drops" class="nav-link">DROPS</a>
+                <a href="#cod-portal" class="nav-link">SECURE_COD</a>
+            </nav>
+            <div class="cart-trigger" id="cart-btn">
+                <div class="cart-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section with Giant Countdown Clock -->
+        <section class="hero-section" id="drops">
+            <div class="hero-content">
+                <div class="tagline neon-border-purple">PROTOCOL: LIMITED DROP 049</div>
+                <h1 class="hero-title">NEXT GENERATION<br><span class="neon-text-purple font-ultra">NEON HARDWARE</span></h1>
+                <p class="hero-description">Engineered for absolute dominance. Forged in the void. Only accessible via secure Cash on Delivery.</p>
+                
+                <!-- Giant Clock Container -->
+                <div class="countdown-clock-container">
+                    <div class="clock-label">TIME REMAINING UNTIL NEXT DROP</div>
+                    <div class="giant-clock" id="countdown-timer">
+                        <div class="time-block">
+                            <span class="time-val" id="days">00</span>
+                            <span class="time-lbl">DAYS</span>
+                        </div>
+                        <span class="time-separator">:</span>
+                        <div class="time-block">
+                            <span class="time-val" id="hours">00</span>
+                            <span class="time-lbl">HRS</span>
+                        </div>
+                        <span class="time-separator">:</span>
+                        <div class="time-block">
+                            <span class="time-val" id="minutes">00</span>
+                            <span class="time-lbl">MINS</span>
+                        </div>
+                        <span class="time-separator">:</span>
+                        <div class="time-block">
+                            <span class="time-val" id="seconds">00</span>
+                            <span class="time-lbl">SECS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#catalog" class="cta-button">
+                    <span>EXPLORE CATALOG</span>
+                    <div class="button-glow"></div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Product Catalog Section -->
+        <section class="catalog-section" id="catalog">
+            <div class="section-header">
+                <h2 class="section-title"><span class="neon-text-cyan">ELITE</span> CORE GEAR</h2>
+                <p class="section-subtitle">Exquisite craftsmanship. Zero placeholders. Premium performance.</p>
+            </div>
+
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card" data-id="1" data-name="Aether-9 Custom Rig" data-price="850000" data-img="assets/rig.png">
+                    <div class="card-glow-border"></div>
+                    <div class="product-image-wrapper">
+                        <img src="assets/rig.png" alt="Aether-9 Custom Rig" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag neon-text-cyan">ULTIMATE RIG</span>
+                        <h3 class="product-title">Aether-9 Custom Rig</h3>
+                        <p class="product-desc">Liquid-cooled cryogenic computing powerhouse. Sleek carbon fiber structure, customized dual loop coolant channels, high-spec components.</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹8,50,000</span>
+                            <button class="add-to-cart-btn">ADD_TO_VOID</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card" data-id="2" data-name="Chronos Mechanical Keyboard" data-price="45000" data-img="assets/keyboard.png">
+                    <div class="card-glow-border"></div>
+                    <div class="product-image-wrapper">
+                        <img src="assets/keyboard.png" alt="Chronos Mechanical Keyboard" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag neon-text-purple">NEON KEYBOARD</span>
+                        <h3 class="product-title">Chronos Keyboard</h3>
+                        <p class="product-desc">Opto-magnetic carbon-fiber structure. Customized heavy-tactile mechanical switches with active violet and cyan ambient backlights.</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹45,000</span>
+                            <button class="add-to-cart-btn">ADD_TO_VOID</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card" data-id="3" data-name="Aero-Glide Mouse" data-price="25000" data-img="assets/mouse.png">
+                    <div class="card-glow-border"></div>
+                    <div class="product-image-wrapper">
+                        <img src="assets/mouse.png" alt="Aero-Glide Mouse" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag neon-text-cyan">PRECISION MOUSE</span>
+                        <h3 class="product-title">Aero-Glide Mouse</h3>
+                        <p class="product-desc">Ultra-lightweight carbon mesh layout, 8,000Hz polling rate with raw ceramic skates and smart neon-battery outline indicators.</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹25,000</span>
+                            <button class="add-to-cart-btn">ADD_TO_VOID</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secure COD Checkout Portal -->
+        <section class="checkout-section" id="cod-portal">
+            <div class="checkout-container glass-card">
+                
+                <!-- Stepper Progress Indicator -->
+                <div class="checkout-stepper">
+                    <div class="step-indicator active" id="step-ind-1">
+                        <span class="step-num">01</span>
+                        <span class="step-text">CART REVIEW</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-indicator" id="step-ind-2">
+                        <span class="step-num">02</span>
+                        <span class="step-text">DELIVERY DETAILS</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-indicator" id="step-ind-3">
+                        <span class="step-num">03</span>
+                        <span class="step-text">ORDER STAMPED</span>
+                    </div>
+                </div>
+
+                <div class="checkout-header">
+                    <h2 class="neon-text-purple">SECURED COD PROTOCOL</h2>
+                    <p>EXCLUSIVE GATEWAY: CASH ON DELIVERY ONLY</p>
+                    <div class="cyber-security-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span>END-TO-END COD SECURED</span>
+                    </div>
+                </div>
+
+                <div class="checkout-grid">
+                    
+                    <!-- Form / Navigation Side -->
+                    <div class="checkout-main-flow">
+                        
+                        <!-- Step 1: Cart Review Screen -->
+                        <div class="checkout-step-screen active" id="step-screen-1">
+                            <h3 class="step-screen-title neon-text-cyan">REVIEW SELECTED HARDWARE</h3>
+                            <p class="step-screen-desc">Confirm items loaded in your temporary memory block before setting coordinates.</p>
+                            
+                            <div class="step-cart-items-list" id="step-cart-list">
+                                <!-- Dynamically populated review list -->
+                            </div>
+
+                            <div class="step-navigation-footer">
+                                <button type="button" class="stepper-next-btn" id="proceed-to-shipping-btn">
+                                    <span>PROCEED TO DELIVERY INFO</span>
+                                    <div class="btn-glow-cyan"></div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Shipping / COD Info Form -->
+                        <form id="checkout-form" class="checkout-form checkout-step-screen" id="step-screen-2">
+                            <h3 class="step-screen-title neon-text-purple">VERIFY SHIELD COORDINATES</h3>
+                            <p class="step-screen-desc">Please supply real contacts and location. Orders require phone verification prior to dispatch.</p>
+                            
+                            <div class="form-group">
+                                <label for="full-name">RECIPIENT FULL NAME</label>
+                                <input type="text" id="full-name" required placeholder="e.g. MAYANK AGARWAL">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone-number">SECURE MOBILE CONTACT</label>
+                                <input type="tel" id="phone-number" required placeholder="e.g. +91 98765 43210">
+                            </div>
+                            <div class="form-group">
+                                <label for="shipping-address">GEOGRAPHICAL COORDINATES (ADDRESS)</label>
+                                <textarea id="shipping-address" rows="3" required placeholder="Enter the exact delivery location coordinates"></textarea>
+                            </div>
+                            
+                            <!-- COD Declaration Checkbox -->
+                            <div class="form-group-checkbox">
+                                <input type="checkbox" id="cod-declare" required>
+                                <label for="cod-declare">I acknowledge that this is a <strong>Cash on Delivery (COD)</strong> order. I will pay the total amount in cash upon delivery.</label>
+                            </div>
+
+                            <div class="step-navigation-footer">
+                                <button type="button" class="stepper-back-btn" id="back-to-cart-btn">BACK</button>
+                                <button type="submit" class="submit-order-btn" id="submit-btn">
+                                    <span>CONFIRM SECURE COD ORDER</span>
+                                    <div class="btn-glow-cyan"></div>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Step 3: Success Screen -->
+                        <div class="checkout-step-screen" id="step-screen-3">
+                            <div class="order-success-banner">
+                                <div class="success-icon-wrapper">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                </div>
+                                <h3 class="neon-text-cyan">ORDER PROTOCOL REGISTERED</h3>
+                                <p>Your order has been queued in our system. A delivery coordinator will contact you via your contact number to verify COD details.</p>
+                                <button type="button" class="reset-order-flow-btn" id="new-order-btn">LOAD MAIN ARCHIVE</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Summary side -->
+                    <div class="order-summary-pane">
+                        <h3>ORDER SECURED TOTALS</h3>
+                        <div class="summary-items" id="summary-items-list">
+                            <div class="summary-empty">NO HARDWARE IN THE VOID CART</div>
+                        </div>
+                        <div class="summary-totals">
+                            <div class="total-row">
+                                <span>SUBTOTAL:</span>
+                                <span id="summary-subtotal">₹0</span>
+                            </div>
+                            <div class="total-row">
+                                <span>DELIVERY:</span>
+                                <span class="neon-text-cyan">FREE (SECURE AIR)</span>
+                            </div>
+                            <div class="total-row grand-total">
+                                <span>TOTAL AMOUNT:</span>
+                                <span class="neon-text-purple" id="summary-total">₹0</span>
+                            </div>
+                        </div>
+
+                        <!-- Animated COD Stamp -->
+                        <div class="cod-stamp-container" id="cod-stamp">
+                            <div class="cod-stamp-seal">
+                                <div class="stamp-text-inner">COD_SECURE</div>
+                                <div class="stamp-verified">VERIFIED</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>&copy; 2026 AETHER_VOID. ALL RIGHTS RESERVED. SECURED COD GATEWAY.</p>
+        </footer>
+
+    </div>
+
+    <!-- Sliding Cart Drawer -->
+    <div class="cart-drawer-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer-header">
+            <h3>VOID_CART</h3>
+            <button class="close-cart-btn" id="close-cart-btn">&times;</button>
+        </div>
+        <div class="cart-items-container" id="cart-items">
+            <!-- Dynamic Cart Items -->
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="cart-total-row">
+                <span>SUBTOTAL</span>
+                <span class="neon-text-purple" id="cart-total-val">₹0</span>
+            </div>
+            <p class="cod-guarantee-note">✓ CASH ON DELIVERY ONLY</p>
+            <a href="#cod-portal" class="checkout-link-btn" id="checkout-link-btn">PROCEED TO SECURE COD</a>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>
