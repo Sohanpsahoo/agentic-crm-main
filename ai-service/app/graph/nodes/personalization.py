@@ -136,7 +136,7 @@ def personalization_node(state: CRMAgentState) -> dict:
     segment = state.get("segment", {})
     campaign_draft = state.get("campaign_draft", {})
     campaign_goal = state.get("campaign_plan", {}).get("goal") or "re-engage"
-    customer_ids = segment.get("customer_ids", [])[:10]  # cap to 10 to avoid Groq 30 RPM limits
+    customer_ids = segment.get("customer_ids", [])  # No longer capped at 10
 
     if not customer_ids:
         post_progress(state["session_id"], "personalization", "No customers to personalize", step="personalize")
@@ -160,13 +160,19 @@ def personalization_node(state: CRMAgentState) -> dict:
         model=settings.groq_model,
         groq_api_key=settings.groq_api_key,
         temperature=0.6,
+        max_retries=3,  # Added backoff retries for rate limits
     )
 
     async def run_all():
+        sem = asyncio.Semaphore(5)  # Max 5 concurrent calls to avoid rate limit spikes
+        async def sem_task(cid, v):
+            async with sem:
+                return await personalize_one(cid, v.get("body", ""), v.get("variant_id", "A"), campaign_goal, llm)
+        
         tasks = []
         for i, cid in enumerate(customer_ids):
             v = get_variant_for_idx(i)
-            tasks.append(personalize_one(cid, v.get("body", ""), v.get("variant_id", "A"), campaign_goal, llm))
+            tasks.append(sem_task(cid, v))
         return await asyncio.gather(*tasks, return_exceptions=True)
 
     results = asyncio.run(run_all())

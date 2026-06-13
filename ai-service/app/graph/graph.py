@@ -71,7 +71,7 @@ def post_segment_gate(state: CRMAgentState) -> str:
 
 def pre_execution_gate(state: CRMAgentState) -> str:
     messages = state.get("personalized_messages", [])
-    if len(messages) > 1000:
+    if len(messages) > 5:
         return "await_approval"
     return "execute"
 

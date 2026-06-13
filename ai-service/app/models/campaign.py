@@ -4,8 +4,8 @@ from datetime import datetime
 
 
 class CampaignPlan(BaseModel):
-    intent: str = Field(description="Summarized marketing intent")
-    steps: List[Literal["segment", "create_campaign", "personalize", "select_channel", "execute", "analyze", "optimize", "create_journey"]] = Field(
+    intent: str = Field(description="Summarized marketing intent or 'ideate'")
+    steps: List[Literal["segment", "create_campaign", "personalize", "select_channel", "execute", "analyze", "optimize", "create_journey", "ideate"]] = Field(
         description="Ordered execution steps"
     )
     segment_criteria: dict = Field(description="Structured criteria for segmentation")
@@ -14,6 +14,7 @@ class CampaignPlan(BaseModel):
     campaign_name: str = Field(description="Suggested campaign name. IMPORTANT: this field must be called 'campaign_name', not 'name'.")
     journey_trigger: Optional[str] = Field(default=None, description="Journey trigger type if creating an automated journey: signup/first_purchase/inactivity/birthday")
     offer_hint: Optional[dict] = Field(default=None, description="Offer/discount details extracted from query, e.g. {'discount': 0.15}")
+    suggested_campaigns: Optional[List[dict]] = Field(default=None, description="List of campaign ideas when intent is ideate")
 
 
 class CopyVariant(BaseModel):

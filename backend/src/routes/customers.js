@@ -12,18 +12,30 @@ router.get("/", async (req, res, next) => {
       tag,
       channel,
       minLtv,
+      minDaysSincePurchase,
       maxDaysSincePurchase,
       search,
+      ageGroup,
     } = req.query;
 
     const filter = {};
     if (tag) filter.tags = tag;
     if (channel) filter[`channel_preferences.${channel}`] = true;
     if (minLtv) filter.ltv = { $gte: Number(minLtv) };
-    if (maxDaysSincePurchase) {
-      const cutoff = new Date();
-      cutoff.setDate(cutoff.getDate() - Number(maxDaysSincePurchase));
-      filter.last_purchase_at = { $lte: cutoff };
+    if (ageGroup) filter['demographics.age_group'] = ageGroup;
+    
+    if (minDaysSincePurchase || maxDaysSincePurchase) {
+      filter.last_purchase_at = {};
+      if (minDaysSincePurchase) {
+        const cutoffMin = new Date();
+        cutoffMin.setDate(cutoffMin.getDate() - Number(minDaysSincePurchase));
+        filter.last_purchase_at.$lte = cutoffMin;
+      }
+      if (maxDaysSincePurchase) {
+        const cutoffMax = new Date();
+        cutoffMax.setDate(cutoffMax.getDate() - Number(maxDaysSincePurchase));
+        filter.last_purchase_at.$gte = cutoffMax;
+      }
     }
     if (search) {
       filter.$or = [

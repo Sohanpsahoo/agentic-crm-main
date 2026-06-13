@@ -143,6 +143,39 @@ export default function AgentChat() {
     }
   };
 
+  const handleIdeate = async () => {
+    setSubmitting(true);
+    setLoadingChat(true);
+    setChatHistory((prev) => [
+      ...prev,
+      { role: "user", content: "What should I do next? Any campaign ideas?", ts: new Date() }
+    ]);
+
+    try {
+      const response = await agentApi.ideate("Generate creative campaign ideas based on recent data");
+      const ideas = response.data?.campaigns || [];
+      
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          role: "model",
+          content: "Here are 3 data-driven campaign ideas based on your current CRM health:",
+          campaignIdeas: ideas,
+          ts: new Date()
+        }
+      ]);
+    } catch (err) {
+      console.error(err);
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "model", content: "Sorry, I couldn't generate ideas right now.", ts: new Date() }
+      ]);
+    } finally {
+      setLoadingChat(false);
+      setSubmitting(false);
+    }
+  };
+
   const handleQuickCampaign = async (campaignDirective) => {
     setSubmitting(true);
     setChatHistory((prev) => [
@@ -226,6 +259,26 @@ export default function AgentChat() {
                       : "bg-zinc-900/80 border border-zinc-850 rounded-tl-none text-zinc-200"
                   }`}>
                     <p className="text-[13px] leading-relaxed whitespace-pre-wrap">{chat.content}</p>
+                    
+                    {chat.campaignIdeas && chat.campaignIdeas.length > 0 && (
+                      <div className="mt-4 space-y-3">
+                        {chat.campaignIdeas.map((idea, i) => (
+                          <div key={i} className="bg-black/40 border border-purple-900/30 rounded-xl p-3 hover:border-purple-500/50 transition-colors">
+                            <h4 className="text-[13px] font-bold text-purple-300">{idea.name}</h4>
+                            <p className="text-[11px] text-gray-400 mt-1"><span className="text-gray-500 font-semibold">Audience:</span> {idea.audience}</p>
+                            <p className="text-[11px] text-gray-400 mt-0.5"><span className="text-gray-500 font-semibold">Offer:</span> {idea.offer}</p>
+                            <p className="text-[11px] text-gray-400 mt-1 italic">"{idea.reasoning}"</p>
+                            <button 
+                              onClick={() => handleQuickCampaign(`Run the ${idea.name} campaign targeting ${idea.audience} with ${idea.offer}.`)}
+                              className="mt-2 text-[10px] font-bold bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg w-full transition-colors"
+                            >
+                              Launch this Campaign
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <span className="text-[9px] text-zinc-550 block mt-1.5 text-right">
                       {new Date(chat.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
@@ -255,6 +308,13 @@ export default function AgentChat() {
 
           {/* Quick Action Ideas bar */}
           <div className="px-4 py-2 border-t border-gray-900 bg-gray-950/20 flex gap-2 overflow-x-auto whitespace-nowrap">
+            <button
+              onClick={handleIdeate}
+              disabled={submitting}
+              className="text-[11px] font-bold px-3 py-1.5 rounded-full bg-rose-950/50 border border-rose-900/40 text-rose-300 hover:bg-rose-900/30 transition-all flex-shrink-0"
+            >
+              💡 What should I do?
+            </button>
             <button
               onClick={() => handleQuickCampaign("Find customers who haven't ordered in 60 days and send them a 15% off winback email campaign.")}
               disabled={submitting || activeSession?.status === "running"}

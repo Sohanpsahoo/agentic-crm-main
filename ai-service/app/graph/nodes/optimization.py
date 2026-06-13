@@ -63,7 +63,9 @@ def optimization_node(state: CRMAgentState) -> dict:
         f"Campaign complete. {metrics.get('open_rate', 0)}% open rate. "
         f"Variant {opt_plan.winning_variant} wins. "
         f"Optimal send: {opt_plan.optimal_send_hour}:00. "
-        f"{opt_plan.summary}"
+        f"{opt_plan.summary}\n\n"
+        f"💡 **AI Recommendations for Next Action:**\n" + 
+        "\n".join([f"- {s}" for s in opt_plan.next_campaign_suggestions])
     )
 
     post_progress(

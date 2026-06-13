@@ -86,6 +86,16 @@ router.post("/estimate", async (req, res, next) => {
       filter.ltv = { $gte: 10000 };
     }
     
+    // Quick heuristic for "last X days/months"
+    const match = c.match(/(?:last|in|within)\s+(\d+)\s+(month|day)s?/);
+    if (match) {
+      let days = parseInt(match[1]);
+      if (match[2] === "month") days *= 30;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - days);
+      filter.last_purchase_at = { $gte: cutoff };
+    }
+    
     const count = await Customer.countDocuments(filter);
     res.json({ count });
   } catch (err) {
@@ -181,6 +191,21 @@ router.post("/:id/generate-persona", async (req, res, next) => {
     segment.persona_card = response.data;
     await segment.save();
 
+    res.json(segment);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/segments/:id
+router.patch("/:id", async (req, res, next) => {
+  try {
+    const segment = await Segment.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    if (!segment) return res.status(404).json({ error: "Segment not found" });
     res.json(segment);
   } catch (err) {
     next(err);

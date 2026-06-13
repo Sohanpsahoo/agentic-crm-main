@@ -388,12 +388,12 @@ async def generate_segment_from_nl(req: SegmentRequest):
     }
 
 _CRM_TOOL_SELECT_PROMPT = """You are ZariBot, the AI CRM controller for Zari Fashion. You have tools to control the entire CRM.
-Based on the user's query, select the single most appropriate tool to run. Do not try to explain or write a conversational response yet. Just select the tool and return the parameters.
+Based on the user's query, select the single most appropriate tool to run using the provided native tool calling feature. Do not try to explain or write a conversational response yet.
 
 TOOL SELECTION RULES — apply in order:
-1. User says msg/message/send/blast/text/notify/whatsapp/sms to ANY group → call simulate_message_to_devices RIGHT NOW, no questions
+1. User says msg/message/send/blast/text/notify/whatsapp/sms/tell/contact/reach/email to ANY group → call simulate_message_to_devices RIGHT NOW, no questions
 2. If the user asks a question about customer statistics, lists of customers matching criteria, or who has or hasn't ordered in N days, and it can be answered directly using the customer database context provided, DO NOT call any tool. Just reply directly with the names/phones/details of the customers.
-3. show/list/find/get customers/people → list_customers
+3. show/list/find/get customers/people → list_customers (use criteria parameter for natural language filters like age, e.g. criteria="under 18")
 4. analytics/stats/performance/open rate/conversion → get_analytics_overview
 5. campaigns → list_campaigns
 6. segments → list_segments  
@@ -459,58 +459,30 @@ async def chat_with_device(req: ChatRequest):
         from app.tools.mongo_tools import get_db
         import datetime
 
-        # Fetch MongoDB customer database to inject in LLM context
+        # Fetch MongoDB aggregate stats to inject in LLM context (reduces TPM vs raw list)
         try:
-            db = get_db()
-            customers_cursor = db.customers.find({}, {
-                "name": 1,
-                "phone": 1,
-                "last_purchase_at": 1,
-                "ltv": 1,
-                "total_orders": 1,
-                "tags": 1
-            }).limit(50)
-            customers_list = list(customers_cursor)
-            now = datetime.datetime.utcnow()
-            customer_lines = []
-            for c in customers_list:
-                last_purchase = c.get("last_purchase_at")
-                days_since = "N/A"
-                if isinstance(last_purchase, datetime.datetime):
-                    days_since = (now - last_purchase).days
-                elif isinstance(last_purchase, str):
-                    try:
-                        lp_dt = datetime.datetime.fromisoformat(last_purchase.replace("Z", "+00:00"))
-                        days_since = (now - lp_dt).days
-                    except Exception:
-                        pass
-                
-                customer_lines.append(
-                    f"{c.get('name')}|{c.get('phone')}|{days_since}"
-                )
+            total_customers = db.customers.count_documents({})
+            recent_customers = list(db.customers.find({}, {"name": 1, "tags": 1}).sort("created_at", -1).limit(5))
+            recent_names = ", ".join([c.get("name", "") for c in recent_customers])
             
             db_context = (
                 "You have access to the customer database from MongoDB to answer queries directly.\n"
-                "Format: Name|Phone|DaysSinceLastPurchase\n"
-                "CUSTOMER DATABASE:\n"
-                + "\n".join(customer_lines)
-                + "\nUse this database to answer questions about customer behavior, or who hasn't ordered in a certain number of days."
+                f"Total Customers: {total_customers}\n"
+                f"Recent Customers: {recent_names}\n"
+                "Use the provided tools to query detailed customer lists or run campaigns."
             )
         except Exception as dbe:
             db_context = f"Error fetching MongoDB customer database: {str(dbe)}"
 
         from langchain_groq import ChatGroq
 
-        groq_keys = [
-            settings.groq_api_key,
-            "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"
-        ]
+        groq_keys = [settings.groq_api_key]
 
         tools = get_crm_tools()
         tool_map = {t.name: t for t in tools}
 
         # Build messages — keep tiny to stay under 6000 TPM
-        history = (req.history or [])[-2:]  # only last 2 turns
+        history = (req.history or [])[-5:]  # only last 5 turns
         messages = [
             SystemMessage(content=_CRM_TOOL_SELECT_PROMPT),
             SystemMessage(content=db_context)
@@ -524,12 +496,7 @@ async def chat_with_device(req: ChatRequest):
                 messages.append(HumanMessage(content=content))
         messages.append(HumanMessage(content=req.message))
 
-        # Check if the query is a CRM action/command or a direct question
-        action_keywords = ["send", "msg", "message", "blast", "text", "notify", "whatsapp", "sms", "launch", "run", "create", "pause", "stop", "update", "complete", "set", "delete", "clear"]
-        query_lower = req.message.lower()
-        is_action = any(kw in query_lower for kw in action_keywords)
-
-        # Phase 1: single LLM call with failover
+        # Phase 1: single LLM call with tools always bound for dynamic capabilities
         response = None
         last_error = None
         for key in groq_keys:
@@ -539,17 +506,23 @@ async def chat_with_device(req: ChatRequest):
                     groq_api_key=key,
                     temperature=0.2,
                 )
-                if is_action:
-                    llm_with_tools = llm.bind_tools(tools)
-                    response = llm_with_tools.invoke(messages)
-                else:
-                    response = llm.invoke(messages)
+                llm_with_tools = llm.bind_tools(tools)
+                response = llm_with_tools.invoke(messages)
                 break
             except Exception as e:
                 err_msg = str(e)
                 if "429" in err_msg or "rate_limit" in err_msg.lower():
                     last_error = e
                     continue
+                if "400" in err_msg:
+                    # Tool validation failed (e.g. LLM hallucinated arguments). 
+                    # Tell the LLM to explain the issue dynamically.
+                    messages.append(SystemMessage(content="The previous tool call failed due to invalid arguments. Respond conversationally to the user explaining what went wrong and ask them to clarify their request."))
+                    try:
+                        response = llm.invoke(messages)
+                        break
+                    except Exception as fallback_e:
+                        raise fallback_e
                 raise e
 
         if not response:
@@ -681,4 +654,83 @@ async def chat_with_device(req: ChatRequest):
             return {"reply": "📝 Message too large for free tier. Try a shorter request."}
         return {"reply": f"⚠️ Error: {err[:200]}\n\nMake sure the AI service and backend are both running."}
 
+class IdeateRequest(BaseModel):
+    context: str
 
+@app.post("/agent/ideate")
+async def ideate(req: IdeateRequest):
+    from app.tools.intelligence_tools import suggest_campaign_ideas
+    return suggest_campaign_ideas(req.context)
+
+class SegmentPreviewRequest(BaseModel):
+    query: str
+
+@app.post("/agent/segment-preview")
+async def segment_preview(req: SegmentPreviewRequest):
+    from app.tools.intelligence_tools import estimate_segment_size
+    return estimate_segment_size(req.query)
+
+class MessagePreviewRequest(BaseModel):
+    goal: str
+    channel: str
+    audience_desc: str
+
+@app.post("/agent/message-preview")
+async def message_preview(req: MessagePreviewRequest):
+    from app.tools.intelligence_tools import preview_message
+    return preview_message(req.goal, req.channel, req.audience_desc)
+
+class BlastSegmentRequest(BaseModel):
+    segment_id: str
+    message_template: str
+    channel: str
+    delay_seconds: int = 0
+
+@app.post("/agent/blast-segment")
+async def blast_segment(req: BlastSegmentRequest, background_tasks: BackgroundTasks):
+    import json
+    import asyncio
+    import httpx
+    
+    async def _scheduled_blast():
+        if req.delay_seconds > 0:
+            await asyncio.sleep(req.delay_seconds)
+            
+        try:
+            # 1. Fetch segment customers
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                r = await client.get(f"{settings.backend_url}/api/segments/{req.segment_id}/customers", params={"limit": 50})
+                r.raise_for_status()
+                data = r.json()
+                customers = data.get("customers", [])
+                
+            if not customers:
+                return
+                
+            # 2. Filter by channel and prepare messages
+            blast_messages = []
+            for c in customers:
+                prefs = c.get("channel_preferences", {})
+                if not prefs.get(req.channel, True):
+                    continue
+                    
+                first_name = (c.get("name") or "there").split()[0]
+                personalized = req.message_template.replace("{name}", first_name).replace("{Name}", first_name)
+                
+                blast_messages.append({
+                    "customer_id": str(c.get("_id", "")),
+                    "customer_name": c.get("name", "Customer"),
+                    "channel": req.channel,
+                    "message": personalized,
+                    "sender": "Zari CRM",
+                })
+                
+            # 3. Blast to Simulation Center
+            if blast_messages:
+                async with httpx.AsyncClient(timeout=15.0) as client:
+                    await client.post(f"{settings.backend_url}/api/agent/blast", json={"messages": blast_messages})
+        except Exception as e:
+            print(f"Scheduled blast failed: {e}")
+
+    background_tasks.add_task(_scheduled_blast)
+    return {"status": "scheduled", "delay_seconds": req.delay_seconds}

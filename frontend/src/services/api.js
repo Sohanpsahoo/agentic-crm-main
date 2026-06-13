@@ -32,6 +32,7 @@ export const segmentsApi = {
   getCustomers: (id, params) => api.get(`/segments/${id}/customers`, { params }),
   refresh: (id) => api.post(`/segments/${id}/refresh`),
   generatePersona: (id) => api.post(`/segments/${id}/generate-persona`),
+  update: (id, data) => api.patch(`/segments/${id}`, data),
 };
 
 export const analyticsApi = {
@@ -50,6 +51,10 @@ export const agentApi = {
   stats: () => api.get("/agent/stats"),
   chat: (message, history, customerName) => api.post("/agent/chat", { message, history, customer_name: customerName }),
   getCommunications: (params) => api.get("/agent/communications", { params }),
+  ideate: (context) => api.post("/agent/ideate", { context }),
+  segmentPreview: (query) => api.post("/agent/segment-preview", { query }),
+  messagePreview: (goal, channel, audience_desc) => api.post("/agent/message-preview", { goal, channel, audience_desc }),
+  blastSegment: (segmentId, messageTemplate, channel, delaySeconds) => api.post("/agent/blast-segment", { segment_id: segmentId, message_template: messageTemplate, channel, delay_seconds: delaySeconds }),
 };
 
 export const offersApi = {

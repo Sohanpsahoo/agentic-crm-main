@@ -79,3 +79,12 @@ def launch_campaign(directive: str) -> str:
     t.start()
     
     return json.dumps({"status": "started", "session_id": session_id, "message": "Campaign graph execution started in the background."})
+
+@tool
+def suggest_next_action() -> str:
+    """Ask the AI for the best next action based on current CRM health and stats."""
+    from app.tools.intelligence_tools import get_customer_health_score, suggest_campaign_ideas
+    health = get_customer_health_score()
+    context = f"We have {health.get('total_customers', 0)} total customers, {health.get('vip_count', 0)} VIPs, and {health.get('churned_count', 0)} churned. Overall health score is {health.get('health_score', 0)}%."
+    ideas = suggest_campaign_ideas(context)
+    return json.dumps({"health": health, "suggestions": ideas})

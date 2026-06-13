@@ -12,6 +12,7 @@ Execution steps (ordered):
 - analyze: generate performance analytics
 - optimize: recommend improvements
 - create_journey: create an automated journey trigger
+- ideate: suggest new campaign ideas based on data
 
 Goals: re-engage | upsell | loyalty | announce | winback | welcome
 
@@ -36,9 +37,10 @@ Rules:
 2. For analytics-only: ["analyze"]
 3. For optimization of existing: ["analyze","optimize"]
 4. For journey requests: ["create_journey"]
-5. Extract any offer/discount from the query and put it in offer_hint (top-level field, e.g. {{"discount": 0.15}})
-6. CRITICAL: The field for the campaign name MUST be "campaign_name" — NOT "name". Example: "campaign_name": "Summer VIP Blast"
-7. All required fields: intent, steps, segment_criteria, goal, campaign_name
+5. For ideation ("what should I do?", "suggest campaigns"): ["ideate"]. Fill `suggested_campaigns` with 3 dictionaries containing keys: name, audience, offer, reasoning.
+6. Extract any offer/discount from the query and put it in offer_hint (top-level field, e.g. {{"discount": 0.15}})
+7. CRITICAL: The field for the campaign name MUST be "campaign_name" — NOT "name". Example: "campaign_name": "Summer VIP Blast"
+8. All required fields: intent, steps, segment_criteria, goal, campaign_name
 
 Respond with valid JSON matching the CampaignPlan schema exactly.
 """

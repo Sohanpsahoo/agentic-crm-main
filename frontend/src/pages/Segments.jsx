@@ -111,9 +111,169 @@ function CreateSegmentModal({ onClose, onCreated }) {
   );
 }
 
+function CampaignDesignerModal({ segment, onClose }) {
+  const [template, setTemplate] = useState("");
+  const [channel, setChannel] = useState("whatsapp");
+  const [delay, setDelay] = useState(0); // in seconds
+  const [scheduling, setScheduling] = useState(false);
+  const [generating, setGenerating] = useState(true);
+  const [scheduled, setScheduled] = useState(false);
+
+  useEffect(() => {
+    if (segment.draft_message) {
+      setTemplate(segment.draft_message);
+      if (segment.draft_channel) setChannel(segment.draft_channel);
+      setGenerating(false);
+      return;
+    }
+    // Auto-generate AI message for this segment
+    import("../services/api").then(({ agentApi }) => {
+      const goal = "Draft a highly engaging, personalized promotional message.";
+      const audDesc = `Name: ${segment.name}. Size: ${segment.size}. Criteria: ${segment.criteria_nl || "All customers"}`;
+      agentApi.messagePreview(goal, "whatsapp", audDesc)
+        .then(res => {
+          setTemplate(res.data.message || "");
+          setGenerating(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setTemplate("Hi {name}, we have some special updates for you!");
+          setGenerating(false);
+        });
+    });
+  }, [segment]);
+
+  const handleSchedule = async (e) => {
+    e.preventDefault();
+    setScheduling(true);
+    import("../services/api").then(({ agentApi }) => {
+      agentApi.blastSegment(segment._id, template, channel, delay)
+        .then(() => setScheduled(true))
+        .catch(err => {
+          console.error(err);
+          alert("Failed to schedule blast.");
+        })
+        .finally(() => setScheduling(false));
+    });
+  };
+
+  if (scheduled) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+        <div className="relative w-full max-w-md bg-gray-900 border border-gray-800 rounded-xl p-6 text-center shadow-2xl">
+          <Sparkles size={48} className="mx-auto text-green-400 mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Campaign Scheduled!</h2>
+          <p className="text-gray-400 text-sm mb-6">
+            Your message will be sent to the <strong>{segment.name}</strong> segment {delay > 0 ? `in ${delay} seconds` : "immediately"}.<br/><br/>
+            Open the <strong>Simulation Center</strong> to watch the messages go out live!
+          </p>
+          <button onClick={onClose} className="btn-primary w-full justify-center">Done</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="relative w-full max-w-lg bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-gray-900/50">
+          <div className="flex items-center gap-2">
+            <Sparkles size={18} className="text-indigo-400" />
+            <h2 className="font-semibold text-white">Design Campaign</h2>
+          </div>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-300"><X size={18} /></button>
+        </div>
+
+        <form onSubmit={handleSchedule} className="p-5 space-y-4">
+          <div className="bg-gray-950 p-3 rounded-lg border border-gray-800 flex justify-between items-center">
+            <div>
+              <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Target Segment</p>
+              <p className="text-sm font-bold text-white mt-0.5">{segment.name}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Audience</p>
+              <p className="text-sm font-bold text-indigo-400 mt-0.5">{segment.size?.toLocaleString()} customers</p>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Message Template</label>
+              {generating && <span className="text-[10px] text-indigo-400 flex items-center gap-1 animate-pulse"><Bot size={12}/> AI Drafting...</span>}
+            </div>
+            <textarea
+              rows="4"
+              value={template}
+              onChange={(e) => setTemplate(e.target.value)}
+              className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-indigo-600 resize-none"
+              disabled={generating}
+              required
+            />
+            <p className="text-[10px] text-gray-500 mt-1">Use <code className="text-gray-400">{'{name}'}</code> to personalize.</p>
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Channel</label>
+              <select 
+                value={channel} 
+                onChange={e => setChannel(e.target.value)}
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600"
+              >
+                <option value="whatsapp">WhatsApp</option>
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Timer (Seconds)</label>
+              <input 
+                type="number" 
+                min="0"
+                value={delay} 
+                onChange={e => setDelay(Number(e.target.value))}
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-600"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="flex-1 btn-secondary py-2.5">Cancel</button>
+            <button 
+              type="button" 
+              onClick={async () => {
+                 setScheduling(true);
+                 try {
+                    const { segmentsApi } = await import("../services/api");
+                    await segmentsApi.update(segment._id, { draft_message: template, draft_channel: channel });
+                    onClose(true); // pass true to indicate a reload is needed
+                 } catch(err) {
+                    alert("Failed to save draft.");
+                 } finally {
+                    setScheduling(false);
+                 }
+              }} 
+              disabled={scheduling || generating || !template} 
+              className="flex-1 btn-secondary py-2.5 bg-gray-800 hover:bg-gray-700"
+            >
+              Save Draft
+            </button>
+            <button type="submit" disabled={scheduling || generating || !template} className="flex-1 btn-primary py-2.5 disabled:opacity-50 justify-center bg-indigo-600 hover:bg-indigo-500">
+              {scheduling ? "Scheduling..." : delay > 0 ? `Schedule in ${delay}s` : "Send Now"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function Segments() {
   const [segments, setSegments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedSegment, setSelectedSegment] = useState(null);
 
   const loadSegments = () => {
     segmentsApi.list().then((r) => setSegments(r.data));
@@ -146,6 +306,16 @@ export default function Segments() {
             setShowModal(false);
             loadSegments();
           }}
+        />
+      )}
+      
+      {selectedSegment && (
+        <CampaignDesignerModal 
+          segment={selectedSegment} 
+          onClose={(shouldReload) => {
+            setSelectedSegment(null);
+            if (shouldReload === true) loadSegments();
+          }} 
         />
       )}
 
@@ -245,6 +415,47 @@ export default function Segments() {
             ) : (
                <button onClick={() => generatePersona(s._id)} className="w-full mt-2 bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-900/50 text-indigo-300 text-xs font-bold py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
                   <Sparkles size={14} /> Generate Persona Card
+               </button>
+            )}
+
+            {s.draft_message ? (
+               <div className="mt-3 bg-gray-900 border border-gray-800 rounded-lg p-3">
+                 <div className="flex justify-between items-center mb-2">
+                   <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Saved Draft</span>
+                   <span className="text-[10px] text-gray-500 uppercase">{s.draft_channel || "whatsapp"}</span>
+                 </div>
+                 <p className="text-xs text-gray-300 line-clamp-2 italic">"{s.draft_message}"</p>
+                 <div className="flex gap-2 mt-3">
+                   <button 
+                     onClick={() => setSelectedSegment(s)} 
+                     className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold py-2 rounded transition-colors"
+                   >
+                     Edit
+                   </button>
+                   <button 
+                     onClick={async () => {
+                       try {
+                         const { agentApi, segmentsApi } = await import("../services/api");
+                         await agentApi.blastSegment(s._id, s.draft_message, s.draft_channel || "whatsapp", 0);
+                         await segmentsApi.update(s._id, { draft_message: "" }); // clear draft
+                         alert("Draft sent successfully!");
+                         loadSegments();
+                       } catch(err) {
+                         alert("Failed to send draft.");
+                       }
+                     }} 
+                     className="flex-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2 rounded transition-colors flex items-center justify-center gap-1"
+                   >
+                     <Sparkles size={12}/> Send
+                   </button>
+                 </div>
+               </div>
+            ) : (
+               <button 
+                  onClick={() => setSelectedSegment(s)} 
+                  className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+               >
+                  <Bot size={14} /> Draft Campaign
                </button>
             )}
 

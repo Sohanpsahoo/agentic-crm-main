@@ -43,20 +43,21 @@ Customer schema:
 - location: {{city, country}}
 
 Rules:
-1. The `stages` field MUST be a single JSON list of aggregation stage objects. All stages (such as `$match` and `$limit`) MUST be elements inside this list. Do NOT place any stages outside the list.
-2. For multiple filter criteria, combine them into a single `$match` stage rather than creating separate stages or using root-level `$and`.
-   Example structure:
-   {{"$match": {{"channel_preferences.email": true, "tags": "vip", "$expr": {{"$lt": ["$last_purchase_at", {{"$subtract": ["$$NOW", 5184000000]}}]}}}}}}
-3. For "not purchased in N days": use $expr: {{"$lt": ["$last_purchase_at", {{"$subtract": ["$$NOW", N_milliseconds]}}]}} where N_milliseconds = N * 86400000.
-4. Channel filter format: {{"channel_preferences.<channel>": true}}.
-5. Always end the `stages` list with a limit stage: {{"$limit": 500}}.
-6. When targeting age groups, map them to the closest database enum (e.g., map "teenager" or "13-19" to "18-24"; map "young adults" or "19-30" to {{"$in": ["18-24", "25-34"]}}; map "30-60" to {{"$in": ["35-44", "45-54", "55+"]}}).
-7. Return full customer documents, not just IDs.
+1. The `stages` field MUST be a single JSON list of aggregation stage objects. All stages (such as `$match` and `$limit`) MUST be elements inside this list.
+2. For multiple filter criteria, combine them into a single `$match` stage.
+3. For "purchased in the last N months/days" (recent buyers): use `$expr: {{"$gte": ["$last_purchase_at", {{"$subtract": ["$$NOW", N_milliseconds]}}]}}`
+   - Example (last 2 months/60 days): `$expr: {{"$gte": ["$last_purchase_at", {{"$subtract": ["$$NOW", 5184000000]}}]}}`
+4. For "haven't purchased in N months/days" (churned): use `$expr: {{"$lt": ["$last_purchase_at", {{"$subtract": ["$$NOW", N_milliseconds]}}]}}`
+5. Always convert months to milliseconds! (1 month ≈ 30 days = 2592000000 ms, 2 months = 5184000000 ms, 3 months = 7776000000 ms, 6 months = 15552000000 ms).
+6. Channel filter format: {{"channel_preferences.<channel>": true}}.
+7. Always end the `stages` list with a limit stage: {{"$limit": 500}}.
+8. Return full customer documents, not just IDs.
+9. BE STRICT: If the user asks for a date range, you MUST include the `$expr` match condition! DO NOT JUST MATCH EVERYTHING.
 
 Past segment examples for reference:
 {rag_context}
 """),
-    ("human", "Criteria: {criteria}\nChannel preference: {channel}\n\nGenerate the pipeline stages."),
+    ("human", "Criteria: {criteria}\nChannel preference: {channel}\n\nGenerate the pipeline stages. Give a very descriptive segment_description detailing the parameters used (e.g., 'Customers who purchased within the last 60 days.')."),
 ])
 
 

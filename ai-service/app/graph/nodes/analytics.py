@@ -33,9 +33,6 @@ def analytics_node(state: CRMAgentState) -> dict:
 
     post_progress(state["session_id"], "analytics", "Computing campaign analytics...", step="analyze")
 
-    # Brief wait so fastest callbacks arrive before we read metrics
-    time.sleep(2)
-
     if not campaign_id:
         post_progress(state["session_id"], "analytics", "No campaign ID — skipping analytics", step="analyze")
         return {"analytics_report": None, "current_step": "optimize"}

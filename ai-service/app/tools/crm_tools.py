@@ -56,7 +56,7 @@ def _delete(path: str) -> str:
 # ─────────────────────────────────────────────
 
 @tool
-def list_customers(limit: str = "20", tag: str = "", search: str = "", min_ltv: str = "0", criteria: str = "", max_days_since_purchase: str = "") -> str:
+def list_customers(limit: str = "20", tag: str = "", search: str = "", min_ltv: str = "0", criteria: str = "", min_days_since_purchase: str = "", max_days_since_purchase: str = "", age_group: str = "") -> str:
     """List customers from the CRM database.
     Args:
         limit: number of customers to return e.g. "20" or "50"
@@ -64,7 +64,9 @@ def list_customers(limit: str = "20", tag: str = "", search: str = "", min_ltv: 
         search: text search on name/email. Leave empty for all.
         min_ltv: minimum lifetime value in INR e.g. "1000". Use "0" for no filter.
         criteria: optional natural language description (informational only, not used for filtering)
-        max_days_since_purchase: maximum number of days since last purchase, e.g. "30" or "60".
+        min_days_since_purchase: minimum days since last purchase (e.g. "60" finds people who haven't purchased in over 60 days)
+        max_days_since_purchase: maximum days since last purchase (e.g. "30" finds people who purchased within the last 30 days)
+        age_group: optional filter by age group. Valid values: "18-24", "25-34", "35-44", "45-54", "55+".
     Returns JSON with customers array and total count.
     """
     try:
@@ -84,13 +86,33 @@ def list_customers(limit: str = "20", tag: str = "", search: str = "", min_ltv: 
     except Exception:
         pass
 
+    if min_days_since_purchase and str(min_days_since_purchase).strip().isdigit():
+        params["minDaysSincePurchase"] = str(min_days_since_purchase).strip()
     if max_days_since_purchase and str(max_days_since_purchase).strip().isdigit():
         params["maxDaysSincePurchase"] = str(max_days_since_purchase).strip()
     elif criteria:
         import re
-        days_match = re.search(r"(\d+)\s*days", criteria.lower())
+        # Heuristic: "haven't purchased in X days" -> minDays; "purchased in last X days" -> maxDays
+        c_lower = criteria.lower()
+        days_match = re.search(r"(\d+)\s*days", c_lower)
         if days_match:
-            params["maxDaysSincePurchase"] = days_match.group(1)
+            days_val = days_match.group(1)
+            if "last" in c_lower or "within" in c_lower:
+                params["maxDaysSincePurchase"] = days_val
+            else:
+                params["minDaysSincePurchase"] = days_val
+
+    # Use the existing _resolve_age_groups function for natural language parsing if needed
+    if age_group:
+        resolved = _resolve_age_groups(age_group)
+        if resolved:
+            params["ageGroup"] = resolved[0]
+        else:
+            params["ageGroup"] = age_group
+    elif criteria:
+        resolved = _resolve_age_groups(criteria)
+        if resolved:
+            params["ageGroup"] = resolved[0]
 
     return _get("/api/customers", params)
 
@@ -578,7 +600,7 @@ def _build_customer_query(criteria: str) -> dict:
 
 
 @tool
-def simulate_message_to_devices(criteria: str, message_template: str, channel: str = "whatsapp", sender: str = "Zari CRM", session_id: Optional[str] = None) -> str:
+def simulate_message_to_devices(criteria: str = "all", message_template: str = "Hi {name}! Check out our latest collection 🛍️", channel: str = "whatsapp", sender: str = "Zari CRM", session_id: Optional[str] = None) -> str:
     """
     Query customers matching criteria, generate a personalized message for each using Groq,
     and send them to the Simulation Center so they appear live on the phone screens.
@@ -595,6 +617,7 @@ def simulate_message_to_devices(criteria: str, message_template: str, channel: s
             e.g. "customers under 18", "all VIP customers", "churned customers", "everyone", "all"
         message_template: the message to send. Can use {name} as a placeholder for the customer's first name.
             e.g. "Hey {name}, check out our new collection! 🛍️"
+            If the user did not provide a message to send, invent a polite, generic marketing message yourself (e.g. "Hi {name}! Check out our latest deals.").
         channel: "whatsapp" | "email" | "sms" (default: whatsapp)
         sender: display name for the sender (default: "Zari CRM")
         session_id: optional execution pipeline session ID for console tracking
@@ -658,23 +681,35 @@ def simulate_message_to_devices(criteria: str, message_template: str, channel: s
             if session_id:
                 post_progress(session_id, "segmentation", f"Demographics matching: kept {len(customers)} of {orig_len} customers matching age groups {age_groups}.", step="segment")
 
-        # Post-filter by channel preference
-        ch_filtered = []
-        for c in customers:
-            # Check if preferred channel matches
-            has_pref = c.get("channel_preferences", {}).get(channel, True)
-            if has_pref:
-                ch_filtered.append(c)
+        # Post-filter by channel preference with intelligent fallback
+        assigned_customers = []
+        fallback_counts = {"whatsapp": 0, "email": 0, "sms": 0}
+        dropped = 0
         
-        excluded_count = len(customers) - len(ch_filtered)
-        customers = ch_filtered
+        for c in customers:
+            prefs = c.get("channel_preferences", {})
+            # Check if primary channel is opted in
+            if prefs.get(channel, True):
+                assigned_customers.append((c, channel))
+            else:
+                # Fallback to another opted-in channel
+                alt_channels = [ch for ch in ["whatsapp", "email", "sms"] if ch != channel and prefs.get(ch, False)]
+                if alt_channels:
+                    alt_ch = alt_channels[0]
+                    assigned_customers.append((c, alt_ch))
+                    fallback_counts[alt_ch] += 1
+                else:
+                    dropped += 1
+        
+        customers = assigned_customers
 
         if session_id:
-            reasoning = f"Selected only subscribers who opted into {channel}. Excluded {excluded_count} customer(s) who preferred other communication channels."
+            fallbacks = sum(fallback_counts.values())
+            reasoning = f"Primary channel ({channel}) assigned where opted-in. Routed {fallbacks} users to alternative channels. Excluded {dropped} fully opted-out."
             post_progress(session_id, "segmentation", f"Target segment locked: {len(customers)} active subscriber(s) chosen. Rationale: {reasoning}", step="segment")
 
         if not customers:
-            msg = f"No customers found matching: '{criteria}' with channel preference '{channel}'."
+            msg = f"No customers found matching: '{criteria}' with any available channel."
             if session_id:
                 post_progress(session_id, "supervisor", msg, step="error")
                 with httpx.Client(timeout=5.0) as client:
@@ -687,16 +722,17 @@ def simulate_message_to_devices(criteria: str, message_template: str, channel: s
                     )
             return json.dumps({
                 "status": "no_customers",
-                "message": f"No customers found matching: '{criteria}'. Try 'all customers', 'VIP customers', or 'churned customers'.",
+                "message": f"No customers found matching: '{criteria}'.",
                 "count": 0,
             })
 
-        # 3. Generate personalized messages and send to each (Sending to each)
+        # 3. Generate personalized messages and send to each
         if session_id:
             post_progress(session_id, "personalization", f"Crafting personalized message bodies for {len(customers[:30])} subscribers...", step="personalization")
 
         blast_messages = []
-        for c in customers[:30]:  # cap at 30 for speed
+        for item in customers[:30]:  # cap at 30 for speed
+            c, assigned_ch = item
             first_name = (c.get("name") or "there").split()[0]
 
             # Simple template substitution
@@ -708,7 +744,7 @@ def simulate_message_to_devices(criteria: str, message_template: str, channel: s
             blast_messages.append({
                 "customer_id": str(c.get("_id", "")),
                 "customer_name": c.get("name", "Customer"),
-                "channel": channel,
+                "channel": assigned_ch,
                 "message": personalized,
                 "sender": sender,
             })
