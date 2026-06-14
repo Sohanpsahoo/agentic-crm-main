@@ -440,24 +440,33 @@ export default function Dashboard() {
           <div className="premium-card p-6">
             <h2 className="text-[16px] font-bold text-white mb-6">Campaign Conversion Analysis (Last 30 Days)</h2>
             {campaignPerf.length > 0 ? (
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={campaignPerf} margin={{ top: 0, right: 10, bottom: 20, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#18181b" />
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={campaignPerf} margin={{ top: 10, right: 10, bottom: 60, left: -10 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#18181b" vertical={false} />
                   <XAxis
                     dataKey="campaign_name"
                     tick={{ fill: "#a1a1aa", fontSize: 11 }}
-                    angle={-20}
+                    angle={-45}
                     textAnchor="end"
                     interval={0}
+                    tickFormatter={(val) => val.length > 15 ? val.substring(0, 15) + '...' : val}
+                    axisLine={false}
+                    tickLine={false}
                   />
-                  <YAxis tick={{ fill: "#a1a1aa", fontSize: 11 }} unit="%" />
+                  <YAxis 
+                    tick={{ fill: "#a1a1aa", fontSize: 11 }} 
+                    unit="%" 
+                    axisLine={false}
+                    tickLine={false}
+                  />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#09090B", border: "1px solid #18181b", borderRadius: 12 }}
+                    cursor={{ fill: '#18181b', opacity: 0.4 }}
                   />
-                  <Legend />
-                  <Bar dataKey="open_rate" name="Open Rate %" fill="#a78bfa" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="ctr"       name="CTR %"       fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="conversion_rate" name="Conv %" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#a1a1aa' }} />
+                  <Bar dataKey="open_rate" name="Open Rate" fill="#a78bfa" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                  <Bar dataKey="ctr"       name="Click Rate" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                  <Bar dataKey="conversion_rate" name="Conv Rate" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
