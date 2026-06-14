@@ -245,12 +245,11 @@ export default function Dashboard() {
         <h1 className="text-[32px] font-bold text-white tracking-tight">Executive Dashboard</h1>
       </div>
 
-      {/* Main Grid: 1:1 to mockup layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: 4 KPI Cards + Recent Activity Feed */}
-        <div className="lg:col-span-7 space-y-8">
-          {/* 4 KPI cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {/* Main Layout */}
+      <div className="space-y-8">
+        
+        {/* Row 1: KPI Cards (4 columns) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <MockupKpiCard
               label="Total Revenue"
               value={overview?.total_revenue ? `₹${overview.total_revenue.toLocaleString()}` : "$1,250,000"}
@@ -276,7 +275,70 @@ export default function Dashboard() {
               isPositive={true}
             />
           </div>
+        </div>
 
+        {/* Row 2: Revenue Growth */}
+        <div className="premium-card p-6 flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-[16px] font-bold text-white">Revenue Growth (Last 6 Months)</h2>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">YTD</span>
+              <span className="text-[20px] font-extrabold text-white">$7.5M</span>
+            </div>
+          </div>
+
+          <div className="w-full h-[260px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={growthData}
+                margin={{ top: 10, right: 10, left: -22, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.24} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid vertical={false} stroke="#18181b" strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#71717a", fontSize: 13, fontWeight: 500 }}
+                />
+                <YAxis
+                  domain={[0, 12]}
+                  ticks={[0, 2, 4, 6, 8, 10, 12]}
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#71717a", fontSize: 13, fontWeight: 500 }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#09090B",
+                    border: "1px solid #18181b",
+                    borderRadius: "16px",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
+                  }}
+                  labelStyle={{ fontWeight: "bold", color: "#020202" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#a78bfa"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Row 3: Segments & Activity Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* AI Suggested Segments Card */}
           <div className="bg-gradient-to-br from-blue-900/20 to-blue-900/10 border border-blue-800/30 p-6 rounded-2xl relative overflow-hidden">
              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-blue-500" />
@@ -370,66 +432,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Right Column: Tall Revenue Growth Card */}
-        <div className="lg:col-span-5 h-full">
-          <div className="premium-card p-6 flex flex-col h-full min-h-[512px] justify-between">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-[16px] font-bold text-white">Revenue Growth (Last 6 Months)</h2>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">YTD</span>
-                <span className="text-[20px] font-extrabold text-white">$7.5M</span>
-              </div>
-            </div>
-
-            <div className="flex-1 min-h-[380px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={growthData}
-                  margin={{ top: 10, right: 10, left: -22, bottom: 0 }}
-                >
-                  <defs>
-                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.24} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid vertical={false} stroke="#18181b" strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#71717a", fontSize: 13, fontWeight: 500 }}
-                  />
-                  <YAxis
-                    domain={[0, 12]}
-                    ticks={[0, 2, 4, 6, 8, 10, 12]}
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#71717a", fontSize: 13, fontWeight: 500 }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#09090B",
-                      border: "1px solid #18181b",
-                      borderRadius: "16px",
-                      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
-                    }}
-                    labelStyle={{ fontWeight: "bold", color: "#020202" }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="#a78bfa"
-                    strokeWidth={3}
-                    fillOpacity={1}
-                    fill="url(#colorRevenue)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
             </div>
           </div>
         </div>
