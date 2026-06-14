@@ -160,8 +160,13 @@ function CampaignDesignerModal({ segment, onClose }) {
       const audDesc = `Name: ${segment.name}. Size: ${segment.size}. Criteria: ${segment.criteria_nl || "All customers"}`;
       agentApi.messagePreview(goalStr, "whatsapp", audDesc)
         .then(res => {
-          const aiMsg = res.body || res.variants?.[0]?.body || "";
-          setTemplate(aiMsg);
+          if (res.error) {
+            console.error("AI Error:", res.error);
+            setTemplate("Error: " + res.error);
+          } else {
+            const aiMsg = res.body || res.variants?.[0]?.body || "";
+            setTemplate(aiMsg);
+          }
           setGenerating(false);
         })
         .catch(err => {
@@ -277,8 +282,13 @@ function CampaignDesignerModal({ segment, onClose }) {
                         const goalStr = `${goal} campaign: ${name}. ${promptText}`;
                         const audDesc = `Name: ${segment.name}. Size: ${segment.size}. Criteria: ${segment.criteria_nl || "All customers"}`;
                         const res = await agentApi.messagePreview(goalStr, channel, audDesc);
-                        const aiMsg = res.body || res.variants?.[0]?.body || "";
-                        setTemplate(aiMsg);
+                        if (res.error) {
+                          alert("AI Error: " + res.error);
+                          setTemplate("");
+                        } else {
+                          const aiMsg = res.body || res.variants?.[0]?.body || "";
+                          setTemplate(aiMsg);
+                        }
                       } catch(err) {
                         alert("Failed to generate AI message.");
                       } finally {
