@@ -30,6 +30,7 @@ const MAIN_NAV = [
 ];
 
 const EXTRA_NAV = [
+  { to: "/monitor", icon: AlertTriangle, label: "Campaign Monitor" },
   { to: "/ai-decisioning", icon: Zap, label: "AI Decisioning" },
   { to: "/personas", icon: UserCircle2, label: "RFM Personas" },
   { to: "/whatsapp", icon: MessageCircle, label: "Simulated Messaging" },
@@ -61,29 +62,7 @@ export default function Layout({ children }) {
           <span className="font-bold text-[18px] text-zinc-100 tracking-tight">Zari CRM</span>
         </div>
 
-        {/* Portal Switcher */}
-        <div className="px-5 pt-4 pb-2">
-          <div className="flex gap-1 bg-[#09090B] p-1 rounded-xl border border-[#18181b]">
-            <button
-              onClick={() => setPortal("company")}
-              className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${portal === "company"
-                ? "bg-zinc-800 text-blue-400 shadow-sm border border-zinc-700/50"
-                : "text-zinc-500 hover:text-zinc-300"
-                }`}
-            >
-              Company
-            </button>
-            <button
-              onClick={() => setPortal("admin")}
-              className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${portal === "admin"
-                ? "bg-zinc-800 text-cyan-400 shadow-sm border border-zinc-700/50"
-                : "text-zinc-500 hover:text-zinc-300"
-                }`}
-            >
-              Admin
-            </button>
-          </div>
-        </div>
+
 
         {/* Navigation Area */}
         <nav className="flex-1 py-3 px-4 space-y-1.5 overflow-y-auto">
