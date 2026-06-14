@@ -142,6 +142,7 @@ router.post("/compute", async (req, res) => {
     }
 
     let updated = 0;
+    const bulkOps = [];
     for (const customer of customers) {
       const cid = customer._id.toString();
       const { count: orderCount = 0, total: totalSpent = 0 } = ordersByCustomer[cid] || {};
@@ -164,44 +165,52 @@ router.post("/compute", async (req, res) => {
       const emailAff = bestChannel === "email" ? 0.7 + Math.random() * 0.3 : 0.25 + Math.random() * 0.3;
       const smsAff = bestChannel === "sms" ? 0.6 + Math.random() * 0.3 : 0.15 + Math.random() * 0.2;
 
-      await CustomerPersona.findOneAndUpdate(
-        { customer_id: customer._id },
-        {
-          customer_id: customer._id,
-          rfm: { recency_score: R, frequency_score: F, monetary_score: M, rfm_score: score, segment },
-          engagement: {
-            best_channel: bestChannel,
-            best_send_hour: bestHour,
-            avg_open_rate: Math.min(1, 0.2 + Math.random() * 0.6),
-            avg_click_rate: Math.min(1, 0.05 + Math.random() * 0.3),
+      bulkOps.push({
+        updateOne: {
+          filter: { customer_id: customer._id },
+          update: {
+            $set: {
+              customer_id: customer._id,
+              rfm: { recency_score: R, frequency_score: F, monetary_score: M, rfm_score: score, segment },
+              engagement: {
+                best_channel: bestChannel,
+                best_send_hour: bestHour,
+                avg_open_rate: Math.min(1, 0.2 + Math.random() * 0.6),
+                avg_click_rate: Math.min(1, 0.05 + Math.random() * 0.3),
+              },
+              predicted: {
+                next_category: (customer.top_categories || [])[0] || "Fashion",
+                next_purchase_days: Math.round(14 + (1 - nextOrderProb) * 60),
+                clv_6m: Math.round(totalSpent * 0.8 + nextOrderProb * 5000),
+                churn_probability: parseFloat(churnProb.toFixed(2)),
+                offer_sensitivity: parseFloat(offerSensitivity.toFixed(2)),
+                next_order_probability: parseFloat(nextOrderProb.toFixed(2)),
+                winback_probability: parseFloat(winbackProb.toFixed(2)),
+                propensity_score: propensityScore,
+              },
+              channel_affinity: {
+                whatsapp: parseFloat(whatsappAff.toFixed(2)),
+                email: parseFloat(emailAff.toFixed(2)),
+                sms: parseFloat(smsAff.toFixed(2)),
+              },
+              recommended_action: {
+                action: actionConfig.action,
+                message_hint: actionConfig.message_hint,
+                best_send_at: `Today ${hourStr}`,
+                urgency: actionConfig.urgency,
+              },
+              persona_label: PERSONA_LABELS[segment] || "Emerging Customer",
+              last_computed: new Date(),
+            }
           },
-          predicted: {
-            next_category: (customer.top_categories || [])[0] || "Fashion",
-            next_purchase_days: Math.round(14 + (1 - nextOrderProb) * 60),
-            clv_6m: Math.round(totalSpent * 0.8 + nextOrderProb * 5000),
-            churn_probability: parseFloat(churnProb.toFixed(2)),
-            offer_sensitivity: parseFloat(offerSensitivity.toFixed(2)),
-            next_order_probability: parseFloat(nextOrderProb.toFixed(2)),
-            winback_probability: parseFloat(winbackProb.toFixed(2)),
-            propensity_score: propensityScore,
-          },
-          channel_affinity: {
-            whatsapp: parseFloat(whatsappAff.toFixed(2)),
-            email: parseFloat(emailAff.toFixed(2)),
-            sms: parseFloat(smsAff.toFixed(2)),
-          },
-          recommended_action: {
-            action: actionConfig.action,
-            message_hint: actionConfig.message_hint,
-            best_send_at: `Today ${hourStr}`,
-            urgency: actionConfig.urgency,
-          },
-          persona_label: PERSONA_LABELS[segment] || "Emerging Customer",
-          last_computed: new Date(),
-        },
-        { upsert: true, new: true }
-      );
+          upsert: true
+        }
+      });
       updated++;
+    }
+
+    if (bulkOps.length > 0) {
+      await CustomerPersona.bulkWrite(bulkOps);
     }
 
     res.json({ success: true, updated });
