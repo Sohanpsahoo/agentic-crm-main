@@ -46,7 +46,7 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
 
   const storefrontLink = [
-    { href: "http://localhost:8088", icon: ShoppingBag, label: "Live Storefront", external: true }
+    { href: import.meta.env.VITE_STOREFRONT_URL || "http://localhost:8088", icon: ShoppingBag, label: "Live Storefront", external: true }
   ];
 
   return (
