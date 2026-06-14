@@ -522,6 +522,8 @@ async def chat_with_device(req: ChatRequest):
                     model="llama-3.1-8b-instant",
                     groq_api_key=key,
                     temperature=0.2,
+                    max_retries=0,
+                    timeout=25,
                 )
                 llm_with_tools = llm.bind_tools(tools)
                 response = llm_with_tools.invoke(messages)
@@ -607,6 +609,8 @@ async def chat_with_device(req: ChatRequest):
                     model="llama-3.1-8b-instant",
                     groq_api_key=key,
                     temperature=0.4,
+                    max_retries=0,
+                    timeout=25,
                 )
                 summary_messages = [
                     SystemMessage(content=_CRM_RESPONSE_FORMAT_PROMPT),

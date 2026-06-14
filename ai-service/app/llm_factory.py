@@ -18,11 +18,13 @@ def get_llm(temperature=0.0, model=None, tools=None):
     primary = ChatGroq(
         model=model_name, 
         groq_api_key=GROQ_KEYS[0], 
-        temperature=temperature
+        temperature=temperature,
+        max_retries=0,
+        timeout=25
     )
     
     fallbacks = [
-        ChatGroq(model=model_name, groq_api_key=k, temperature=temperature) 
+        ChatGroq(model=model_name, groq_api_key=k, temperature=temperature, max_retries=0, timeout=25) 
         for k in GROQ_KEYS[1:]
     ]
     
