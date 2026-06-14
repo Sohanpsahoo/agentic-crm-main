@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, X } from "lucide-react";
-import { journeysApi } from "../../services/api";
+import { Plus, X, Trash2 } from "lucide-react";
+import React from "react";
+import { journeysApi, agentApi } from "../../services/api";
 
 const TRIGGER_LABELS = {
   signup: "New Signup",
@@ -33,11 +34,18 @@ function CreateJourneyModal({ onClose, onSuccess }) {
     e.preventDefault();
     setLoading(true);
     try {
+      // Generate steps automatically using AI based on journey info
+      const generated = await agentApi.generateJourney({
+        name: formData.name,
+        description: formData.description,
+        trigger: formData.trigger
+      }).catch(e => ({ steps: [] })); // Fallback to empty if AI fails
+
       await journeysApi.create({
         name: formData.name,
         description: formData.description,
         trigger: { type: formData.trigger },
-        steps: []
+        steps: generated.steps || []
       });
       onSuccess();
       onClose();
@@ -119,7 +127,8 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
     type: "wait",
     wait_days: 1,
     channel: "whatsapp",
-    condition: ""
+    condition: "",
+    campaign_goal: ""
   });
   const [loading, setLoading] = useState(false);
 
@@ -129,7 +138,20 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
     try {
       const config = {};
       if (formData.type === "wait") config.wait_days = formData.wait_days;
-      if (formData.type === "message") config.channel = formData.channel;
+      if (formData.type === "message" || formData.type === "offer") {
+        config.channel = formData.channel;
+        config.campaign_goal = formData.campaign_goal;
+        try {
+          const generatedContent = await agentApi.messagePreview(
+            formData.campaign_goal || "General update",
+            formData.channel,
+            "Added manually to journey"
+          );
+          config.message_content = generatedContent;
+        } catch (e) {
+          console.error("Failed to generate message content", e);
+        }
+      }
       if (formData.type === "condition") config.condition = formData.condition;
 
       await journeysApi.addStep(journeyId, {
@@ -185,18 +207,33 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
             </div>
           )}
 
-          {formData.type === "message" && (
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">Channel</label>
-              <select
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
-                value={formData.channel}
-                onChange={e => setFormData({ ...formData, channel: e.target.value })}
-              >
-                <option value="whatsapp">WhatsApp</option>
-                <option value="email">Email</option>
-                <option value="sms">SMS</option>
-              </select>
+          {(formData.type === "message" || formData.type === "offer") && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Channel</label>
+                <select
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                  value={formData.channel}
+                  onChange={e => setFormData({ ...formData, channel: e.target.value })}
+                >
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="email">Email</option>
+                  <option value="sms">SMS</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">
+                  {formData.type === "message" ? "Message / Goal" : "Offer Details"}
+                </label>
+                <input
+                  required
+                  type="text"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                  placeholder={formData.type === "message" ? "e.g. Welcome Message" : "e.g. 10% Discount"}
+                  value={formData.campaign_goal}
+                  onChange={e => setFormData({ ...formData, campaign_goal: e.target.value })}
+                />
+              </div>
             </div>
           )}
 
@@ -236,9 +273,88 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
   );
 }
 
+function StepPreviewModal({ step, journey, onClose }) {
+  const [preview, setPreview] = useState(step.config?.message_content || null);
+  const [loading, setLoading] = useState(!step.config?.message_content);
+
+  React.useEffect(() => {
+    // Only fetch if not already generated and saved in the step config
+    if (!step.config?.message_content && (step.type === "message" || step.type === "offer")) {
+      agentApi.messagePreview(
+        step.config?.campaign_goal || "General update", 
+        step.config?.channel || "email", 
+        journey.description || "Customer journey"
+      ).then(res => {
+        setPreview(res);
+        setLoading(false);
+      }).catch(err => {
+        setPreview({ error: "Failed to load preview" });
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [step, journey]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-gray-900 border border-gray-800 rounded-xl flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+          <h2 className="font-semibold text-white">
+            {step.type === "message" ? "Message Preview" : step.type === "offer" ? "Offer Preview" : "Step Details"}
+          </h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-300">
+            <X size={18} />
+          </button>
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+            <h3 className="text-xs text-gray-500 uppercase font-semibold mb-2">Intent / Goal</h3>
+            <p className="text-purple-300 text-sm italic">
+              "{step.config?.campaign_goal || step.type}"
+            </p>
+          </div>
+
+          {(step.type === "message" || step.type === "offer") && (
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <h3 className="text-xs text-gray-500 uppercase font-semibold mb-2 flex items-center justify-between">
+                <span>Live AI Preview</span>
+                <span className="text-[10px] bg-purple-900/40 text-purple-400 px-2 py-0.5 rounded capitalize">
+                  {step.config?.channel || "email"}
+                </span>
+              </h3>
+              {loading ? (
+                <div className="animate-pulse space-y-2 py-2">
+                  <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+                  <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+                </div>
+              ) : preview?.error ? (
+                <p className="text-red-400 text-sm">{preview.error}</p>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-white text-sm font-medium">{preview?.headline}</p>
+                  <p className="text-gray-300 text-sm leading-relaxed">{preview?.body}</p>
+                  {preview?.cta && (
+                    <button className="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-lg mt-2">
+                      {preview.cta}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Journeys() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [addingStepTo, setAddingStepTo] = useState(null);
+  const [previewingStep, setPreviewingStep] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: journeys = [], isLoading } = useQuery({
@@ -248,6 +364,11 @@ export default function Journeys() {
 
   const toggleStatus = useMutation({
     mutationFn: ({ id, status }) => journeysApi.setStatus(id, status),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["journeys"] }),
+  });
+
+  const deleteJourney = useMutation({
+    mutationFn: (id) => journeysApi.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["journeys"] }),
   });
 
@@ -282,6 +403,14 @@ export default function Journeys() {
         />
       )}
 
+      {previewingStep && (
+        <StepPreviewModal
+          step={previewingStep.step}
+          journey={previewingStep.journey}
+          onClose={() => setPreviewingStep(null)}
+        />
+      )}
+
       {isLoading ? (
         <div className="text-gray-500 py-12 text-center">Loading journeys...</div>
       ) : (
@@ -299,7 +428,18 @@ export default function Journeys() {
                   <p className="text-gray-400 text-sm mt-1">{journey.description}</p>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
+                  <button
+                    onClick={() => {
+                      if(window.confirm('Are you sure you want to delete this journey?')) {
+                        deleteJourney.mutate(journey._id);
+                      }
+                    }}
+                    className="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-400/10 transition-colors"
+                    title="Delete Journey"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                   {journey.status === "active" && (
                     <button
                       onClick={() => toggleStatus.mutate({ id: journey._id, status: "paused" })}
@@ -331,7 +471,10 @@ export default function Journeys() {
               <div className="flex items-center gap-2 overflow-x-auto pb-1 mt-4">
                 {(journey.steps || []).map((step, i) => (
                   <div key={step.step_id} className="flex items-center gap-2 flex-shrink-0">
-                    <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">
+                    <div 
+                      onClick={() => (step.type === 'message' || step.type === 'offer') ? setPreviewingStep({ step, journey }) : null}
+                      className={`bg-gray-700 rounded-lg px-3 py-2 text-sm ${(step.type === 'message' || step.type === 'offer') ? 'cursor-pointer hover:ring-2 hover:ring-purple-500 transition-all' : ''}`}
+                    >
                       <div className="text-white flex items-center gap-1.5">
                         <span>{STEP_ICONS[step.type] || "📌"}</span>
                         <span className="capitalize">{step.type}</span>
@@ -347,6 +490,11 @@ export default function Journeys() {
                           {typeof step.config.condition === "string" 
                             ? step.config.condition 
                             : JSON.stringify(step.config.condition)}
+                        </div>
+                      )}
+                      {step.config?.campaign_goal && (
+                        <div className="text-purple-300 text-[11px] mt-1 bg-purple-900/30 px-1.5 py-0.5 rounded break-words max-w-[150px]">
+                          "{step.config.campaign_goal}"
                         </div>
                       )}
                     </div>

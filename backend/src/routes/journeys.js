@@ -84,4 +84,15 @@ router.patch("/:id/status", async (req, res) => {
   }
 });
 
+// DELETE /api/journeys/:id
+router.delete("/:id", async (req, res) => {
+  try {
+    const journey = await Journey.findByIdAndDelete(req.params.id);
+    if (!journey) return res.status(404).json({ error: "Journey not found" });
+    res.json({ message: "Journey deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

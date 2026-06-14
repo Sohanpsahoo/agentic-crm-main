@@ -47,10 +47,10 @@ Rules:
 2. CRITICAL: A pipeline stage specification object must contain exactly one field. For example, do NOT combine {{"$match": {{...}}, "$limit": 500}} into one object. They MUST be separate objects in the array: [{{"$match": {{...}}}}, {{"$limit": 500}}].
 3. For multiple filter criteria, combine them into a single `$match` stage.
 4. For date filters, the current date is {current_date}. 
-5. For "purchased in the last N months/days", use `$gte` with a calculated ISO string. For example: {{"last_purchase_at": {{"$gte": "2024-04-13T00:00:00Z"}}}}
-6. For "haven't purchased in N months/days" (churned), use `$lt` with a calculated ISO string. For example: {{"last_purchase_at": {{"$lt": "2024-04-13T00:00:00Z"}}}}
-7. For "didn't purchase in [Year]" (e.g. 2026), ensure last_purchase_at is strictly before the start of that Year: {{"last_purchase_at": {{"$lt": "2026-01-01T00:00:00Z"}}}}
-8. Channel filter format: {{"channel_preferences.<channel>": true}}.
+5. For "purchased in the last N months/days", use `$gte` with a calculated ISO string. For example: {{"$match": {{"last_purchase_at": {{"$gte": "2024-04-13T00:00:00Z"}}}}}}
+6. For "haven't purchased in N months/days" (churned), use `$lt` with a calculated ISO string. For example: {{"$match": {{"last_purchase_at": {{"$lt": "2024-04-13T00:00:00Z"}}}}}}
+7. For "didn't purchase in [Year]" (e.g. 2026), ensure last_purchase_at is strictly before the start of that Year: {{"$match": {{"last_purchase_at": {{"$lt": "2026-01-01T00:00:00Z"}}}}}}
+8. Channel filter format: {{"$match": {{"channel_preferences.<channel>": true}}}}. Do not forget the $match!
 9. Always end the `stages` list with a separate limit stage: {{"$limit": 500}}.
 10. Return full customer documents, not just IDs.
 11. BE STRICT: DO NOT use `$expr` or `$$NOW` as it is not supported in this Atlas cluster. Use standard `$gte` and `$lt` matching.

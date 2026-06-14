@@ -686,6 +686,64 @@ async def ideate(req: IdeateRequest):
     from app.tools.intelligence_tools import suggest_campaign_ideas
     return suggest_campaign_ideas(req.context)
 
+class GenerateJourneyRequest(BaseModel):
+    name: str
+    description: str
+    trigger: str
+
+@app.post("/agent/generate-journey")
+async def generate_journey_steps(req: GenerateJourneyRequest):
+    try:
+        from langchain_groq import ChatGroq
+        import json
+        llm = ChatGroq(
+            model=settings.groq_model,
+            groq_api_key=settings.groq_api_key,
+            temperature=0.2
+        )
+        system_prompt = (
+            "You are an expert CRM automation architect.\n"
+            "Generate the optimal sequence of steps for a marketing journey.\n"
+            "A step can be one of the following types:\n"
+            "1. 'wait' (config: { wait_days: number })\n"
+            "2. 'condition' (config: { condition: string })\n"
+            "3. 'message' (config: { channel: 'whatsapp' | 'email' | 'sms' })\n"
+            "4. 'offer' (config: { })\n"
+            "Return EXACTLY a JSON array of step objects, where each object has 'type' and 'config'.\n"
+            "Example: [{\"type\": \"wait\", \"config\": {\"wait_days\": 1}}, {\"type\": \"message\", \"config\": {\"channel\": \"email\"}}]\n"
+            "Do not include any explanation or markdown formatting like ```json."
+        )
+        user_prompt = f"Journey Name: {req.name}\nDescription: {req.description}\nTrigger: {req.trigger}\nGenerate the steps JSON."
+        
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        response = llm.invoke(messages)
+        content = response.content.strip()
+        
+        if content.startswith("```json"):
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif content.startswith("```"):
+            content = content.split("```")[1].split("```")[0].strip()
+            
+        steps = json.loads(content)
+        # Give each step an id
+        import uuid
+        from app.tools.intelligence_tools import preview_message
+        for step in steps:
+            step["step_id"] = f"step_{uuid.uuid4().hex[:8]}"
+            if step["type"] in ["message", "offer"]:
+                goal = step.get("config", {}).get("campaign_goal", "engagement")
+                channel = step.get("config", {}).get("channel", "email")
+                step["config"]["message_content"] = preview_message(goal, channel, req.description)
+            
+        return {"steps": steps}
+    except Exception as e:
+        print(f"Error generating journey steps: {e}")
+        return {"steps": []}
+
 class SegmentPreviewRequest(BaseModel):
     query: str
 

@@ -54,8 +54,9 @@ export const agentApi = {
   chat: (message, history, customerName) => api.post("/agent/chat", { message, history, customer_name: customerName }),
   getCommunications: (params) => api.get("/agent/communications", { params }),
   ideate: (context) => api.post("/agent/ideate", { context }),
+  generateJourney: (data) => api.post("/agent/generate-journey", data).then(r => r.data),
   segmentPreview: (query) => api.post("/agent/segment-preview", { query }),
-  messagePreview: (goal, channel, audience_desc) => api.post("/agent/message-preview", { goal, channel, audience_desc }),
+  messagePreview: (goal, channel, audience_desc) => api.post("/agent/message-preview", { goal, channel, audience_desc }).then(r => r.data),
   blastSegment: (segmentId, messageTemplate, channel, delaySeconds) => api.post("/agent/blast-segment", { segment_id: segmentId, message_template: messageTemplate, channel, delay_seconds: delaySeconds }),
 };
 
@@ -75,6 +76,7 @@ export const journeysApi = {
   enroll: (id, customerId) => api.post(`/journeys/${id}/enroll`, { customer_id: customerId }).then((r) => r.data),
   setStatus: (id, status) => api.patch(`/journeys/${id}/status`, { status }).then((r) => r.data),
   addStep: (id, stepData) => api.post(`/journeys/${id}/steps`, stepData).then((r) => r.data),
+  delete: (id) => api.delete(`/journeys/${id}`).then((r) => r.data),
 };
 
 export const productsApi = {

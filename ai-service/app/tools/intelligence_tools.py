@@ -27,15 +27,45 @@ def estimate_segment_size(nl_criteria: str) -> dict:
     from app.graph.nodes.segmentation import PIPELINE_PROMPT, SegmentPipeline
     llm = ChatGroq(model=settings.groq_model, groq_api_key=settings.groq_api_key, temperature=0.0)
     chain = PIPELINE_PROMPT | llm.with_structured_output(SegmentPipeline)
+    from datetime import datetime
     try:
-        plan_result = chain.invoke({"criteria": nl_criteria, "channel": "any", "rag_context": ""})
+        plan_result = chain.invoke({
+            "criteria": nl_criteria, 
+            "channel": "any", 
+            "rag_context": "",
+            "current_date": datetime.now().isoformat()
+        })
         pipeline = plan_result.stages
     except Exception:
         return {"size": 0, "error": "Failed to generate pipeline"}
         
     try:
         db = get_db()
-        # Add limit to avoid fetching too much just for preview
+        
+        def convert_dates(obj):
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    if isinstance(v, str) and len(v) >= 19 and "T" in v and "-" in v and ":" in v:
+                        try:
+                            from dateutil import parser
+                            obj[k] = parser.isoparse(v)
+                        except Exception:
+                            pass
+                    else:
+                        convert_dates(v)
+            elif isinstance(obj, list):
+                for i, v in enumerate(obj):
+                    if isinstance(v, str) and len(v) >= 19 and "T" in v and "-" in v and ":" in v:
+                        try:
+                            from dateutil import parser
+                            obj[i] = parser.isoparse(v)
+                        except Exception:
+                            pass
+                    else:
+                        convert_dates(v)
+        
+        convert_dates(pipeline)
+        
         pipeline.append({"$count": "total"})
         result = list(db.customers.aggregate(pipeline))
         size = result[0]["total"] if result else 0

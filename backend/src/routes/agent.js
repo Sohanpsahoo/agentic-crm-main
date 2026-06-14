@@ -222,6 +222,15 @@ router.post("/ideate", async (req, res, next) => {
   }
 });
 
+router.post("/generate-journey", async (req, res, next) => {
+  try {
+    const r = await axios.post(`${AI_SERVICE_URL}/agent/generate-journey`, req.body);
+    res.json(r.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/segment-preview", async (req, res, next) => {
   try {
     const r = await axios.post(`${AI_SERVICE_URL}/agent/segment-preview`, req.body);

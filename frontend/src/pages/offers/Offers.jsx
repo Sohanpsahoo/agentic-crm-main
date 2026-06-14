@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { offersApi } from "../../services/api";
+import CreateOfferWizard from "./CreateOfferWizard";
 
 const STATUS_COLORS = {
   active: "text-green-400 bg-green-400/10",
@@ -20,14 +21,6 @@ export default function Offers() {
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    type: "percentage",
-    value: 20,
-    code_prefix: "OFFER",
-    status: "draft",
-  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["offers", statusFilter],
@@ -44,7 +37,6 @@ export default function Offers() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["offers"] });
       setShowForm(false);
-      setForm({ name: "", description: "", type: "percentage", value: 20, code_prefix: "OFFER", status: "draft" });
     },
   });
 
@@ -146,58 +138,11 @@ export default function Offers() {
 
       {/* Create offer modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6 space-y-4">
-            <h2 className="text-white text-lg font-semibold">New Offer</h2>
-
-            {[
-              { label: "Name", key: "name", type: "text" },
-              { label: "Description", key: "description", type: "text" },
-              { label: "Code Prefix", key: "code_prefix", type: "text" },
-              { label: "Value", key: "value", type: "number" },
-            ].map(({ label, key, type }) => (
-              <div key={key}>
-                <label className="text-sm text-gray-400 block mb-1">{label}</label>
-                <input
-                  type={type}
-                  value={form[key]}
-                  onChange={(e) => setForm((f) => ({ ...f, [key]: type === "number" ? Number(e.target.value) : e.target.value }))}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
-                />
-              </div>
-            ))}
-
-            <div>
-              <label className="text-sm text-gray-400 block mb-1">Type</label>
-              <select
-                value={form.type}
-                onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
-                className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
-              >
-                <option value="percentage">Percentage Off</option>
-                <option value="fixed">Fixed Amount Off</option>
-                <option value="points_multiplier">Points Multiplier</option>
-                <option value="free_product">Free Product</option>
-              </select>
-            </div>
-
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={() => setShowForm(false)}
-                className="flex-1 py-2 rounded-lg bg-gray-700 text-gray-300 text-sm hover:bg-gray-600 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => createOffer.mutate(form)}
-                disabled={!form.name || createOffer.isPending}
-                className="flex-1 py-2 rounded-lg bg-purple-600 text-white text-sm hover:bg-purple-700 disabled:opacity-50 transition-colors"
-              >
-                {createOffer.isPending ? "Creating..." : "Create Offer"}
-              </button>
-            </div>
-          </div>
-        </div>
+        <CreateOfferWizard 
+          onClose={() => setShowForm(false)} 
+          onCreate={(payload) => createOffer.mutate(payload)} 
+          isPending={createOffer.isPending} 
+        />
       )}
     </div>
   );

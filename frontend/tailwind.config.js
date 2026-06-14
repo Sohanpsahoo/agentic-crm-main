@@ -5,12 +5,12 @@ export default {
     extend: {
       colors: {
         brand: {
-          50:  "#fdf4ff",
+          50: "#fdf4ff",
           100: "#fae8ff",
           300: "#d8b4fe",
           400: "#c084fc",
           500: "#a855f7",
-          600: "#9333ea",
+          600: "#0F62FE",
           700: "#7e22ce",
           900: "#3b0764",
         },
@@ -41,22 +41,22 @@ export default {
         sans: ["Plus Jakarta Sans", "Outfit", "system-ui", "sans-serif"],
       },
       animation: {
-        "slide-up":  "slideUp 0.3s ease-out",
-        "fade-in":   "fadeIn 0.2s ease-out",
-        "pulse-once":"pulseOnce 0.6s ease-out",
+        "slide-up": "slideUp 0.3s ease-out",
+        "fade-in": "fadeIn 0.2s ease-out",
+        "pulse-once": "pulseOnce 0.6s ease-out",
       },
       keyframes: {
         slideUp: {
-          "0%":   { transform: "translateY(10px)", opacity: "0" },
-          "100%": { transform: "translateY(0)",    opacity: "1" },
+          "0%": { transform: "translateY(10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
         fadeIn: {
-          "0%":   { opacity: "0" },
+          "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
         pulseOnce: {
           "0%,100%": { opacity: "1" },
-          "50%":     { opacity: "0.6" },
+          "50%": { opacity: "0.6" },
         },
       },
     },
