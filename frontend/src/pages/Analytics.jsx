@@ -202,15 +202,16 @@ export default function Analytics() {
           <SectionHeader icon={Radio} title="Channel Performance" sub="Open rate · CTR · Conversion by channel" />
           {radarData.length > 0 ? (
             <ResponsiveContainer width="100%" height={380}>
-              <RadarChart data={radarData} margin={{ top: 30, bottom: 30, left: 30, right: 30 }}>
-                <PolarGrid stroke="#4b5563" />
-                <PolarAngleAxis dataKey="channel" tick={{ fill: "#d1d5db", fontSize: 14, fontWeight: "bold" }} />
-                <Radar name="Open Rate %" dataKey="Open Rate" stroke="#0F62FE" strokeWidth={3} fill="#0F62FE" fillOpacity={0.4} />
-                <Radar name="CTR %"       dataKey="CTR"       stroke="#3b82f6" strokeWidth={3} fill="#3b82f6" fillOpacity={0.4} />
-                <Radar name="Conv %"      dataKey="Conv Rate" stroke="#10b981" strokeWidth={3} fill="#10b981" fillOpacity={0.4} />
+              <BarChart data={radarData} margin={{ top: 20, right: 10, bottom: 20, left: -10 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" vertical={false} opacity={0.5} />
+                <XAxis dataKey="channel" tick={{ fill: "#d1d5db", fontSize: 14, fontWeight: "bold" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
                 <Tooltip cursor={{ fill: '#374151', opacity: 0.4 }} content={<CUSTOM_TOOLTIP />} />
-                <Legend wrapperStyle={{ fontSize: 13, color: "#d1d5db", paddingTop: "20px" }} iconType="circle" />
-              </RadarChart>
+                <Legend wrapperStyle={{ fontSize: 13, color: "#d1d5db" }} iconType="circle" verticalAlign="top" />
+                <Bar dataKey="Open Rate" name="Open Rate %" fill="#0F62FE" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                <Bar dataKey="CTR"       name="CTR %"       fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                <Bar dataKey="Conv Rate" name="Conv %"      fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={60} />
+              </BarChart>
             </ResponsiveContainer>
           ) : (
             <div className="h-56 flex items-center justify-center text-gray-500 text-sm">No channel data</div>
