@@ -262,7 +262,7 @@ router.post("/blast-segment", async (req, res, next) => {
 // Called by the AI service tool to push messages to the Simulation Center in real time
 router.post("/blast", async (req, res) => {
   try {
-    const { messages } = req.body;
+    const { messages, campaign_name } = req.body;
     // messages: [{ customer_id, customer_name, channel, message, sender }]
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: "messages array required" });
@@ -270,7 +270,7 @@ router.post("/blast", async (req, res) => {
 
     // Create a Campaign in MongoDB to represent this chatbot direct action
     const channel = messages[0]?.channel || "whatsapp";
-    const campaignName = `AI Chatbot Campaign - ${new Date().toLocaleDateString()}`;
+    const campaignName = campaign_name || `AI Chatbot Campaign - ${new Date().toLocaleDateString()}`;
     const campaign = await Campaign.create({
       name: campaignName,
       goal: "winback",

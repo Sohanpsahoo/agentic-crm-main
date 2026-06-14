@@ -82,7 +82,8 @@ async function simulateLifecycle({ channel_message_id, campaign_id, customer_id,
             const convertRate = Math.min(RATES.convert * mult.convert, 0.99);
             if (Math.random() < convertRate) {
               setTimeout(async () => {
-                await fireCallback({ ...base, event: "converted" });
+                const revenue = rand(500, 3000);
+                await fireCallback({ ...base, event: "converted", metadata: { revenue } });
               }, rand(minDelay * 2, maxDelay * 4));
             }
           }, rand(minDelay, maxDelay * 2));

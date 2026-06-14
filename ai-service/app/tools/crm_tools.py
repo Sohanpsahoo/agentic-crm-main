@@ -600,7 +600,7 @@ def _build_customer_query(criteria: str) -> dict:
 
 
 @tool
-def simulate_message_to_devices(criteria: str = "all", message_template: str = "Hi {name}! Check out our latest collection 🛍️", channel: str = "whatsapp", sender: str = "Zari CRM", session_id: Optional[str] = None) -> str:
+def simulate_message_to_devices(criteria: str = "all", message_template: str = "Hi {name}! Check out our latest collection 🛍️", channel: str = "whatsapp", sender: str = "Zari CRM", campaign_name: str = "Direct Blast", session_id: Optional[str] = None) -> str:
     """
     Query customers matching criteria, generate a personalized message for each using Groq,
     and send them to the Simulation Center so they appear live on the phone screens.
@@ -620,6 +620,7 @@ def simulate_message_to_devices(criteria: str = "all", message_template: str = "
             If the user did not provide a message to send, invent a polite, generic marketing message yourself (e.g. "Hi {name}! Check out our latest deals.").
         channel: "whatsapp" | "email" | "sms" (default: whatsapp)
         sender: display name for the sender (default: "Zari CRM")
+        campaign_name: A descriptive name for the campaign e.g. "Diwali Saree Offer" or "VIP Winback"
         session_id: optional execution pipeline session ID for console tracking
 
     Returns JSON with count of customers messaged and a preview list.
@@ -754,7 +755,7 @@ def simulate_message_to_devices(criteria: str = "all", message_template: str = "
             post_progress(session_id, "execution", f"Initiating dispatch queue. Sending messages one-by-one to device simulation interfaces...", step="execute")
 
         # Send to backend blast endpoint — this emits device:message_added via socket
-        blast_result = _post("/api/agent/blast", {"messages": blast_messages})
+        blast_result = _post("/api/agent/blast", {"messages": blast_messages, "campaign_name": campaign_name})
         result_data = json.loads(blast_result)
 
         if result_data.get("error"):
