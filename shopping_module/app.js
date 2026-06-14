@@ -2,6 +2,8 @@
 let cart = [];
 
 // --- Config / DOM Nodes ---
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 const DOM = {
     cartBtn: document.getElementById('cart-btn'),
     cartDrawer: document.getElementById('cart-drawer'),
@@ -52,7 +54,7 @@ async function dispatchMoment(eventType, metadata = {}) {
     const phone = "+91 9999999999"; // default simulation profile
     try {
         console.log(`[Storefront Moment] Dispatching event: ${eventType}`);
-        await fetch('http://localhost:3001/api/moments/event', {
+        await fetch(`${BACKEND_URL}/api/moments/event`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, phone, event_type: eventType, metadata })
@@ -327,7 +329,7 @@ function initCheckoutStepper() {
             const channel_message_id = urlParams.get('msg_id');
 
             // Post order to backend to sync to Mongo and send WhatsApp alert
-            const response = await fetch('http://localhost:3001/api/orders/storefront', {
+            const response = await fetch(`${BACKEND_URL}/api/orders/storefront`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
