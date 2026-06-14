@@ -195,12 +195,8 @@ async def make_decision(req: DecisionRequest):
     determining the channel, incentive, copy/message, and rationale using Gemini.
     """
     try:
-        from langchain_groq import ChatGroq
-        llm = ChatGroq(
-            model=settings.groq_model,
-            groq_api_key=settings.groq_api_key,
-            temperature=0.1
-        )
+        from app.llm_factory import get_llm
+        llm = get_llm(temperature=0.1)
         
         system_prompt = (
             "You are an AI Real-Time Marketer Agent running inside AETHER_VOID storefront.\n"
@@ -275,12 +271,8 @@ class SegmentPersonaRequest(BaseModel):
 async def generate_segment_persona(req: SegmentPersonaRequest):
     """Generate a detailed persona card for a segment based on customer data."""
     try:
-        from langchain_groq import ChatGroq
-        llm = ChatGroq(
-            model=settings.groq_model,
-            groq_api_key=settings.groq_api_key,
-            temperature=0.4
-        )
+        from app.llm_factory import get_llm
+        llm = get_llm(temperature=0.4)
         
         system_prompt = (
             "You are an expert marketing strategist and persona researcher.\n"
@@ -331,15 +323,11 @@ async def generate_segment_persona(req: SegmentPersonaRequest):
 async def generate_segment_from_nl(req: SegmentRequest):
     """Generate a customer segment from natural language."""
     from app.graph.nodes.segmentation import PIPELINE_PROMPT, SegmentPipeline, get_db
-    from langchain_groq import ChatGroq
+    from app.llm_factory import get_llm
     from app.tools.mongo_tools import save_segment
     import json
     
-    llm = ChatGroq(
-        model=settings.groq_model,
-        groq_api_key=settings.groq_api_key,
-        temperature=0.0,
-    )
+    llm = get_llm(temperature=0.0)
     
     chain = PIPELINE_PROMPT | llm.with_structured_output(SegmentPipeline)
     
@@ -500,7 +488,12 @@ async def chat_with_device(req: ChatRequest):
 
         from langchain_groq import ChatGroq
 
-        groq_keys = [settings.groq_api_key]
+        import os
+        groq_keys = [
+            settings.groq_api_key,
+        ]
+        if os.environ.get("GROQ_API_KEY_FALLBACK"):
+            groq_keys.append(os.environ.get("GROQ_API_KEY_FALLBACK"))
 
         tools = get_crm_tools()
         tool_map = {t.name: t for t in tools}
@@ -694,13 +687,9 @@ class GenerateJourneyRequest(BaseModel):
 @app.post("/agent/generate-journey")
 async def generate_journey_steps(req: GenerateJourneyRequest):
     try:
-        from langchain_groq import ChatGroq
+        from app.llm_factory import get_llm
         import json
-        llm = ChatGroq(
-            model=settings.groq_model,
-            groq_api_key=settings.groq_api_key,
-            temperature=0.2
-        )
+        llm = get_llm(temperature=0.2)
         system_prompt = (
             "You are an expert CRM automation architect.\n"
             "Generate the optimal sequence of steps for a marketing journey.\n"
