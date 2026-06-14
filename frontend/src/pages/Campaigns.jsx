@@ -207,8 +207,8 @@ export default function Campaigns() {
 
   useEffect(() => {
     campaignsApi.list({ limit: 30 }).then((r) => {
-      setCampaigns(r.data.campaigns);
-      setTotal(r.data.total);
+      setCampaigns(r.data.campaigns || []);
+      setTotal(r.data.total || 0);
     });
 
     const handleCampaignCreated = (newCampaign) => {
@@ -221,7 +221,7 @@ export default function Campaigns() {
 
     const handleCampaignUpdated = (updatedCampaign) => {
       setCampaigns((prev) =>
-        prev.map((c) => (c._id === updatedCampaign._id ? updatedCampaign : c))
+        (prev || []).map((c) => (c._id === updatedCampaign._id ? updatedCampaign : c))
       );
     };
 
