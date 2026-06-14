@@ -361,11 +361,11 @@ export default function Dashboard() {
                    <div className="h-16 bg-blue-950/20 rounded-xl animate-pulse border border-blue-900/20" />
                 </div>
              ) : (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                    {suggestedSegments.map((seg, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3.5 bg-zinc-950/60 rounded-xl border border-blue-900/20 hover:border-blue-500/50 transition-colors group">
+                      <div key={idx} className="flex items-center justify-between p-3 bg-zinc-950/60 rounded-xl border border-blue-900/20 hover:border-blue-500/50 transition-colors group">
                          <div>
-                            <p className="text-[14px] font-bold text-white group-hover:text-blue-300 transition-colors">{seg.name}</p>
+                            <p className="text-[13px] font-bold text-white group-hover:text-blue-300 transition-colors">{seg.name}</p>
                             <p className="text-[11px] text-zinc-400 mt-0.5">{seg.reason}</p>
                          </div>
                          <button className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-300 hover:bg-blue-600 hover:text-white transition-all flex-shrink-0 flex items-center gap-1.5">
@@ -392,7 +392,7 @@ export default function Dashboard() {
                 No recent activity.
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {recentActivity.map((activity, idx) => {
                   const isOrder = activity.type === "order";
                   const isCampaign = activity.type === "campaign";
@@ -406,18 +406,18 @@ export default function Dashboard() {
                   })();
 
                   return (
-                    <div key={idx} className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
+                    <div key={idx} className="flex items-center justify-between py-2.5 px-3 bg-zinc-950/40 rounded-xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
                       <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${
                           isOrder ? "bg-emerald-950/20 text-emerald-450" : 
                           isCampaign ? "bg-blue-950/30 text-blue-400" : 
                           "bg-zinc-800 text-zinc-300"
                         }`}>
-                          {isOrder ? <Tag size={16} /> : isCampaign ? <Megaphone size={16} /> : <Users size={16} />}
+                          {isOrder ? <Tag size={14} /> : isCampaign ? <Megaphone size={14} /> : <Users size={14} />}
                         </div>
-                        <span className="text-[14px] font-semibold text-zinc-300">{activity.message}</span>
+                        <span className="text-[13px] font-semibold text-zinc-300">{activity.message}</span>
                       </div>
-                      <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">{timeStr}</span>
+                      <span className="text-[11px] text-zinc-500 whitespace-nowrap ml-4">{timeStr}</span>
                     </div>
                   );
                 })}

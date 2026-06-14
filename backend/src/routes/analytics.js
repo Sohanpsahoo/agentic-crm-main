@@ -262,7 +262,7 @@ router.get("/recent-activity", async (req, res) => {
     const recentOrders = await Order.find().sort({ created_at: -1 }).limit(limit).populate("customer_id", "name");
     const orderEvents = recentOrders.map(o => ({
       type: "order",
-      message: `New deal: ${o.customer_id?.name || 'Customer'} spent ₹${o.total_amount}`,
+      message: `New deal: ${o.customer_id?.name || 'Customer'} spent ₹${o.total}`,
       timestamp: o.created_at,
     }));
 
