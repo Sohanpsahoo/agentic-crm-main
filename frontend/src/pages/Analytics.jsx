@@ -133,12 +133,12 @@ export default function Analytics() {
     { label: "Converted", value: Number(ov.total_converted) || 0, rate: ov.overall_conversion_rate || "0", color: "#ef4444" },
   ];
 
-  const radarData = channelPerf.map((c) => ({
-    channel: c.channel?.toUpperCase() || "—",
-    "Open Rate": parseFloat(c.open_rate?.toFixed(1) || 0),
-    "CTR": parseFloat(c.ctr?.toFixed(1) || 0),
-    "Conv Rate": parseFloat(c.conversion_rate?.toFixed(1) || 0),
-  }));
+  // Inject dummy SMS data and order as requested (WhatsApp > SMS > Email)
+  const radarData = [
+    { channel: "WHATSAPP", "Open Rate": 68.5, "CTR": 24.2, "Conv Rate": 12.8 },
+    { channel: "SMS", "Open Rate": 45.2, "CTR": 14.5, "Conv Rate": 5.4 },
+    { channel: "EMAIL", "Open Rate": 22.1, "CTR": 4.8, "Conv Rate": 1.2 },
+  ];
 
   return (
     <div className="p-6 space-y-6">
@@ -206,7 +206,7 @@ export default function Analytics() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" vertical={false} opacity={0.5} />
                 <XAxis dataKey="channel" tick={{ fill: "#d1d5db", fontSize: 13, fontWeight: "500" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
-                <Tooltip cursor={{ fill: '#374151', opacity: 0.4 }} content={<CUSTOM_TOOLTIP />} />
+                <Tooltip cursor={{ fill: 'transparent' }} content={<CUSTOM_TOOLTIP />} />
                 <Legend wrapperStyle={{ fontSize: 12, color: "#d1d5db", paddingBottom: "20px" }} iconType="circle" verticalAlign="top" />
                 <Bar dataKey="Open Rate" name="Open Rate %" fill="#a855f7" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="CTR"       name="CTR %"       fill="#3b82f6" radius={[4, 4, 0, 0]} />
