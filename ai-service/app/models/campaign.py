@@ -28,6 +28,7 @@ class CampaignCopy(BaseModel):
     headline: str = Field(description="Main headline, personalized with {{first_name}} token if appropriate")
     body: str = Field(description="Message body. For WhatsApp/SMS max 160 chars. Use {{promo_code}} token.")
     cta: str = Field(description="Call to action button text")
+    rationale: str = Field(default="Standard message", description="Why this message was generated and how it aligns with the goal")
     variants: List[CopyVariant] = Field(description="Two A/B variants", min_length=2, max_length=2)
 
 

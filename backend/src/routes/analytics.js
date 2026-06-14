@@ -153,6 +153,7 @@ router.get("/roi", async (req, res, next) => {
         $project: {
           campaign_name: "$campaign.name",
           channel: "$campaign.channel",
+          created_at: "$campaign.created_at",
           revenue_attributed: "$revenue",
           sent: 1,
           converted: 1,
@@ -166,7 +167,7 @@ router.get("/roi", async (req, res, next) => {
           },
         },
       },
-      { $sort: { roi: -1 } },
+      { $sort: { created_at: -1 } },
     ]);
     res.json(data);
   } catch (err) {

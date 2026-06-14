@@ -176,6 +176,34 @@ router.post("/storefront", async (req, res, next) => {
       console.error("[Storefront API] Failed to trigger WhatsApp dispatch:", waErr.message);
     }
 
+    // Attribute revenue if campaign params exist, or fallback to most recent communication
+    let comm_id = req.body.channel_message_id;
+    let camp_id = req.body.campaign_id;
+    if (!comm_id && customer) {
+      const Communication = require("../models/Communication");
+      const recentComm = await Communication.findOne({
+        customer_id: customer._id
+      }).sort({ created_at: -1 });
+      if (recentComm) {
+        comm_id = recentComm.channel_message_id;
+        camp_id = recentComm.campaign_id;
+      }
+    }
+
+    if (comm_id) {
+      try {
+        await axios.post("http://localhost:3001/api/webhooks/channel", {
+          event: "converted",
+          channel_message_id: comm_id,
+          campaign_id: camp_id,
+          metadata: { revenue: 999 }
+        });
+        console.log(`[Storefront API] Attributed ₹${total} revenue to msg_id: ${comm_id}`);
+      } catch (attrErr) {
+        console.error("[Storefront API] Failed to attribute conversion:", attrErr.message);
+      }
+    }
+
     res.status(201).json({ success: true, order });
   } catch (err) {
     next(err);

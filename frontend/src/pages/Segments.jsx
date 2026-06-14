@@ -69,7 +69,7 @@ function CreateSegmentModal({ onClose, onCreated }) {
       <div className="relative w-full max-w-lg bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-gray-900/50">
           <div className="flex items-center gap-2">
-            <Bot size={18} className="text-purple-400" />
+            <Bot size={18} className="text-blue-400" />
             <h2 className="font-semibold text-white">AI Segment Builder</h2>
           </div>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-300"><X size={18} /></button>
@@ -83,7 +83,7 @@ function CreateSegmentModal({ onClose, onCreated }) {
               placeholder="e.g. 'Find high value customers who prefer WhatsApp.'"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-purple-600 resize-none"
+              className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-blue-600 resize-none"
               autoFocus
             />
           </div>
@@ -98,7 +98,7 @@ function CreateSegmentModal({ onClose, onCreated }) {
                     <RefreshCw size={12} className="animate-spin" /> Estimating...
                   </span>
                 ) : estimatedSize !== null ? (
-                  <span className="text-purple-400">{estimatedSize.toLocaleString()} customer(s)</span>
+                  <span className="text-blue-400">{estimatedSize.toLocaleString()} customer(s)</span>
                 ) : (
                   <span className="text-gray-500">—</span>
                 )}
@@ -120,11 +120,11 @@ function CreateSegmentModal({ onClose, onCreated }) {
                </div>
             </div>
           ) : (
-            <div className="bg-purple-900/20 border border-purple-800/30 rounded-lg p-3 flex gap-3">
-               <div className="mt-0.5"><Bot size={16} className="text-purple-400" /></div>
+            <div className="bg-blue-900/20 border border-blue-800/30 rounded-lg p-3 flex gap-3">
+               <div className="mt-0.5"><Bot size={16} className="text-blue-400" /></div>
                <div>
-                  <p className="text-sm font-medium text-purple-200">AI-Powered Extraction</p>
-                  <p className="text-xs text-purple-300/70 mt-1">
+                  <p className="text-sm font-medium text-blue-200">AI-Powered Extraction</p>
+                  <p className="text-xs text-blue-300/70 mt-1">
                      The Copilot will parse your intent, query the real-time customer database, and instantly generate an accurate segment pipeline.
                   </p>
                </div>
@@ -434,19 +434,19 @@ export default function Segments() {
             </div>
 
             {s.criteria_nl && (
-              <div className="bg-purple-900/10 border border-purple-800/20 rounded-lg px-3 py-2.5 mt-2">
+              <div className="bg-blue-900/10 border border-blue-800/20 rounded-lg px-3 py-2.5 mt-2">
                 <div className="flex items-center gap-1.5 mb-1">
-                   <Bot size={12} className="text-purple-400" />
-                   <span className="text-[10px] uppercase tracking-wider font-bold text-purple-400">AI Reasoning</span>
+                   <Bot size={12} className="text-blue-400" />
+                   <span className="text-[10px] uppercase tracking-wider font-bold text-blue-400">AI Reasoning</span>
                 </div>
                 <p className="text-xs text-gray-300">Prompt: <span className="italic text-gray-400">"{s.criteria_nl}"</span></p>
                 {s.description && (
-                   <p className="text-xs text-gray-300 mt-1 mb-2">Matched: <span className="text-purple-200">{s.description}</span></p>
+                   <p className="text-xs text-gray-300 mt-1 mb-2">Matched: <span className="text-blue-200">{s.description}</span></p>
                 )}
                 
                 {/* Agent Logs & Pipeline Viewer */}
                 <details className="mt-2 group">
-                  <summary className="text-[10px] uppercase tracking-wider font-bold text-gray-500 cursor-pointer hover:text-purple-400 transition-colors list-none flex items-center gap-1">
+                  <summary className="text-[10px] uppercase tracking-wider font-bold text-gray-500 cursor-pointer hover:text-blue-400 transition-colors list-none flex items-center gap-1">
                     <span className="group-open:rotate-90 transition-transform text-gray-600 font-mono">▶</span>
                     Agent Logs & Decision Pipeline
                   </summary>
@@ -461,7 +461,7 @@ export default function Segments() {
                     {s.criteria_json && (
                       <>
                         <div className="text-[10px] text-gray-400 mt-2 font-semibold">Generated MongoDB Pipeline:</div>
-                        <pre className="text-[9px] font-mono text-purple-300/70 mt-1 whitespace-pre-wrap break-all bg-gray-950 p-2 rounded">
+                        <pre className="text-[9px] font-mono text-blue-300/70 mt-1 whitespace-pre-wrap break-all bg-gray-950 p-2 rounded">
                           {JSON.stringify(s.criteria_json, null, 2)}
                         </pre>
                       </>
@@ -473,7 +473,7 @@ export default function Segments() {
             
             {/* AI Persona Card */}
             {s.persona_card ? (
-               <div className="mt-3 bg-gradient-to-br from-indigo-900/30 to-purple-900/20 border border-indigo-800/40 rounded-xl p-4 shadow-lg">
+               <div className="mt-3 bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-800/40 rounded-xl p-4 shadow-lg">
                   <div className="flex items-center justify-between mb-3">
                      <div className="flex items-center gap-2">
                         <Sparkles size={14} className="text-indigo-400" />
@@ -508,7 +508,7 @@ export default function Segments() {
 
             <button 
               onClick={() => setSelectedSegment(s)} 
-              className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
             >
               <Bot size={14} /> Create Draft Campaign
             </button>

@@ -51,7 +51,7 @@ export default function Offers() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
         >
           + New Offer
         </button>
@@ -65,7 +65,7 @@ export default function Offers() {
             onClick={() => setStatusFilter(s)}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               statusFilter === s
-                ? "bg-purple-600 text-white"
+                ? "bg-blue-600 text-white"
                 : "bg-gray-800 text-gray-400 hover:text-white"
             }`}
           >
@@ -89,7 +89,7 @@ export default function Offers() {
                     {offer.status}
                   </span>
                 </div>
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-2xl font-bold text-blue-400">
                   {TYPE_LABELS[offer.type]?.(offer.value) || offer.value}
                 </div>
               </div>

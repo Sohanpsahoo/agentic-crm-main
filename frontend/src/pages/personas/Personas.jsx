@@ -6,7 +6,7 @@ import personasApi from "../../services/personasApi";
 const SEGMENTS = ["Champions", "Loyal", "At Risk", "Cannot Lose", "Lost", "New", "Potential"];
 
 const SEG_COLORS = {
-  Champions:      { bg: "bg-purple-600/20", text: "text-purple-300", border: "border-purple-600/30" },
+  Champions:      { bg: "bg-blue-600/20", text: "text-blue-300", border: "border-blue-600/30" },
   Loyal:          { bg: "bg-blue-600/20",   text: "text-blue-300",   border: "border-blue-600/30" },
   "At Risk":      { bg: "bg-amber-600/20",  text: "text-amber-300",  border: "border-amber-600/30" },
   "Cannot Lose":  { bg: "bg-red-600/20",    text: "text-red-300",    border: "border-red-600/30" },
@@ -62,7 +62,7 @@ export default function Personas() {
         <button
           onClick={() => recompute.mutate()}
           disabled={recompute.isPending}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
         >
           <RefreshCw size={14} className={recompute.isPending ? "animate-spin" : ""} />
           {recompute.isPending ? "Computing..." : "Recompute RFM"}
@@ -74,7 +74,7 @@ export default function Personas() {
         <button
           onClick={() => { setActiveSegment(""); setPage(1); }}
           className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
-            !activeSegment ? "bg-purple-600 text-white border-purple-600" : "bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500"
+            !activeSegment ? "bg-blue-600 text-white border-blue-600" : "bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500"
           }`}
         >
           All
@@ -171,7 +171,7 @@ export default function Personas() {
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-700 rounded-full h-1.5">
                         <div
-                          className="h-1.5 rounded-full bg-purple-500"
+                          className="h-1.5 rounded-full bg-blue-500"
                           style={{ width: `${p.predicted?.propensity_score || 0}%` }}
                         />
                       </div>

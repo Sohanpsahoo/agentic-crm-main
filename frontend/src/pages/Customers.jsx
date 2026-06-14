@@ -10,7 +10,7 @@ const TAG_COLORS = {
   "at-risk":    "bg-orange-900/50 text-orange-300 border-orange-700/40",
   active:       "bg-green-900/50 text-green-300 border-green-700/40",
   loyal:        "bg-blue-900/50 text-blue-300 border-blue-700/40",
-  champion:     "bg-purple-900/50 text-purple-300 border-purple-700/40",
+  champion:     "bg-blue-900/50 text-blue-300 border-blue-700/40",
   "one-time":   "bg-gray-700/50 text-gray-400 border-gray-600/40",
   "high-value": "bg-emerald-900/50 text-emerald-300 border-emerald-700/40",
   new:          "bg-cyan-900/50 text-cyan-300 border-cyan-700/40",
@@ -36,7 +36,7 @@ function Customer360Card({ customerId, onClose }) {
   }, [customerId]);
 
   if (loading) return (
-    <div className="bg-gray-800 rounded-2xl border border-purple-600/40 p-5 space-y-3 animate-pulse">
+    <div className="bg-gray-800 rounded-2xl border border-blue-600/40 p-5 space-y-3 animate-pulse">
       {[32, 48, 24, 24].map((w, i) => (
         <div key={i} className={`h-3 bg-gray-700 rounded w-${w}/48`} />
       ))}
@@ -49,7 +49,7 @@ function Customer360Card({ customerId, onClose }) {
   const churnLabel = churnScore > 0.6 ? "High" : churnScore > 0.3 ? "Medium" : "Low";
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-purple-600/40 p-5 shadow-2xl shadow-purple-900/20 relative animate-slideUp">
+    <div className="bg-gray-800 rounded-2xl border border-blue-600/40 p-5 shadow-2xl shadow-blue-900/20 relative animate-slideUp">
       <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
         <X size={16} />
       </button>
@@ -193,12 +193,12 @@ export default function Customers() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Users size={22} className="text-purple-400" />
+            <Users size={22} className="text-blue-400" />
             Customers
           </h1>
           <p className="text-gray-400 text-sm mt-0.5">
             {loading ? "Loading..." : `${total.toLocaleString()} total`}
-            {activeTag && <span className="ml-2 text-purple-400">· filtered by <strong>{activeTag}</strong></span>}
+            {activeTag && <span className="ml-2 text-blue-400">· filtered by <strong>{activeTag}</strong></span>}
           </p>
         </div>
       </div>
@@ -229,7 +229,7 @@ export default function Customers() {
               onClick={() => toggleTag(tag)}
               className={`text-xs px-2.5 py-1 rounded-full border transition-all duration-150 ${
                 activeTag === tag
-                  ? (TAG_COLORS[tag] || "bg-purple-900/50 text-purple-300 border-purple-700/40")
+                  ? (TAG_COLORS[tag] || "bg-blue-900/50 text-blue-300 border-blue-700/40")
                   : "bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500 hover:text-gray-200"
               }`}
             >
@@ -272,7 +272,7 @@ export default function Customers() {
                     key={c._id}
                     onClick={() => setSelectedId(selectedId === c._id ? null : c._id)}
                     className={`border-b border-gray-700/50 cursor-pointer transition-colors ${
-                      selectedId === c._id ? "bg-purple-900/20" : "hover:bg-gray-700/30"
+                      selectedId === c._id ? "bg-blue-900/20" : "hover:bg-gray-700/30"
                     }`}
                   >
                     <td className="px-4 py-3">

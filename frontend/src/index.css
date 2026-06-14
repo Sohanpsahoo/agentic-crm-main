@@ -12,7 +12,7 @@
   --brand-gradient-start: #8b5cf6;
   --brand-gradient-end: #3b82f6;
   --bg-main: #000000;
-  --bg-card: #09090b;
+  --bg-card: #09090B;
   --bg-sidebar: #020202;
   --border-color: #18181b;
   --text-main: #f8fafc;
@@ -149,7 +149,7 @@ input:focus, select:focus, textarea:focus {
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
   background-color: #7c3aed;
-  color: #ffffff;
+  color: #020202;
   font-size: 0.875rem;
   font-weight: 600;
   border: none;

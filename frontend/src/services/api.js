@@ -22,6 +22,7 @@ export const campaignsApi = {
   updateStatus: (id, status) => api.patch(`/campaigns/${id}/status`, { status }),
   send: (id) => api.post(`/campaigns/${id}/send`),
   retryDLQ: () => api.post(`/campaigns/retry-dlq`),
+  delete: (id) => api.delete(`/campaigns/${id}`),
 };
 
 export const segmentsApi = {

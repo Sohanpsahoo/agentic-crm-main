@@ -12,7 +12,7 @@ const FUNNEL_COLORS = ["#a855f7", "#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
 const STAGES = ["sent", "delivered", "opened", "clicked", "converted"];
 
 const STAGE_META = {
-  sent:      { label: "Sent",      icon: "📨", color: "purple",  bg: "bg-purple-900/40",  text: "text-purple-300",  border: "border-purple-700/40" },
+  sent:      { label: "Sent",      icon: "📨", color: "blue",  bg: "bg-blue-900/40",  text: "text-blue-300",  border: "border-blue-700/40" },
   delivered: { label: "Delivered", icon: "📥", color: "blue",    bg: "bg-blue-900/40",    text: "text-blue-300",    border: "border-blue-700/40" },
   opened:    { label: "Opened",    icon: "📖", color: "cyan",    bg: "bg-cyan-900/40",    text: "text-cyan-300",    border: "border-cyan-700/40" },
   clicked:   { label: "Clicked",   icon: "🔗", color: "amber",   bg: "bg-amber-900/40",   text: "text-amber-300",   border: "border-amber-700/40" },
@@ -84,7 +84,7 @@ function LifecycleStepper({ status }) {
             </div>
             {i < STAGES.length - 1 && (
               <div className={`h-[2px] flex-1 mx-0.5 rounded-full transition-all duration-700 mt-[-12px]
-                ${currentIdx > i ? "bg-gradient-to-r from-purple-600 to-blue-500" : "bg-gray-800"}`}
+                ${currentIdx > i ? "bg-gradient-to-r from-blue-600 to-blue-500" : "bg-gray-800"}`}
               />
             )}
           </React.Fragment>
@@ -155,7 +155,7 @@ export default function CampaignDetail() {
 
   if (!campaign) return (
     <div className="p-6 flex items-center gap-3 text-gray-400">
-      <div className="w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+      <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
       Loading campaign...
     </div>
   );
@@ -201,7 +201,7 @@ export default function CampaignDetail() {
                   alert(e.response?.data?.error || "Failed to send campaign");
                 }
               }}
-              className="btn-primary py-1.5 px-4 bg-purple-600 hover:bg-purple-500 flex items-center gap-2 font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+              className="btn-primary py-1.5 px-4 bg-blue-600 hover:bg-blue-500 flex items-center gap-2 font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)]"
             >
               🚀 Send Campaign Now
             </button>
@@ -217,7 +217,7 @@ export default function CampaignDetail() {
       </div>
 
       {/* ── Live Activity Feed ── */}
-      <div className="card border border-purple-900/20 bg-gradient-to-br from-gray-900/80 to-purple-950/5">
+      <div className="card border border-blue-900/20 bg-gradient-to-br from-gray-900/80 to-blue-950/5">
         <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
           <div>
             <h2 className="font-bold text-white text-base flex items-center gap-2">
@@ -229,7 +229,7 @@ export default function CampaignDetail() {
           </div>
           <div className="grid grid-cols-5 gap-2">
             {[
-              { label: "Sent",      value: funnel.sent      || 0, icon: "📨", bg: "bg-purple-900/30",  text: "text-purple-300",  border: "border-purple-800/30" },
+              { label: "Sent",      value: funnel.sent      || 0, icon: "📨", bg: "bg-blue-900/30",  text: "text-blue-300",  border: "border-blue-800/30" },
               { label: "Delivered", value: funnel.delivered  || 0, icon: "📥", bg: "bg-blue-900/30",    text: "text-blue-300",    border: "border-blue-800/30" },
               { label: "Opened",    value: funnel.opened     || 0, icon: "📖", bg: "bg-cyan-900/30",    text: "text-cyan-300",    border: "border-cyan-800/30" },
               { label: "Clicked",   value: funnel.clicked    || 0, icon: "🔗", bg: "bg-amber-900/30",   text: "text-amber-300",   border: "border-amber-800/30" },
@@ -258,7 +258,7 @@ export default function CampaignDetail() {
                   key={idx}
                   className={`rounded-xl border p-4 transition-all duration-500 ${
                     isFlashing
-                      ? "border-purple-500/70 bg-purple-950/20 shadow-lg shadow-purple-950/30 scale-[1.01]"
+                      ? "border-blue-500/70 bg-blue-950/20 shadow-lg shadow-blue-950/30 scale-[1.01]"
                       : "border-gray-800/60 bg-gray-900/40 hover:border-gray-700/60"
                   }`}
                 >
@@ -378,7 +378,7 @@ export default function CampaignDetail() {
                 <p className="text-xs text-gray-400 mt-1">Avg. Delivery Speed</p>
               </div>
               <div className="bg-gray-800/40 border border-gray-700/50 rounded-lg p-4 text-center">
-                <p className="text-2xl font-black text-purple-400">
+                <p className="text-2xl font-black text-blue-400">
                   {formatDuration(analytics.timing.avg_open_time_seconds)}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">Avg. Open Delay</p>
@@ -443,7 +443,7 @@ export default function CampaignDetail() {
       )}
 
       {/* ── Resilience & DLQ Monitor ── */}
-      <div className="card border border-purple-900/30 bg-purple-950/5 p-5">
+      <div className="card border border-blue-900/30 bg-blue-950/5 p-5">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <div>
             <h2 className="font-semibold text-white text-base flex items-center gap-2">
@@ -497,7 +497,7 @@ export default function CampaignDetail() {
                 alert("Failed to trigger DLQ retry.");
               }
             }}
-            className="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-lg font-bold transition-all shadow-md flex items-center gap-1.5"
+            className="px-4 py-2 bg-blue-800 hover:bg-blue-700 text-white rounded-lg font-bold transition-all shadow-md flex items-center gap-1.5"
           >
             🔄 Trigger Force DLQ Retry
           </button>

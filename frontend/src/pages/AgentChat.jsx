@@ -23,12 +23,12 @@ function AgentEvent({ event }) {
 
   return (
     <div className="flex gap-3 py-2.5 border-b border-gray-850 last:border-b-0">
-      <div className="w-8 h-8 rounded-full bg-purple-900/40 border border-purple-700/30 flex items-center justify-center text-sm flex-shrink-0 mt-0.5 shadow-sm">
+      <div className="w-8 h-8 rounded-full bg-blue-900/40 border border-blue-700/30 flex items-center justify-center text-sm flex-shrink-0 mt-0.5 shadow-sm">
         {icons[event.agent] || "🤖"}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-purple-400 uppercase tracking-wide">
+          <span className="text-xs font-semibold text-blue-400 uppercase tracking-wide">
             {event.agent?.replace(/_/g, " ") || "agent"}
           </span>
           <span className="text-[10px] text-gray-500 font-mono">
@@ -212,14 +212,14 @@ export default function AgentChat() {
       <div className="px-6 py-4 border-b border-gray-800 bg-gray-900/50 flex justify-between items-center">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <Bot size={22} className="text-purple-400 animate-pulse" />
+            <Bot size={22} className="text-blue-400 animate-pulse" />
             Agentic Campaign Director
           </h1>
           <p className="text-xs text-gray-400 mt-0.5">Full CRM control via Groq AI — view/edit customers, segments, campaigns, analytics, offers, journeys and more.</p>
         </div>
-        <div className="flex items-center gap-2 bg-purple-950/30 border border-purple-800/40 rounded-full px-3 py-1">
-          <Sparkles size={12} className="text-purple-300" />
-          <span className="text-[10px] text-purple-300 font-bold uppercase tracking-wider">Groq CRM Director</span>
+        <div className="flex items-center gap-2 bg-blue-950/30 border border-blue-800/40 rounded-full px-3 py-1">
+          <Sparkles size={12} className="text-blue-300" />
+          <span className="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Groq CRM Director</span>
         </div>
       </div>
 
@@ -230,11 +230,11 @@ export default function AgentChat() {
         <div className="w-1/2 border-r border-gray-850 flex flex-col h-full bg-zinc-950/20">
           <div className="p-4 border-b border-gray-850 bg-gray-950/40 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-purple-950/40 flex items-center justify-center border border-purple-900/30">
-                <Bot size={16} className="text-purple-400" />
+              <div className="w-8 h-8 rounded-xl bg-blue-950/40 flex items-center justify-center border border-blue-900/30">
+                <Bot size={16} className="text-blue-400" />
               </div>
               <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400">Creative Ad Head</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400">Creative Ad Head</h3>
                 <p className="text-[10px] text-emerald-450 font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" /> Active Brain
                 </p>
@@ -249,13 +249,13 @@ export default function AgentChat() {
               return (
                 <div key={idx} className={`flex gap-3 max-w-[85%] ${isUser ? "self-end ml-auto flex-row-reverse" : "self-start"}`}>
                   {!isUser && (
-                    <div className="w-8 h-8 rounded-lg bg-purple-950/45 border border-purple-900/30 flex items-center justify-center text-xs flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950/45 border border-blue-900/30 flex items-center justify-center text-xs flex-shrink-0">
                       💡
                     </div>
                   )}
                   <div className={`p-4 rounded-2xl ${
                     isUser
-                      ? "bg-purple-600 text-white rounded-tr-none"
+                      ? "bg-blue-600 text-white rounded-tr-none"
                       : "bg-zinc-900/80 border border-zinc-850 rounded-tl-none text-zinc-200"
                   }`}>
                     <p className="text-[13px] leading-relaxed whitespace-pre-wrap">{chat.content}</p>
@@ -263,14 +263,14 @@ export default function AgentChat() {
                     {chat.campaignIdeas && chat.campaignIdeas.length > 0 && (
                       <div className="mt-4 space-y-3">
                         {chat.campaignIdeas.map((idea, i) => (
-                          <div key={i} className="bg-black/40 border border-purple-900/30 rounded-xl p-3 hover:border-purple-500/50 transition-colors">
-                            <h4 className="text-[13px] font-bold text-purple-300">{idea.name}</h4>
+                          <div key={i} className="bg-black/40 border border-blue-900/30 rounded-xl p-3 hover:border-blue-500/50 transition-colors">
+                            <h4 className="text-[13px] font-bold text-blue-300">{idea.name}</h4>
                             <p className="text-[11px] text-gray-400 mt-1"><span className="text-gray-500 font-semibold">Audience:</span> {idea.audience}</p>
                             <p className="text-[11px] text-gray-400 mt-0.5"><span className="text-gray-500 font-semibold">Offer:</span> {idea.offer}</p>
                             <p className="text-[11px] text-gray-400 mt-1 italic">"{idea.reasoning}"</p>
                             <button 
                               onClick={() => handleQuickCampaign(`Run the ${idea.name} campaign targeting ${idea.audience} with ${idea.offer}.`)}
-                              className="mt-2 text-[10px] font-bold bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg w-full transition-colors"
+                              className="mt-2 text-[10px] font-bold bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg w-full transition-colors"
                             >
                               Launch this Campaign
                             </button>
@@ -289,15 +289,15 @@ export default function AgentChat() {
 
             {loadingChat && (
               <div className="flex gap-3 max-w-[85%] self-start animate-pulse">
-                <div className="w-8 h-8 rounded-lg bg-purple-950/45 border border-purple-900/30 flex items-center justify-center text-xs flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-blue-950/45 border border-blue-900/30 flex items-center justify-center text-xs flex-shrink-0">
                   💭
                 </div>
                 <div className="bg-zinc-900/80 border border-zinc-850 rounded-2xl rounded-tl-none p-4 text-zinc-400 text-[13px] flex items-center gap-2">
                   <span>Brainstorming strategies</span>
                   <div className="flex gap-1">
-                    <span className="w-1 h-1 rounded-full bg-purple-400 animate-bounce delay-75"></span>
-                    <span className="w-1 h-1 rounded-full bg-purple-400 animate-bounce delay-150"></span>
-                    <span className="w-1 h-1 rounded-full bg-purple-400 animate-bounce delay-225"></span>
+                    <span className="w-1 h-1 rounded-full bg-blue-400 animate-bounce delay-75"></span>
+                    <span className="w-1 h-1 rounded-full bg-blue-400 animate-bounce delay-150"></span>
+                    <span className="w-1 h-1 rounded-full bg-blue-400 animate-bounce delay-225"></span>
                   </div>
                 </div>
               </div>
@@ -318,7 +318,7 @@ export default function AgentChat() {
             <button
               onClick={() => handleQuickCampaign("Find customers who haven't ordered in 60 days and send them a 15% off winback email campaign.")}
               disabled={submitting || activeSession?.status === "running"}
-              className="text-[11px] font-bold px-3 py-1.5 rounded-full bg-purple-950/50 border border-purple-900/40 text-purple-300 hover:bg-purple-900/30 transition-all flex-shrink-0"
+              className="text-[11px] font-bold px-3 py-1.5 rounded-full bg-blue-950/50 border border-blue-900/40 text-blue-300 hover:bg-blue-900/30 transition-all flex-shrink-0"
             >
               🚀 Copilot: Recover Lost Customers
             </button>
@@ -363,13 +363,13 @@ export default function AgentChat() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Ask anything: 'Show VIP customers', 'Pause campaign X', 'What's our open rate?'..."
-              className="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-[13px] text-white focus:outline-none focus:border-purple-600 placeholder-gray-550"
+              className="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-[13px] text-white focus:outline-none focus:border-blue-600 placeholder-gray-550"
               disabled={submitting || activeSession?.status === "running"}
             />
             <button
               type="submit"
               disabled={!inputText.trim() || submitting || activeSession?.status === "running"}
-              className="w-10 h-10 rounded-xl bg-purple-600 hover:bg-purple-700 flex items-center justify-center text-white disabled:opacity-40 transition-all flex-shrink-0"
+              className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white disabled:opacity-40 transition-all flex-shrink-0"
             >
               <Send size={15} />
             </button>
@@ -380,12 +380,12 @@ export default function AgentChat() {
         <div className="w-1/2 p-6 flex flex-col overflow-hidden bg-gray-950">
           <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
             <div className="flex items-center gap-2">
-              <Play className="text-purple-400 rotate-90" size={15} />
+              <Play className="text-blue-400 rotate-90" size={15} />
               <h2 className="font-semibold text-sm uppercase tracking-wider">Execution Pipeline Console</h2>
             </div>
             {activeSession && (
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                activeSession.status === "completed" ? "bg-green-950 text-green-400 border border-green-900" : "bg-purple-950 text-purple-400 border border-purple-900 animate-pulse"
+                activeSession.status === "completed" ? "bg-green-950 text-green-400 border border-green-900" : "bg-blue-950 text-blue-400 border border-blue-900 animate-pulse"
               }`}>
                 {activeSession.status === "completed" ? "FINISHED" : "RUNNING"}
               </span>
@@ -404,7 +404,7 @@ export default function AgentChat() {
                 </div>
                 <button
                   onClick={() => navigate("/whatsapp")}
-                  className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors"
+                  className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors"
                 >
                   <Smartphone size={11} />
                   View in Simulation Center
@@ -451,7 +451,7 @@ export default function AgentChat() {
 
                   {activeSession.status === "running" && (
                     <div className="flex items-center gap-2.5 py-3 text-xs text-gray-400 font-mono">
-                      <Loader2 size={13} className="animate-spin text-purple-400" />
+                      <Loader2 size={13} className="animate-spin text-blue-400" />
                       Agent executing LangGraph workflow...
                     </div>
                   )}
@@ -461,9 +461,9 @@ export default function AgentChat() {
                     const approvalEvent = activeSession.events.find(e => e.step === "await_approval");
                     const pData = approvalEvent?.data || {};
                     return (
-                      <div className="my-4 p-5 bg-purple-950/10 border border-purple-800/30 rounded-xl shadow-lg">
+                      <div className="my-4 p-5 bg-blue-950/10 border border-blue-800/30 rounded-xl shadow-lg">
                         <div className="flex items-center justify-between mb-4">
-                           <p className="text-purple-400 font-bold text-xs uppercase tracking-wide flex items-center gap-1.5">
+                           <p className="text-blue-400 font-bold text-xs uppercase tracking-wide flex items-center gap-1.5">
                              <Sparkles size={14} /> AI CAMPAIGN PROPOSAL
                            </p>
                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-900/40 text-amber-400 border border-amber-700/30">
@@ -527,7 +527,7 @@ export default function AgentChat() {
                                   onClick={() => setScheduleType(opt.id)}
                                   className={`p-2 rounded-lg border text-left transition-all ${
                                     scheduleType === opt.id
-                                      ? "border-purple-500 bg-purple-950/20 text-white"
+                                      ? "border-blue-500 bg-blue-950/20 text-white"
                                       : "border-gray-850 bg-gray-950/45 hover:border-gray-700 text-gray-400"
                                   }`}
                                 >
@@ -541,7 +541,7 @@ export default function AgentChat() {
                         <div className="flex gap-2">
                           <button 
                             onClick={() => handleApproval(true)}
-                            className="flex-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                            className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-1.5"
                           >
                             <CheckCircle2 size={14} /> One-Click Approve & Launch
                           </button>

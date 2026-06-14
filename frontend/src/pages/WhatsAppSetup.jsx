@@ -376,7 +376,7 @@ export default function WhatsAppSetup() {
       <div className="flex items-center justify-between border-b border-zinc-800 pb-5">
         <div>
           <h1 className="text-[32px] font-bold text-white tracking-tight flex items-center gap-2">
-            <Smartphone className="text-purple-400" />
+            <Smartphone className="text-blue-400" />
             Simulation Center
           </h1>
           <p className="text-zinc-400 mt-1">
@@ -398,7 +398,7 @@ export default function WhatsAppSetup() {
           <div className="premium-card p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-[16px] font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Laptop size={18} className="text-purple-400" />
+                <Laptop size={18} className="text-blue-400" />
                 Simulated Devices ({customersWithMessages.length})
               </h2>
             </div>
@@ -423,19 +423,19 @@ export default function WhatsAppSetup() {
                     }}
                     className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between ${
                       isActive
-                        ? "bg-purple-950/20 border-purple-500/50 shadow-md shadow-purple-950/10 text-white"
+                        ? "bg-blue-950/20 border-blue-500/50 shadow-md shadow-blue-950/10 text-white"
                         : "bg-zinc-950/40 border-zinc-900 hover:border-zinc-800 text-zinc-300"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${isActive ? "bg-purple-600 text-white" : "bg-zinc-900 text-zinc-400"}`}>
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${isActive ? "bg-blue-600 text-white" : "bg-zinc-900 text-zinc-400"}`}>
                         <SmartphoneIcon size={18} />
                       </div>
                       <div className="min-w-0">
                         <div className="text-[13.5px] font-bold flex items-center gap-1.5">
                           {c.name}
                           {hasUnread && (
-                            <span className="w-2 h-2 rounded-full bg-purple-500 inline-block" />
+                            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
                           )}
                         </div>
                         <p className="text-[11px] text-zinc-500 mt-0.5 truncate max-w-[170px]" title={latestMsg}>
@@ -469,7 +469,7 @@ export default function WhatsAppSetup() {
             <div className="flex flex-col items-center">
               {/* Active Customer Indicator Badge */}
               <div className="mb-6 text-center space-y-1">
-                <span className="text-[11px] font-extrabold text-purple-400 uppercase tracking-widest bg-purple-950/40 px-3 py-1 rounded-full border border-purple-900/30">
+                <span className="text-[11px] font-extrabold text-blue-400 uppercase tracking-widest bg-blue-950/40 px-3 py-1 rounded-full border border-blue-900/30">
                   {activePhoneCustomer.name}'s Device Screen
                 </span>
                 <p className="text-[12px] text-zinc-500 mt-1">
@@ -478,7 +478,7 @@ export default function WhatsAppSetup() {
               </div>
 
               {/* Smartphone Frame */}
-              <div className="relative w-[345px] h-[690px] bg-[#111115] rounded-[50px] p-4 shadow-2xl border-4 border-zinc-800 shadow-purple-950/20 overflow-hidden transition-all duration-300">
+              <div className="relative w-[345px] h-[690px] bg-[#111115] rounded-[50px] p-4 shadow-2xl border-4 border-zinc-800 shadow-blue-950/20 overflow-hidden transition-all duration-300">
                 {/* Dynamic Island / Notch */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-6 bg-black rounded-b-3xl z-30 flex items-center justify-center">
                   <div className="w-2.5 h-2.5 rounded-full bg-zinc-900 ml-16" />
@@ -504,7 +504,7 @@ export default function WhatsAppSetup() {
                   {/* Dynamic Push Notification Banner */}
                   {activeBanner && (
                     <div className="absolute top-11 left-3 right-3 bg-black/90 border border-zinc-800/80 rounded-2xl p-3.5 shadow-xl flex items-start gap-3 z-50 animate-bounce duration-500 backdrop-blur-md">
-                      <div className="w-8 h-8 rounded-lg bg-purple-650 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <div className="w-8 h-8 rounded-lg bg-blue-650 flex items-center justify-center flex-shrink-0 shadow-md">
                         {activeBanner.channel === "whatsapp" ? <MessageSquare size={16} className="text-white" /> : 
                          activeBanner.channel === "sms" ? <Smartphone size={16} className="text-white" /> : <Mail size={16} className="text-white" />}
                       </div>
@@ -630,10 +630,10 @@ export default function WhatsAppSetup() {
                         {/* Chat Header */}
                         <div className="h-12 bg-zinc-900 border-b border-zinc-850 px-4 flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <button onClick={() => setPhoneScreen("inbox")} className="text-purple-400 hover:text-purple-300">
+                            <button onClick={() => setPhoneScreen("inbox")} className="text-blue-400 hover:text-blue-300">
                               <ArrowLeft size={16} />
                             </button>
-                            <div className="w-7 h-7 rounded-full bg-purple-650 flex items-center justify-center font-bold text-[11px]">
+                            <div className="w-7 h-7 rounded-full bg-blue-650 flex items-center justify-center font-bold text-[11px]">
                               Z
                             </div>
                             <div>
@@ -663,11 +663,11 @@ export default function WhatsAppSetup() {
                                 key={msg.id}
                                 className={`flex flex-col items-start max-w-[88%] p-3 shadow-md rounded-2xl animate-slideUp relative ${
                                   isSelf
-                                    ? "self-end bg-purple-950/40 border border-purple-900/40 rounded-tr-none text-right"
+                                    ? "self-end bg-blue-950/40 border border-blue-900/40 rounded-tr-none text-right"
                                     : "self-start bg-zinc-900 border border-zinc-850 rounded-tl-none text-left"
                                 }`}
                               >
-                                <span className={`text-[9px] uppercase font-bold tracking-wider mb-1 ${isSelf ? "text-purple-400" : "text-emerald-400"}`}>
+                                <span className={`text-[9px] uppercase font-bold tracking-wider mb-1 ${isSelf ? "text-blue-400" : "text-emerald-400"}`}>
                                   {isSelf ? "You" : msg.sender}
                                 </span>
                                 <p
@@ -681,7 +681,7 @@ export default function WhatsAppSetup() {
                                 {showLinkBtn && !isPurchased && (
                                   <button
                                     onClick={() => handleBubbleClick(msg)}
-                                    className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-700/80 hover:bg-purple-600 text-white text-[10px] font-extrabold tracking-wide border border-purple-500/50 transition-all shadow-md"
+                                    className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-700/80 hover:bg-blue-600 text-white text-[10px] font-extrabold tracking-wide border border-blue-500/50 transition-all shadow-md"
                                   >
                                     🔗 Tap to view exclusive offer →
                                   </button>
@@ -722,9 +722,9 @@ export default function WhatsAppSetup() {
                             <div className="flex items-center gap-1.5 self-start bg-zinc-900 border border-zinc-850 rounded-2xl rounded-tl-none p-3 shadow-md animate-pulse">
                               <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Typing</span>
                               <div className="flex gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce delay-75"></span>
-                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce delay-150"></span>
-                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce delay-225"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce delay-75"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce delay-150"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce delay-225"></span>
                               </div>
                             </div>
                           )}
@@ -737,9 +737,9 @@ export default function WhatsAppSetup() {
                             value={replyMessage}
                             onChange={(e) => setReplyMessage(e.target.value)}
                             placeholder="Type a response to the AI..."
-                            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-full px-3.5 py-1.5 text-[12px] text-white focus:outline-none focus:border-purple-500 placeholder-zinc-500"
+                            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-full px-3.5 py-1.5 text-[12px] text-white focus:outline-none focus:border-blue-500 placeholder-zinc-500"
                           />
-                          <button type="submit" disabled={!replyMessage.trim()} className="w-8 h-8 rounded-full bg-purple-650 hover:bg-purple-700 flex items-center justify-center text-white disabled:opacity-40 transition-all flex-shrink-0">
+                          <button type="submit" disabled={!replyMessage.trim()} className="w-8 h-8 rounded-full bg-blue-650 hover:bg-blue-700 flex items-center justify-center text-white disabled:opacity-40 transition-all flex-shrink-0">
                             <Send size={13} />
                           </button>
                         </form>
@@ -751,7 +751,7 @@ export default function WhatsAppSetup() {
                         <div className="h-11 bg-[#1a0533] flex items-center gap-2 px-3">
                           <button
                             onClick={() => { setPhoneScreen("chat"); setShopMsg(null); }}
-                            className="text-purple-300 hover:text-white"
+                            className="text-blue-300 hover:text-white"
                           >
                             <ArrowLeft size={16} />
                           </button>
@@ -759,7 +759,7 @@ export default function WhatsAppSetup() {
                         </div>
 
                         {/* Status bar strip */}
-                        <div className="bg-purple-700 px-3 py-1 text-[9px] text-white font-bold uppercase tracking-widest text-center">
+                        <div className="bg-blue-700 px-3 py-1 text-[9px] text-white font-bold uppercase tracking-widest text-center">
                           ✨ Special campaign offer — limited time
                         </div>
 
@@ -767,7 +767,7 @@ export default function WhatsAppSetup() {
                         <div className="flex-1 overflow-y-auto bg-gray-50">
                           {/* Hero image */}
                           <div
-                            className="w-full h-28 bg-gradient-to-br from-purple-700 via-purple-900 to-black relative flex items-center justify-center"
+                            className="w-full h-28 bg-gradient-to-br from-blue-700 via-blue-900 to-black relative flex items-center justify-center"
                           >
                             <div className="absolute inset-0 bg-black/30" />
                             <div className="relative text-center z-10 px-4">
@@ -786,7 +786,7 @@ export default function WhatsAppSetup() {
                               {shopMsg.message?.substring(0, 80) || "Special campaign offer just for you!"}{shopMsg.message?.length > 80 ? "…" : ""}
                             </p>
                             <div className="flex items-baseline gap-2 mt-2">
-                              <span className="text-[20px] font-black text-purple-700">₹999</span>
+                              <span className="text-[20px] font-black text-blue-700">₹999</span>
                               <span className="text-[12px] text-gray-400 line-through">₹1,999</span>
                               <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 rounded">50% OFF</span>
                             </div>
@@ -836,7 +836,7 @@ export default function WhatsAppSetup() {
                                 // Update local shopMsg status for immediate UI
                                 setShopMsg((prev) => prev ? { ...prev, status: "converted" } : prev);
                               }}
-                              className="w-full py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-600 hover:to-purple-500 text-white rounded-xl text-[13px] font-extrabold transition-all shadow-md active:scale-95"
+                              className="w-full py-2.5 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white rounded-xl text-[13px] font-extrabold transition-all shadow-md active:scale-95"
                             >
                               🛍️ Buy Now — ₹999
                             </button>
@@ -848,7 +848,7 @@ export default function WhatsAppSetup() {
                       <div className="flex-1 flex flex-col bg-zinc-950 overflow-hidden">
                         {/* Header */}
                         <div className="h-12 bg-zinc-900 border-b border-zinc-850 px-4 flex items-center gap-2">
-                          <button onClick={() => setPhoneScreen("inbox")} className="text-purple-400 hover:text-purple-300">
+                          <button onClick={() => setPhoneScreen("inbox")} className="text-blue-400 hover:text-blue-300">
                             <ArrowLeft size={16} />
                           </button>
                           <h4 className="text-[13px] font-extrabold text-white">Mail Box ({activeEmailMessages.length})</h4>
@@ -877,7 +877,7 @@ export default function WhatsAppSetup() {
                                 <span className="text-[11.5px] font-extrabold text-white">{mail.sender}</span>
                                 <span className="text-[9px] text-zinc-550">{mail.timestamp}</span>
                               </div>
-                              <h5 className="text-[11px] font-bold text-purple-450 truncate">Campaign Notification Alert</h5>
+                              <h5 className="text-[11px] font-bold text-blue-450 truncate">Campaign Notification Alert</h5>
                               <p className="text-[11px] text-zinc-400 line-clamp-2 mt-0.5 leading-snug">{mail.message}</p>
                             </button>
                           ))}
@@ -893,7 +893,7 @@ export default function WhatsAppSetup() {
                     {phoneScreen === "email_detail" && activeEmail && (
                       <div className="absolute inset-0 bg-zinc-950 z-40 flex flex-col overflow-hidden animate-slideUp">
                         <div className="h-12 bg-zinc-900 border-b border-zinc-850 px-4 flex items-center gap-2">
-                          <button onClick={() => setPhoneScreen("email")} className="text-purple-400">
+                          <button onClick={() => setPhoneScreen("email")} className="text-blue-400">
                             <ArrowLeft size={16} />
                           </button>
                           <h4 className="text-[12px] font-extrabold text-white">Promotional Message</h4>
@@ -914,7 +914,7 @@ export default function WhatsAppSetup() {
                                   {activeEmail.status === "sent" && <span className="text-zinc-400">Sent</span>}
                                   {activeEmail.status === "delivered" && <span className="text-zinc-400">Delivered</span>}
                                   {activeEmail.status === "opened" && <span className="text-blue-400">Opened</span>}
-                                  {activeEmail.status === "clicked" && <span className="text-purple-400">Clicked</span>}
+                                  {activeEmail.status === "clicked" && <span className="text-blue-400">Clicked</span>}
                                   {activeEmail.status === "converted" && <span className="text-green-400">Converted</span>}
                                 </span>
                               </div>
@@ -929,7 +929,7 @@ export default function WhatsAppSetup() {
                                       status: "clicked"
                                     });
                                   }}
-                                  className="w-full py-2 bg-purple-650 hover:bg-purple-700 text-white rounded-xl text-[12px] font-bold transition-all shadow-md"
+                                  className="w-full py-2 bg-blue-650 hover:bg-blue-700 text-white rounded-xl text-[12px] font-bold transition-all shadow-md"
                                 >
                                   🔗 Click Promotional Link
                                 </button>

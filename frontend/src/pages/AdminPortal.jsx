@@ -96,14 +96,14 @@ export default function AdminPortal() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <ShieldAlert className="text-purple-400" size={24} />
+            <ShieldAlert className="text-blue-400" size={24} />
             <h1 className="text-2xl font-bold">Global Admin Portal</h1>
           </div>
           <p className="text-gray-400 text-sm">Monitor platform orchestrations, service statuses, and model hyper-tuning parameters.</p>
         </div>
         <button 
           onClick={checkHealth}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-semibold"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors text-sm font-semibold"
         >
           <RefreshCw size={14} />
           Force Health Check
@@ -152,7 +152,7 @@ export default function AdminPortal() {
         {/* Database Stats Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-4">
           <div className="flex items-center gap-2 border-b border-gray-800 pb-3">
-            <Database className="text-purple-400" size={18} />
+            <Database className="text-blue-400" size={18} />
             <h2 className="font-semibold text-base">Aggregated Database Analytics</h2>
           </div>
           {loadingDb ? (
@@ -169,11 +169,11 @@ export default function AdminPortal() {
               </div>
               <div className="bg-gray-950 border border-gray-800 rounded-lg p-4 text-center">
                 <div className="text-xs text-gray-500 uppercase font-semibold">System LTV</div>
-                <div className="text-xl font-bold mt-2 text-purple-400">₹{(dbStats?.totalLtv || 0).toLocaleString()}</div>
+                <div className="text-xl font-bold mt-2 text-blue-400">₹{(dbStats?.totalLtv || 0).toLocaleString()}</div>
               </div>
             </div>
           )}
-          <div className="rounded-lg bg-purple-950/20 border border-purple-900/30 p-3 mt-4 text-xs text-purple-300">
+          <div className="rounded-lg bg-blue-950/20 border border-blue-900/30 p-3 mt-4 text-xs text-blue-300">
             ✓ MongoDB connection verified. Active replica collections: customers, orders, customerpersonas, customermoments.
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function AdminPortal() {
                   </div>
                 )}
                 {mom.action_taken && mom.action_taken.engage && (
-                  <div className="bg-purple-950/20 border border-purple-900/30 p-2 rounded text-purple-300">
+                  <div className="bg-blue-950/20 border border-blue-900/30 p-2 rounded text-blue-300">
                     <span className="font-semibold">AI Agent Decision:</span> Sent {mom.action_taken.channel} message with {mom.action_taken.incentive} incentive.
                     <div className="italic text-[10px] mt-1">"{mom.action_taken.message}"</div>
                   </div>

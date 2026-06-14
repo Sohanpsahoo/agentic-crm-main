@@ -73,7 +73,7 @@ function CreateJourneyModal({ onClose, onSuccess }) {
             <input
               required
               type="text"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
               placeholder="e.g. Welcome Series"
               value={formData.name}
               onChange={e => setFormData({ ...formData, name: e.target.value })}
@@ -82,7 +82,7 @@ function CreateJourneyModal({ onClose, onSuccess }) {
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">Description</label>
             <textarea
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500 resize-none h-20"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 resize-none h-20"
               placeholder="What does this journey do?"
               value={formData.description}
               onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -91,7 +91,7 @@ function CreateJourneyModal({ onClose, onSuccess }) {
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">Trigger</label>
             <select
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
               value={formData.trigger}
               onChange={e => setFormData({ ...formData, trigger: e.target.value })}
             >
@@ -111,7 +111,7 @@ function CreateJourneyModal({ onClose, onSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create Journey"}
             </button>
@@ -182,7 +182,7 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">Step Type</label>
             <select
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
               value={formData.type}
               onChange={e => setFormData({ ...formData, type: e.target.value })}
             >
@@ -200,7 +200,7 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
                 required
                 type="number"
                 min="1"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                 value={formData.wait_days}
                 onChange={e => setFormData({ ...formData, wait_days: parseInt(e.target.value) })}
               />
@@ -212,7 +212,7 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">Channel</label>
                 <select
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                   value={formData.channel}
                   onChange={e => setFormData({ ...formData, channel: e.target.value })}
                 >
@@ -228,7 +228,7 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
                 <input
                   required
                   type="text"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                   placeholder={formData.type === "message" ? "e.g. Welcome Message" : "e.g. 10% Discount"}
                   value={formData.campaign_goal}
                   onChange={e => setFormData({ ...formData, campaign_goal: e.target.value })}
@@ -243,7 +243,7 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
               <input
                 required
                 type="text"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                 placeholder="e.g. Has purchased > $100"
                 value={formData.condition}
                 onChange={e => setFormData({ ...formData, condition: e.target.value })}
@@ -262,7 +262,7 @@ function AddStepModal({ journeyId, onClose, onSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {loading ? "Adding..." : "Add Step"}
             </button>
@@ -311,7 +311,7 @@ function StepPreviewModal({ step, journey, onClose }) {
         <div className="p-5 space-y-4">
           <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
             <h3 className="text-xs text-gray-500 uppercase font-semibold mb-2">Intent / Goal</h3>
-            <p className="text-purple-300 text-sm italic">
+            <p className="text-blue-300 text-sm italic">
               "{step.config?.campaign_goal || step.type}"
             </p>
           </div>
@@ -320,7 +320,7 @@ function StepPreviewModal({ step, journey, onClose }) {
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
               <h3 className="text-xs text-gray-500 uppercase font-semibold mb-2 flex items-center justify-between">
                 <span>Live AI Preview</span>
-                <span className="text-[10px] bg-purple-900/40 text-purple-400 px-2 py-0.5 rounded capitalize">
+                <span className="text-[10px] bg-blue-900/40 text-blue-400 px-2 py-0.5 rounded capitalize">
                   {step.config?.channel || "email"}
                 </span>
               </h3>
@@ -336,8 +336,14 @@ function StepPreviewModal({ step, journey, onClose }) {
                 <div className="space-y-3">
                   <p className="text-white text-sm font-medium">{preview?.headline}</p>
                   <p className="text-gray-300 text-sm leading-relaxed">{preview?.body}</p>
+                  {preview?.rationale && (
+                    <div className="mt-3 p-3 bg-blue-900/20 border border-blue-900/40 rounded-lg">
+                      <p className="text-xs font-semibold text-blue-400 mb-1">AI Rationale</p>
+                      <p className="text-xs text-blue-200/70">{preview.rationale}</p>
+                    </div>
+                  )}
                   {preview?.cta && (
-                    <button className="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-lg mt-2">
+                    <button className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg mt-2">
                       {preview.cta}
                     </button>
                   )}
@@ -381,7 +387,7 @@ export default function Journeys() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
         >
           <Plus size={16} />
           Create Journey
@@ -462,7 +468,7 @@ export default function Journeys() {
               {/* Trigger badge */}
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs text-gray-500">Trigger:</span>
-                <span className="text-xs px-2 py-1 rounded-lg bg-purple-600/20 text-purple-300 font-medium">
+                <span className="text-xs px-2 py-1 rounded-lg bg-blue-600/20 text-blue-300 font-medium">
                   ⚡ {TRIGGER_LABELS[journey.trigger?.type] || journey.trigger?.type}
                 </span>
               </div>
@@ -473,7 +479,7 @@ export default function Journeys() {
                   <div key={step.step_id} className="flex items-center gap-2 flex-shrink-0">
                     <div 
                       onClick={() => (step.type === 'message' || step.type === 'offer') ? setPreviewingStep({ step, journey }) : null}
-                      className={`bg-gray-700 rounded-lg px-3 py-2 text-sm ${(step.type === 'message' || step.type === 'offer') ? 'cursor-pointer hover:ring-2 hover:ring-purple-500 transition-all' : ''}`}
+                      className={`bg-gray-700 rounded-lg px-3 py-2 text-sm ${(step.type === 'message' || step.type === 'offer') ? 'cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all' : ''}`}
                     >
                       <div className="text-white flex items-center gap-1.5">
                         <span>{STEP_ICONS[step.type] || "📌"}</span>
@@ -493,7 +499,7 @@ export default function Journeys() {
                         </div>
                       )}
                       {step.config?.campaign_goal && (
-                        <div className="text-purple-300 text-[11px] mt-1 bg-purple-900/30 px-1.5 py-0.5 rounded break-words max-w-[150px]">
+                        <div className="text-blue-300 text-[11px] mt-1 bg-blue-900/30 px-1.5 py-0.5 rounded break-words max-w-[150px]">
                           "{step.config.campaign_goal}"
                         </div>
                       )}
@@ -521,7 +527,7 @@ export default function Journeys() {
                 </div>
                 <div>
                   <div className="text-xs text-gray-500">Completion Rate</div>
-                  <div className="text-purple-400 font-semibold">
+                  <div className="text-blue-400 font-semibold">
                     {journey.enrolled_count
                       ? ((journey.completed_count / journey.enrolled_count) * 100).toFixed(0) + "%"
                       : "—"}

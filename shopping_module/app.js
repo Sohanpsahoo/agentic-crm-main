@@ -322,6 +322,10 @@ function initCheckoutStepper() {
         DOM.submitBtn.innerHTML = '<span>QUEUING ORDER DETAILS...</span><div class="btn-glow-cyan"></div>';
         
         try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const campaign_id = urlParams.get('campaign_id');
+            const channel_message_id = urlParams.get('msg_id');
+
             // Post order to backend to sync to Mongo and send WhatsApp alert
             const response = await fetch('http://localhost:3001/api/orders/storefront', {
                 method: 'POST',
@@ -333,7 +337,9 @@ function initCheckoutStepper() {
                     phone,
                     address,
                     items: cart,
-                    total
+                    total,
+                    campaign_id,
+                    channel_message_id
                 })
             });
 

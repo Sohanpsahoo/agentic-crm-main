@@ -316,4 +316,19 @@ router.post("/retry-dlq", async (req, res, next) => {
   }
 });
 
+// DELETE /api/campaigns/:id
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const campaign = await Campaign.findByIdAndDelete(req.params.id);
+    if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+    
+    // Optionally delete related communications
+    await Communication.deleteMany({ campaign_id: req.params.id });
+
+    res.json({ success: true, deleted: campaign._id });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

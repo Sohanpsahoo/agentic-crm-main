@@ -64,8 +64,8 @@ function AgentCard({ agent }) {
   return (
     <div className="bg-zinc-950 rounded-2xl border border-[#18181b] p-4 transition-all duration-300 hover:shadow-sm flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="w-8 h-8 rounded-xl bg-purple-950/40 flex items-center justify-center flex-shrink-0">
-          <Icon size={16} className="text-purple-400" />
+        <div className="w-8 h-8 rounded-xl bg-blue-950/40 flex items-center justify-center flex-shrink-0">
+          <Icon size={16} className="text-blue-400" />
         </div>
         <span className={`flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full ${cfg.badge}`}>
           {agent.status === "live" ? (
@@ -114,8 +114,8 @@ function AgentFleetPanel() {
     <div className="premium-card p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-950/40 flex items-center justify-center">
-            <Cpu size={20} className="text-purple-400" />
+          <div className="w-10 h-10 rounded-xl bg-blue-950/40 flex items-center justify-center">
+            <Cpu size={20} className="text-blue-400" />
           </div>
           <div>
             <h2 className="text-[16px] font-bold text-white">AI Agent Fleet Status</h2>
@@ -268,33 +268,33 @@ export default function Dashboard() {
           </div>
 
           {/* AI Suggested Segments Card */}
-          <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/10 border border-purple-800/30 p-6 rounded-2xl relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500" />
+          <div className="bg-gradient-to-br from-blue-900/20 to-blue-900/10 border border-blue-800/30 p-6 rounded-2xl relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-blue-500" />
              <div className="flex items-center gap-2 mb-5">
-                <div className="w-8 h-8 rounded-lg bg-purple-900/40 flex items-center justify-center">
-                   <Target size={16} className="text-purple-400" />
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 flex items-center justify-center">
+                   <Target size={16} className="text-blue-400" />
                 </div>
                 <div>
                    <h2 className="text-[16px] font-bold text-white">AI Suggested Segments</h2>
-                   <p className="text-[11px] text-purple-300/70">Copilot recommendations for this week</p>
+                   <p className="text-[11px] text-blue-300/70">Copilot recommendations for this week</p>
                 </div>
              </div>
              
              {loadingSuggestions ? (
                 <div className="flex flex-col gap-3">
-                   <div className="h-16 bg-purple-950/20 rounded-xl animate-pulse border border-purple-900/20" />
-                   <div className="h-16 bg-purple-950/20 rounded-xl animate-pulse border border-purple-900/20" />
-                   <div className="h-16 bg-purple-950/20 rounded-xl animate-pulse border border-purple-900/20" />
+                   <div className="h-16 bg-blue-950/20 rounded-xl animate-pulse border border-blue-900/20" />
+                   <div className="h-16 bg-blue-950/20 rounded-xl animate-pulse border border-blue-900/20" />
+                   <div className="h-16 bg-blue-950/20 rounded-xl animate-pulse border border-blue-900/20" />
                 </div>
              ) : (
                 <div className="flex flex-col gap-3">
                    {suggestedSegments.map((seg, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3.5 bg-zinc-950/60 rounded-xl border border-purple-900/20 hover:border-purple-500/50 transition-colors group">
+                      <div key={idx} className="flex items-center justify-between p-3.5 bg-zinc-950/60 rounded-xl border border-blue-900/20 hover:border-blue-500/50 transition-colors group">
                          <div>
-                            <p className="text-[14px] font-bold text-white group-hover:text-purple-300 transition-colors">{seg.name}</p>
+                            <p className="text-[14px] font-bold text-white group-hover:text-blue-300 transition-colors">{seg.name}</p>
                             <p className="text-[11px] text-zinc-400 mt-0.5">{seg.reason}</p>
                          </div>
-                         <button className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-300 hover:bg-purple-600 hover:text-white transition-all flex-shrink-0 flex items-center gap-1.5">
+                         <button className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-300 hover:bg-blue-600 hover:text-white transition-all flex-shrink-0 flex items-center gap-1.5">
                             <Bot size={12} /> {seg.action}
                          </button>
                       </div>
@@ -340,8 +340,8 @@ export default function Dashboard() {
               {/* Item 3 */}
               <div className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-purple-950/30 flex items-center justify-center flex-shrink-0">
-                    <Megaphone size={16} className="text-purple-400" />
+                  <div className="w-9 h-9 rounded-xl bg-blue-950/30 flex items-center justify-center flex-shrink-0">
+                    <Megaphone size={16} className="text-blue-400" />
                   </div>
                   <span className="text-[14px] font-semibold text-zinc-300">Marketing campaign "Summer Sale" launched</span>
                 </div>
@@ -403,12 +403,12 @@ export default function Dashboard() {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#09090b",
+                      backgroundColor: "#09090B",
                       border: "1px solid #18181b",
                       borderRadius: "16px",
                       boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
                     }}
-                    labelStyle={{ fontWeight: "bold", color: "#ffffff" }}
+                    labelStyle={{ fontWeight: "bold", color: "#020202" }}
                   />
                   <Area
                     type="monotone"
@@ -450,7 +450,7 @@ export default function Dashboard() {
                   />
                   <YAxis tick={{ fill: "#a1a1aa", fontSize: 11 }} unit="%" />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#09090b", border: "1px solid #18181b", borderRadius: 12 }}
+                    contentStyle={{ backgroundColor: "#09090B", border: "1px solid #18181b", borderRadius: 12 }}
                   />
                   <Legend />
                   <Bar dataKey="open_rate" name="Open Rate %" fill="#a78bfa" radius={[4, 4, 0, 0]} />
@@ -475,7 +475,7 @@ export default function Dashboard() {
                       {rfmDist.map((d) => <Cell key={d.segment} fill={RFM_COLORS[d.segment] || "#6b7280"} />)}
                     </Pie>
                     <Tooltip
-                      contentStyle={{ backgroundColor: "#09090b", border: "1px solid #18181b", borderRadius: 12, fontSize: 12 }}
+                      contentStyle={{ backgroundColor: "#09090B", border: "1px solid #18181b", borderRadius: 12, fontSize: 12 }}
                       formatter={(v, n) => [`${v} customers`, n]}
                     />
                   </RechartsPie>

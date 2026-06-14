@@ -55,7 +55,7 @@ export default function Layout({ children }) {
       <aside className="w-64 flex flex-col bg-[#020202] border-r border-[#18181b] flex-shrink-0 z-10">
         {/* Logo Container */}
         <div className="flex items-center gap-3 px-6 h-[76px] border-b border-[#18181b]">
-          <div className="w-[34px] h-[34px] rounded-xl bg-gradient-to-tr from-purple-600 via-purple-500 to-indigo-500 flex items-center justify-center text-white font-extrabold text-[17px] shadow-sm shadow-purple-500/20">
+          <div className="w-[34px] h-[34px] rounded-xl bg-gradient-to-tr from-blue-600 via-blue-500 to-indigo-500 flex items-center justify-center text-white font-extrabold text-[17px] shadow-sm shadow-blue-500/20">
             Z
           </div>
           <span className="font-bold text-[18px] text-zinc-100 tracking-tight">Zari CRM</span>
@@ -63,11 +63,11 @@ export default function Layout({ children }) {
 
         {/* Portal Switcher */}
         <div className="px-5 pt-4 pb-2">
-          <div className="flex gap-1 bg-[#09090b] p-1 rounded-xl border border-[#18181b]">
+          <div className="flex gap-1 bg-[#09090B] p-1 rounded-xl border border-[#18181b]">
             <button
               onClick={() => setPortal("company")}
               className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${portal === "company"
-                ? "bg-zinc-800 text-purple-400 shadow-sm border border-zinc-700/50"
+                ? "bg-zinc-800 text-blue-400 shadow-sm border border-zinc-700/50"
                 : "text-zinc-500 hover:text-zinc-300"
                 }`}
             >
@@ -95,7 +95,7 @@ export default function Layout({ children }) {
                   to={item.to}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 rounded-2xl text-[14px] font-semibold tracking-wide transition-all duration-300 ${isActive
-                      ? "bg-purple-950/40 text-purple-400 shadow-sm border border-purple-900/30"
+                      ? "bg-blue-950/40 text-blue-400 shadow-sm border border-blue-900/30"
                       : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
                     }`
                   }
@@ -113,7 +113,7 @@ export default function Layout({ children }) {
                     to={item.to}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-[13px] font-semibold tracking-wide transition-all duration-300 ${isActive
-                        ? "bg-purple-950/40 text-purple-400 shadow-sm"
+                        ? "bg-blue-950/40 text-blue-400 shadow-sm"
                         : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
                       }`
                     }
@@ -155,7 +155,7 @@ export default function Layout({ children }) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-[13px] font-semibold tracking-wide transition-all duration-300 text-zinc-400 hover:text-white hover:bg-zinc-900/50"
               >
-                <item.icon size={16} className="flex-shrink-0 text-purple-400" />
+                <item.icon size={16} className="flex-shrink-0 text-blue-400" />
                 <span>{item.label}</span>
               </a>
             ))}
@@ -166,7 +166,7 @@ export default function Layout({ children }) {
         <div className="p-4 border-t border-[#18181b]">
           <div className="rounded-2xl bg-zinc-950 border border-[#18181b] p-4">
             <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Powered by</p>
-            <p className="text-[13px] text-purple-400 font-bold mt-1">Groq Llama + LangGraph</p>
+            <p className="text-[13px] text-blue-400 font-bold mt-1">Groq Llama + LangGraph</p>
           </div>
         </div>
       </aside>
@@ -190,7 +190,7 @@ export default function Layout({ children }) {
 
           {/* Profile controls */}
           <div className="flex items-center gap-4">
-            <button className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-[#18181b] hover:border-purple-500 transition-all duration-300 shadow-sm">
+            <button className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-[#18181b] hover:border-blue-500 transition-all duration-300 shadow-sm">
               <img
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80"
                 alt="User Profile"

@@ -12,7 +12,7 @@ const URGENCY_STYLES = {
 const ACTION_STYLES = {
   "re-engage": "text-orange-400 bg-orange-400/10",
   winback:     "text-red-400 bg-red-400/10",
-  upsell:      "text-purple-400 bg-purple-400/10",
+  upsell:      "text-blue-400 bg-blue-400/10",
   retain:      "text-blue-400 bg-blue-400/10",
   nurture:     "text-green-400 bg-green-400/10",
 };
@@ -21,7 +21,7 @@ const CHANNEL_ICONS = { whatsapp: "💬", email: "📧", sms: "📱" };
 
 const ACTIONS = ["", "re-engage", "winback", "upsell", "retain", "nurture"];
 
-function ScoreBar({ value, max = 100, color = "bg-purple-500" }) {
+function ScoreBar({ value, max = 100, color = "bg-blue-500" }) {
   const pct = Math.round((value / max) * 100);
   return (
     <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ function ChannelAffinityBar({ affinity }) {
     <div className="flex gap-2">
       {ch.map((c) => (
         <div key={c.key} className={`flex items-center gap-1 text-xs px-2 py-1 rounded-lg ${
-          c.key === best.key ? "bg-purple-600/30 text-purple-300" : "bg-gray-700 text-gray-400"
+          c.key === best.key ? "bg-blue-600/30 text-blue-300" : "bg-gray-700 text-gray-400"
         }`}>
           <span>{c.icon}</span>
           <span>{Math.round(c.val * 100)}%</span>
@@ -86,13 +86,13 @@ export default function AIDecisioning() {
 
   const modelCards = [
     {
-      icon: <Target size={20} className="text-purple-400" />,
+      icon: <Target size={20} className="text-blue-400" />,
       title: "AI Recommendation Builder",
       subtitle: "Right message · Right offer · Right time — per customer",
       stat: decisions.filter((d) => d.recommended_action?.action).length,
       statLabel: "active recommendations",
-      color: "border-purple-600/30",
-      bg: "bg-purple-600/5",
+      color: "border-blue-600/30",
+      bg: "bg-blue-600/5",
     },
     {
       icon: <TrendingUp size={20} className="text-blue-400" />,
@@ -129,7 +129,7 @@ export default function AIDecisioning() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Zap size={22} className="text-purple-400" />
+            <Zap size={22} className="text-blue-400" />
             <h1 className="text-2xl font-bold text-white">AI Decisioning</h1>
           </div>
           <p className="text-gray-400 text-sm">
@@ -142,7 +142,7 @@ export default function AIDecisioning() {
         <button
           onClick={() => recompute.mutate()}
           disabled={recompute.isPending}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
         >
           <RefreshCw size={14} className={recompute.isPending ? "animate-spin" : ""} />
           {recompute.isPending ? "Computing..." : "Recompute AI Models"}
@@ -219,7 +219,7 @@ export default function AIDecisioning() {
                         <div className="text-xs text-gray-500">₹{(c.ltv || 0).toLocaleString()} LTV</div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-xs px-2 py-1 rounded-full bg-purple-600/20 text-purple-300 font-medium whitespace-nowrap">
+                        <span className="text-xs px-2 py-1 rounded-full bg-blue-600/20 text-blue-300 font-medium whitespace-nowrap">
                           {seg}
                         </span>
                       </td>
@@ -241,7 +241,7 @@ export default function AIDecisioning() {
                         <ScoreBar value={Math.round((pred.winback_probability || 0) * 100)} color="bg-orange-500" />
                       </td>
                       <td className="px-4 py-3 w-28">
-                        <ScoreBar value={pred.propensity_score || 0} color="bg-purple-500" />
+                        <ScoreBar value={pred.propensity_score || 0} color="bg-blue-500" />
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
                         {act.best_send_at || "—"}

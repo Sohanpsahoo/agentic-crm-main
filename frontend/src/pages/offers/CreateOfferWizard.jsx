@@ -121,7 +121,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
         {/* Progress Bar */}
         <div className="flex h-1 bg-gray-800">
           <div 
-            className="bg-purple-600 transition-all duration-300"
+            className="bg-blue-600 transition-all duration-300"
             style={{ width: `${(step / 5) * 100}%` }}
           />
         </div>
@@ -140,7 +140,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                     placeholder="e.g. Summer Sale 2026"
                   />
                 </div>
@@ -149,7 +149,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                   <textarea
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                     placeholder="What is this offer for?"
                   />
                 </div>
@@ -158,7 +158,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                   <select
                     value={form.type}
                     onChange={(e) => setForm({ ...form, type: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                   >
                     <option value="percentage">Percentage Discount</option>
                     <option value="fixed">Fixed Amount Off</option>
@@ -172,7 +172,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                     type="number"
                     value={form.value}
                     onChange={(e) => setForm({ ...form, value: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div>
@@ -181,7 +181,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                     type="datetime-local"
                     value={form.validity_start}
                     onChange={(e) => setForm({ ...form, validity_start: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div>
@@ -190,7 +190,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                     type="datetime-local"
                     value={form.validity_end}
                     onChange={(e) => setForm({ ...form, validity_end: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -218,21 +218,21 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
 
                 {!form.target_all && (
                   <div className="space-y-4">
-                    <div className="bg-gray-800 rounded-xl p-4 border border-purple-500/30">
-                      <label className="text-sm text-purple-300 font-medium block mb-2 flex items-center gap-2">
+                    <div className="bg-gray-800 rounded-xl p-4 border border-blue-500/30">
+                      <label className="text-sm text-blue-300 font-medium block mb-2 flex items-center gap-2">
                         <Sparkles size={14} /> Describe your target audience (AI)
                       </label>
                       <textarea
                         value={nlTarget}
                         onChange={(e) => setNlTarget(e.target.value)}
                         placeholder="e.g. Customers who bought shoes last month and spent over $100"
-                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500 min-h-[80px]"
+                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 min-h-[80px]"
                       />
                       <button
                         type="button"
                         onClick={generateAudience}
                         disabled={isGeneratingSegment || !nlTarget}
-                        className="mt-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                        className="mt-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
                       >
                         {isGeneratingSegment ? "Analyzing Data..." : "Generate Audience"}
                       </button>
@@ -292,7 +292,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                       type="number"
                       value={form.total_budget}
                       onChange={(e) => setForm({ ...form, total_budget: e.target.value })}
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Leave 0 for unlimited budget.</p>
@@ -305,7 +305,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                       type="number"
                       value={form.max_uses}
                       onChange={(e) => setForm({ ...form, max_uses: e.target.value })}
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                     />
                     <p className="text-xs text-gray-500 mt-1">Total times this offer can be claimed across everyone.</p>
                   </div>
@@ -315,7 +315,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                       type="number"
                       value={form.uses_per_customer}
                       onChange={(e) => setForm({ ...form, uses_per_customer: e.target.value })}
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                     type="text"
                     value={form.code_prefix}
                     onChange={(e) => setForm({ ...form, code_prefix: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500 font-mono uppercase"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 font-mono uppercase"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     {form.auto_generate_codes 
@@ -364,8 +364,8 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
             <div className="space-y-5 animate-in fade-in">
               <h3 className="text-white font-medium text-lg border-b border-gray-800 pb-2">Distribution & Finalize</h3>
               
-              <div className="bg-purple-900/20 border border-purple-500/30 p-5 rounded-xl space-y-3">
-                <div className="flex items-center gap-2 text-purple-300 font-medium pb-2 border-b border-purple-500/20">
+              <div className="bg-blue-900/20 border border-blue-500/30 p-5 rounded-xl space-y-3">
+                <div className="flex items-center gap-2 text-blue-300 font-medium pb-2 border-b border-blue-500/20">
                   <Check size={18} /> Offer Ready to Launch
                 </div>
                 
@@ -381,7 +381,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
                 <select
                   value={form.status}
                   onChange={(e) => setForm({ ...form, status: e.target.value })}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                 >
                   <option value="draft">Save as Draft (Distribute later)</option>
                   <option value="active">Active (Ready for distribution)</option>
@@ -407,7 +407,7 @@ export default function CreateOfferWizard({ onClose, onCreate, isPending }) {
           {step < 5 ? (
             <button
               onClick={nextStep}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors shadow-lg shadow-purple-900/20"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors shadow-lg shadow-blue-900/20"
             >
               Continue <ChevronRight size={16} />
             </button>

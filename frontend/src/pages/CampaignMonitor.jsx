@@ -80,7 +80,7 @@ function AlertCard({ alert, onApply, onDismiss }) {
           )}
           <div>
             <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Action</p>
-            <span className="badge bg-purple-900/40 text-purple-300 border-purple-700/40 capitalize">
+            <span className="badge bg-blue-900/40 text-blue-300 border-blue-700/40 capitalize">
               {alert.recommended_action?.replace(/_/g, " ")}
             </span>
           </div>
@@ -90,7 +90,7 @@ function AlertCard({ alert, onApply, onDismiss }) {
               <button
                 onClick={handleApply}
                 disabled={!!loading}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {loading === "apply" ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
                 Apply & Resend to Non-Openers
@@ -204,7 +204,7 @@ export default function CampaignMonitor() {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors ${
-              filter === f ? "bg-purple-600 text-white" : "bg-gray-800 text-gray-400 hover:text-gray-200"
+              filter === f ? "bg-blue-600 text-white" : "bg-gray-800 text-gray-400 hover:text-gray-200"
             }`}
           >
             {f}

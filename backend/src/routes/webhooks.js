@@ -22,8 +22,10 @@ router.post("/channel", async (req, res) => {
     // only advance status (never go backwards in lifecycle)
     const currentIdx = STATUS_ORDER.indexOf(comm.status);
     const newIdx = STATUS_ORDER.indexOf(event);
+    let statusChanged = false;
     if (newIdx > currentIdx) {
       comm.status = event;
+      statusChanged = true;
     }
 
     // append event to log
@@ -34,18 +36,25 @@ router.post("/channel", async (req, res) => {
     if (event === "delivered") comm.delivered_at = new Date();
     if (event === "opened") comm.opened_at = new Date();
     if (event === "clicked") comm.clicked_at = new Date();
-    if (event === "converted") comm.converted_at = new Date();
+    if (event === "converted") {
+      comm.converted_at = new Date();
+      if (metadata && metadata.revenue) {
+        comm.revenue_attributed = (comm.revenue_attributed || 0) + Number(metadata.revenue);
+      }
+    }
     if (event === "failed") comm.failed_reason = metadata?.reason || "unknown";
 
     await comm.save();
 
     // update campaign metrics_summary denormalization
     const increment = {};
-    if (event === "delivered") increment["metrics_summary.delivered"] = 1;
-    if (event === "opened") increment["metrics_summary.opened"] = 1;
-    if (event === "clicked") increment["metrics_summary.clicked"] = 1;
-    if (event === "converted") increment["metrics_summary.converted"] = 1;
-    if (event === "failed") increment["metrics_summary.failed"] = 1;
+    if (statusChanged) {
+      if (event === "delivered") increment["metrics_summary.delivered"] = 1;
+      if (event === "opened") increment["metrics_summary.opened"] = 1;
+      if (event === "clicked") increment["metrics_summary.clicked"] = 1;
+      if (event === "converted") increment["metrics_summary.converted"] = 1;
+      if (event === "failed") increment["metrics_summary.failed"] = 1;
+    }
 
     if (Object.keys(increment).length) {
       await Campaign.findByIdAndUpdate(comm.campaign_id, { $inc: increment });
