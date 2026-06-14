@@ -141,13 +141,6 @@ export default function Layout({ children }) {
           </div>
         </nav>
 
-        {/* Footer info box */}
-        <div className="p-4 border-t border-[#18181b]">
-          <div className="rounded-2xl bg-zinc-950 border border-[#18181b] p-4">
-            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Powered by</p>
-            <p className="text-[13px] text-blue-400 font-bold mt-1">Groq Llama + LangGraph</p>
-          </div>
-        </div>
       </aside>
 
       {/* Main Content Area */}
