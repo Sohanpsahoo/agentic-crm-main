@@ -177,11 +177,14 @@ export default function Dashboard() {
   const [rfmDist, setRfmDist] = useState([]);
   const [suggestedSegments, setSuggestedSegments] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(true);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [loadingActivity, setLoadingActivity] = useState(true);
 
   useEffect(() => {
     analyticsApi.overview().then((r) => setOverview(r.data)).catch(() => {});
     analyticsApi.campaigns({ days: 30 }).then((r) => setCampaignPerf(r.data.slice(0, 8))).catch(() => {});
     personasApi.distribution().then((d) => setRfmDist(d || [])).catch(() => {});
+    analyticsApi.recentActivity().then((r) => setRecentActivity(r.data || [])).catch(() => {}).finally(() => setLoadingActivity(false));
     
     // Fetch Suggested Segments
     agentApi.chat("Generate 4 target segment recommendations based on recent activity: 'Dormant High Value Customers', 'Frequent Buyers This Month', 'First Purchase Users', and 'At Risk Customers'. Return EXACTLY a JSON array of objects with keys: 'name', 'reason', 'action'. Do not return markdown. Just the raw JSON array.", [], "Marketer")
@@ -377,59 +380,49 @@ export default function Dashboard() {
           {/* Recent Activity Feed Card */}
           <div className="premium-card p-6">
             <h2 className="text-[16px] font-bold text-white mb-6">Recent Activity Feed</h2>
-            <div className="space-y-4">
-              {/* Item 1 */}
-              <div className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-zinc-800 shadow-sm flex-shrink-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80"
-                      alt="User avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-[14px] font-semibold text-zinc-300">New deal signed: Acme Corp for $50k</span>
-                </div>
-                <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">1 hr ago</span>
+            
+            {loadingActivity ? (
+              <div className="space-y-4">
+                <div className="h-16 bg-zinc-950/40 rounded-2xl animate-pulse border border-[#18181b]/60" />
+                <div className="h-16 bg-zinc-950/40 rounded-2xl animate-pulse border border-[#18181b]/60" />
+                <div className="h-16 bg-zinc-950/40 rounded-2xl animate-pulse border border-[#18181b]/60" />
               </div>
+            ) : recentActivity.length === 0 ? (
+              <div className="h-40 flex items-center justify-center text-zinc-500 text-[13px]">
+                No recent activity.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {recentActivity.map((activity, idx) => {
+                  const isOrder = activity.type === "order";
+                  const isCampaign = activity.type === "campaign";
+                  
+                  const timeStr = (() => {
+                    const diff = (new Date() - new Date(activity.timestamp)) / 1000;
+                    if (diff < 60) return "just now";
+                    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+                    if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+                    return `${Math.floor(diff / 86400)} days ago`;
+                  })();
 
-              {/* Item 2 */}
-              <div className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-zinc-800 shadow-sm flex-shrink-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80"
-                      alt="User avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-[14px] font-semibold text-zinc-300">Customer support ticket closed: #2345</span>
-                </div>
-                <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">3 hrs ago</span>
+                  return (
+                    <div key={idx} className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                          isOrder ? "bg-emerald-950/20 text-emerald-450" : 
+                          isCampaign ? "bg-blue-950/30 text-blue-400" : 
+                          "bg-zinc-800 text-zinc-300"
+                        }`}>
+                          {isOrder ? <Tag size={16} /> : isCampaign ? <Megaphone size={16} /> : <Users size={16} />}
+                        </div>
+                        <span className="text-[14px] font-semibold text-zinc-300">{activity.message}</span>
+                      </div>
+                      <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">{timeStr}</span>
+                    </div>
+                  );
+                })}
               </div>
-
-              {/* Item 3 */}
-              <div className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-950/30 flex items-center justify-center flex-shrink-0">
-                    <Megaphone size={16} className="text-blue-400" />
-                  </div>
-                  <span className="text-[14px] font-semibold text-zinc-300">Marketing campaign "Summer Sale" launched</span>
-                </div>
-                <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">5 hrs ago</span>
-              </div>
-
-              {/* Item 4 */}
-              <div className="flex items-center justify-between p-4 bg-zinc-950/40 rounded-2xl border border-[#18181b]/60 hover:shadow-sm transition-all duration-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-950/20 flex items-center justify-center flex-shrink-0">
-                    <CheckCircle size={16} className="text-emerald-450" />
-                  </div>
-                  <span className="text-[14px] font-semibold text-zinc-300">Lead converted: John Smith</span>
-                </div>
-                <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">1 day ago</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

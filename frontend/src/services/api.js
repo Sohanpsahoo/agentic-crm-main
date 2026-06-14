@@ -45,6 +45,7 @@ export const analyticsApi = {
   roi: () => api.get("/analytics/roi"),
   rfmDistribution: () => api.get("/analytics/rfm-distribution"),
   businessKpis: () => api.get("/analytics/business-kpis"),
+  recentActivity: () => api.get("/analytics/recent-activity"),
 };
 
 export const agentApi = {

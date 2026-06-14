@@ -253,5 +253,44 @@ router.get("/rfm-distribution", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// GET /api/analytics/recent-activity
+router.get("/recent-activity", async (req, res) => {
+  try {
+    const limit = 5;
+    
+    // Fetch recent orders
+    const recentOrders = await Order.find().sort({ created_at: -1 }).limit(limit).populate("customer_id", "name");
+    const orderEvents = recentOrders.map(o => ({
+      type: "order",
+      message: `New deal: ${o.customer_id?.name || 'Customer'} spent ₹${o.total_amount}`,
+      timestamp: o.created_at,
+    }));
+
+    // Fetch recent customers
+    const recentCustomers = await Customer.find().sort({ created_at: -1 }).limit(limit);
+    const customerEvents = recentCustomers.map(c => ({
+      type: "customer",
+      message: `New customer joined: ${c.name}`,
+      timestamp: c.created_at,
+    }));
+
+    // Fetch recent campaigns
+    const recentCampaigns = await Campaign.find({ status: "running" }).sort({ created_at: -1 }).limit(limit);
+    const campaignEvents = recentCampaigns.map(c => ({
+      type: "campaign",
+      message: `Campaign "${c.name}" launched`,
+      timestamp: c.created_at,
+    }));
+
+    // Combine and sort by timestamp desc, take top 6
+    const allEvents = [...orderEvents, ...customerEvents, ...campaignEvents]
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, 6);
+
+    res.json(allEvents);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;
