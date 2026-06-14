@@ -23,9 +23,14 @@ agentic-crm/
 ├── ai-service/          →  FastAPI + LangGraph — Multi-agent AI orchestration
 ├── channel-service/     →  Node.js — Email / SMS delivery simulator
 ├── whatsapp-service/    →  Node.js + Baileys — Real WhatsApp messaging
-├── scripts/             →  Database seeding scripts
-├── docker-compose.yml   →  MongoDB + Qdrant containers
-└── start.ps1            →  One-click dev launcher (Windows)
+├── shopping_module/     →  Interactive conversational shopping application
+├── scripts/             →  Database and Qdrant seeding scripts
+├── docs/                →  Documentation and assets
+├── logs/                →  System execution logs
+├── docker-compose.yml   →  MongoDB + Qdrant container configurations
+├── vercel.json          →  Deployment configuration for multi-service hosting
+├── START.md             →  Quick start guide
+└── startmannual.ps1     →  One-click dev launcher (Windows)
 ```
 
 ---
