@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zari CRM | AI-Powered Customer Relationship Management</title>
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -71,7 +74,7 @@
     .bg-grid {
       background-size: 50px 50px;
       background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
       mask-image: linear-gradient(to bottom, transparent, black, transparent);
       -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
     }
@@ -80,7 +83,7 @@
     .glow-orb {
       position: absolute;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(15,98,254,0) 70%);
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(15, 98, 254, 0) 70%);
       filter: blur(60px);
       z-index: 0;
       pointer-events: none;
@@ -91,8 +94,15 @@
     }
 
     @keyframes pulse-slow {
-      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-      100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.8;
+      }
     }
 
     /* Glassmorphism */
@@ -110,7 +120,7 @@
       border: 1px solid rgba(255, 255, 255, 0.05);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    
+
     .glass-card:hover {
       border-color: rgba(59, 130, 246, 0.6);
       box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2);
@@ -128,18 +138,30 @@
     }
 
     @keyframes shine {
-      to { background-position: 200% center; }
+      to {
+        background-position: 200% center;
+      }
     }
 
     /* Floating animation */
     @keyframes float {
-      0% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(2deg); }
-      100% { transform: translateY(0px) rotate(0deg); }
+      0% {
+        transform: translateY(0px) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(2deg);
+      }
+
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
     }
+
     .floating {
       animation: float 6s ease-in-out infinite;
     }
+
     .floating-delay {
       animation: float 8s ease-in-out infinite 2s;
     }
@@ -149,24 +171,27 @@
       opacity: 0;
       transform: translateY(40px);
     }
-    
+
     .char-reveal {
       display: inline-block;
       overflow: hidden;
     }
-    .char-reveal > span {
+
+    .char-reveal>span {
       display: inline-block;
       transform: translateY(100%);
     }
   </style>
 </head>
+
 <body class="antialiased font-sans selection:bg-brand-500 selection:text-white">
 
   <!-- Fixed Navbar -->
   <nav class="fixed w-full z-50 top-0 transition-all duration-300 glass-panel border-b-0 border-white/5 py-4">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-brand-600/20 flex items-center justify-center border border-brand-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+        <div
+          class="w-10 h-10 rounded-xl bg-brand-600/20 flex items-center justify-center border border-brand-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
           <i data-lucide="sparkles" class="text-brand-400 w-5 h-5"></i>
         </div>
         <span class="font-display font-bold text-xl tracking-tight text-white">Zari CRM</span>
@@ -177,8 +202,10 @@
         <a href="#copilot" class="hover:text-white transition-colors">AI Copilot</a>
       </div>
       <div class="flex items-center gap-4">
-        <a href="http://localhost:5173" class="hidden md:block text-sm font-medium text-gray-300 hover:text-white transition-colors">Sign In</a>
-        <a href="http://localhost:5173" class="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-brand-50 transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+        <a href="http://localhost:5173"
+          class="hidden md:block text-sm font-medium text-gray-300 hover:text-white transition-colors">Sign In</a>
+        <a href="http://localhost:5173"
+          class="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-brand-50 transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]">
           Start Now
         </a>
       </div>
@@ -191,12 +218,13 @@
     <div class="absolute inset-0 bg-grid opacity-30 z-0"></div>
     <div id="particles-js"></div>
     <div class="glow-orb pulse-slow w-[800px] h-[800px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-    
+
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full grid lg:grid-cols-2 gap-16 items-center">
-      
+
       <!-- Hero Text -->
       <div class="text-left space-y-8 hero-content">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-sm font-medium backdrop-blur-md">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-sm font-medium backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
           Next-Gen Autonomous AI
         </div>
@@ -205,53 +233,62 @@
           <span class="text-gradient">runs itself.</span>
         </h1>
         <p class="text-lg lg:text-xl text-gray-400 max-w-xl font-light leading-relaxed hero-subtitle">
-          Leverage autonomous AI agents to orchestrate multi-channel marketing campaigns, dynamically segment audiences, and drive revenue while you sleep.
+          Click to directly launch the product built by me for the assignment.
         </p>
         <div class="flex items-center gap-4 pt-4 hero-buttons">
-          <a href="http://localhost:5173" class="px-8 py-4 rounded-full bg-brand-600 text-white font-semibold hover:bg-brand-500 transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center gap-2 group">
-            Launch Platform 
+          <a href="https://agentic-crm-main.vercel.app/"
+            class="px-8 py-4 rounded-full bg-brand-600 text-white font-semibold hover:bg-brand-500 transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center gap-2 group">
+            Launch Platform
             <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
           </a>
-          <a href="#features" class="px-8 py-4 rounded-full glass-panel text-white font-semibold hover:bg-white/10 transition-all flex items-center gap-2">
-            Explore Features
-          </a>
+
         </div>
       </div>
 
       <!-- Hero 3D Parallax Visuals -->
       <div class="relative h-[600px] hidden lg:block hero-visuals perspective-[1000px] z-20">
         <!-- Main Dashboard Mockup -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] glass-panel rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20" id="parallax-main">
-          <div class="absolute inset-0 bg-gradient-to-tr from-brand-500/10 to-purple-500/10 rounded-2xl pointer-events-none"></div>
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] glass-panel rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20"
+          id="parallax-main">
+          <div
+            class="absolute inset-0 bg-gradient-to-tr from-brand-500/10 to-purple-500/10 rounded-2xl pointer-events-none">
+          </div>
           <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-4">
             <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
             <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-            <span class="ml-4 text-xs font-mono text-brand-300 flex items-center gap-2"><i data-lucide="zap" class="w-3 h-3 text-yellow-400"></i> Zari Copilot Active</span>
+            <span class="ml-4 text-xs font-mono text-brand-300 flex items-center gap-2"><i data-lucide="zap"
+                class="w-3 h-3 text-yellow-400"></i> Zari Copilot Active</span>
           </div>
           <div class="space-y-4">
             <div class="flex items-start gap-3">
-              <div class="w-8 h-8 rounded-full bg-brand-600/30 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
+              <div
+                class="w-8 h-8 rounded-full bg-brand-600/30 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
                 <i data-lucide="bot" class="w-4 h-4 text-brand-400"></i>
               </div>
               <div class="bg-dark-800 rounded-xl rounded-tl-none p-3 border border-white/5 text-sm text-gray-300">
-                I've identified 1,240 "At Risk" VIP customers. Shall I launch a personalized WhatsApp winback campaign with a 20% offer?
+                I've identified 1,240 "At Risk" VIP customers. Shall I launch a personalized WhatsApp winback campaign
+                with a 20% offer?
               </div>
             </div>
             <div class="flex items-start gap-3 flex-row-reverse">
               <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="user" class="w-4 h-4 text-white"></i>
               </div>
-              <div class="bg-brand-600 rounded-xl rounded-tr-none p-3 text-sm text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+              <div
+                class="bg-brand-600 rounded-xl rounded-tr-none p-3 text-sm text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]">
                 Yes, execute the campaign immediately.
               </div>
             </div>
             <div class="flex items-start gap-3">
-               <div class="w-8 h-8 rounded-full bg-brand-600/30 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
+              <div
+                class="w-8 h-8 rounded-full bg-brand-600/30 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
                 <i data-lucide="bot" class="w-4 h-4 text-brand-400"></i>
               </div>
               <div class="bg-dark-800 rounded-xl rounded-tl-none p-3 border border-white/5 text-sm text-gray-300">
-                <div class="flex items-center gap-2 text-brand-400 font-medium mb-1"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Campaign Dispatched</div>
+                <div class="flex items-center gap-2 text-brand-400 font-medium mb-1"><i data-lucide="check-circle-2"
+                    class="w-4 h-4"></i> Campaign Dispatched</div>
                 Generating copy, applying segments, and streaming to WhatsApp API. Expect ROI analytics shortly.
               </div>
             </div>
@@ -259,7 +296,8 @@
         </div>
 
         <!-- Floating Analytics Card -->
-        <div class="absolute -top-10 -right-10 w-[240px] glass-panel rounded-2xl p-5 shadow-2xl z-30 floating" id="parallax-float-1">
+        <div class="absolute -top-10 -right-10 w-[240px] glass-panel rounded-2xl p-5 shadow-2xl z-30 floating"
+          id="parallax-float-1">
           <h3 class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-2">Campaign ROI</h3>
           <div class="text-3xl font-display font-bold text-white mb-1">3.4x</div>
           <div class="text-green-400 text-xs font-medium flex items-center gap-1">
@@ -274,9 +312,11 @@
         </div>
 
         <!-- Floating Segments Card -->
-        <div class="absolute -bottom-10 -left-10 w-[260px] glass-panel rounded-2xl p-5 shadow-2xl z-10 floating-delay" id="parallax-float-2">
+        <div class="absolute -bottom-10 -left-10 w-[260px] glass-panel rounded-2xl p-5 shadow-2xl z-10 floating-delay"
+          id="parallax-float-2">
           <div class="flex items-center gap-3 mb-4">
-             <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+            <div
+              class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
               <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
             </div>
             <div>
@@ -285,8 +325,8 @@
             </div>
           </div>
           <div class="flex justify-between items-center text-sm border-t border-white/5 pt-3">
-             <span class="text-gray-400">Size</span>
-             <span class="text-white font-bold">12,405</span>
+            <span class="text-gray-400">Size</span>
+            <span class="text-white font-bold">12,405</span>
           </div>
         </div>
 
@@ -298,11 +338,13 @@
   <section class="py-40 relative overflow-hidden bg-dark-900 border-y border-white/5" id="features">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center relative z-10">
       <h2 class="font-display text-5xl lg:text-7xl font-bold tracking-tight text-white mb-8 statement-text">
-        Stop managing software. <br/>
-        <span class="text-gray-700 transition-colors duration-700 hover:text-white cursor-default">Start managing growth.</span>
+        Stop managing software. <br />
+        <span class="text-gray-700 transition-colors duration-700 hover:text-white cursor-default">Start managing
+          growth.</span>
       </h2>
       <p class="text-2xl text-gray-400 max-w-3xl mx-auto font-light reveal">
-        Traditional CRMs are just databases you have to maintain. Zari CRM is an active team member that identifies opportunities and acts on them autonomously.
+        Traditional CRMs are just databases you have to maintain. Zari CRM is an active team member that identifies
+        opportunities and acts on them autonomously.
       </p>
     </div>
   </section>
@@ -310,29 +352,34 @@
   <!-- Bento Box Features -->
   <section class="py-32 relative">
     <div class="glow-orb pulse-slow w-[600px] h-[600px] top-0 right-0 opacity-20 bg-purple-600"></div>
-    <div class="glow-orb pulse-slow w-[600px] h-[600px] bottom-0 left-0 opacity-20 bg-blue-600" style="animation-delay: 2s;"></div>
+    <div class="glow-orb pulse-slow w-[600px] h-[600px] bottom-0 left-0 opacity-20 bg-blue-600"
+      style="animation-delay: 2s;"></div>
 
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-      
+
       <div class="text-center mb-20 reveal">
         <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-4">Unfair Advantage.</h2>
         <p class="text-gray-400 text-xl">Everything you need to automate your entire marketing pipeline.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bento-grid">
-        
+
         <!-- Feature 1 -->
         <div class="glass-card rounded-3xl p-8 md:col-span-2 bento-item">
-          <div class="w-12 h-12 rounded-xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center mb-6">
+          <div
+            class="w-12 h-12 rounded-xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center mb-6">
             <i data-lucide="brain-circuit" class="w-6 h-6 text-brand-400"></i>
           </div>
           <h3 class="text-2xl font-bold text-white mb-3">AI Copilot Orchestration</h3>
           <p class="text-gray-400 leading-relaxed mb-8 max-w-md">
-            Chat naturally with your CRM. Ask it to find specific audiences, generate personalized SMS or Email copy, and schedule multi-channel dispatches instantly.
+            Chat naturally with your CRM. Ask it to find specific audiences, generate personalized SMS or Email copy,
+            and schedule multi-channel dispatches instantly.
           </p>
-          <div class="w-full h-48 rounded-xl bg-dark-900 border border-white/5 relative overflow-hidden flex items-center justify-center">
+          <div
+            class="w-full h-48 rounded-xl bg-dark-900 border border-white/5 relative overflow-hidden flex items-center justify-center">
             <div class="absolute inset-0 bg-grid opacity-50"></div>
-            <div class="relative px-6 py-3 rounded-full bg-dark-800 border border-white/10 text-brand-300 text-sm font-mono flex items-center gap-2 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+            <div
+              class="relative px-6 py-3 rounded-full bg-dark-800 border border-white/10 text-brand-300 text-sm font-mono flex items-center gap-2 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
               > "Launch a winback campaign for churned VIPs" <span class="w-2 h-4 bg-brand-400 animate-pulse"></span>
             </div>
           </div>
@@ -340,48 +387,114 @@
 
         <!-- Feature 2 -->
         <div class="glass-card rounded-3xl p-8 bento-item">
-           <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-6">
+          <div
+            class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-6">
             <i data-lucide="target" class="w-6 h-6 text-purple-400"></i>
           </div>
           <h3 class="text-xl font-bold text-white mb-3">RFM Segmentation</h3>
           <p class="text-gray-400 leading-relaxed text-sm">
-            Automatically bucket your customers based on Recency, Frequency, and Monetary value. Target "Champions" differently than "At Risk" users.
+            Automatically bucket your customers based on Recency, Frequency, and Monetary value. Target "Champions"
+            differently than "At Risk" users.
           </p>
         </div>
 
         <!-- Feature 3 -->
         <div class="glass-card rounded-3xl p-8 bento-item">
-           <div class="w-12 h-12 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center mb-6">
+          <div
+            class="w-12 h-12 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center mb-6">
             <i data-lucide="bar-chart-3" class="w-6 h-6 text-green-400"></i>
           </div>
           <h3 class="text-xl font-bold text-white mb-3">Deep Analytics</h3>
           <p class="text-gray-400 leading-relaxed text-sm">
-            Visualize your ROI, delivery funnels, and channel performance in real-time. Know exactly which campaigns drive revenue.
+            Visualize your ROI, delivery funnels, and channel performance in real-time. Know exactly which campaigns
+            drive revenue.
           </p>
         </div>
 
         <!-- Feature 4 -->
         <div class="glass-card rounded-3xl p-8 md:col-span-2 bento-item">
-          <div class="w-12 h-12 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center mb-6">
+          <div
+            class="w-12 h-12 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center mb-6">
             <i data-lucide="megaphone" class="w-6 h-6 text-orange-400"></i>
           </div>
           <h3 class="text-2xl font-bold text-white mb-3">Omnichannel Dispatch</h3>
           <p class="text-gray-400 leading-relaxed mb-8 max-w-md">
-            Connect natively to WhatsApp, Email, and SMS APIs. The AI crafts the message, personalizes it per user, and sends it through the optimal channel.
+            Connect natively to WhatsApp, Email, and SMS APIs. The AI crafts the message, personalizes it per user, and
+            sends it through the optimal channel.
           </p>
-           <div class="flex gap-4">
-             <div class="w-14 h-14 rounded-2xl bg-[#25D366]/20 border border-[#25D366]/30 flex items-center justify-center hover:-translate-y-2 transition-transform shadow-[0_0_15px_rgba(37,211,102,0.2)]">
-               <i data-lucide="message-circle" class="w-6 h-6 text-[#25D366]"></i>
-             </div>
-             <div class="w-14 h-14 rounded-2xl bg-[#EA4335]/20 border border-[#EA4335]/30 flex items-center justify-center hover:-translate-y-2 transition-transform shadow-[0_0_15px_rgba(234,67,53,0.2)]">
-               <i data-lucide="mail" class="w-6 h-6 text-[#EA4335]"></i>
-             </div>
-             <div class="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center hover:-translate-y-2 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-               <i data-lucide="smartphone" class="w-6 h-6 text-blue-400"></i>
-             </div>
-           </div>
+          <div class="flex gap-4">
+            <div
+              class="w-14 h-14 rounded-2xl bg-[#25D366]/20 border border-[#25D366]/30 flex items-center justify-center hover:-translate-y-2 transition-transform shadow-[0_0_15px_rgba(37,211,102,0.2)]">
+              <i data-lucide="message-circle" class="w-6 h-6 text-[#25D366]"></i>
+            </div>
+            <div
+              class="w-14 h-14 rounded-2xl bg-[#EA4335]/20 border border-[#EA4335]/30 flex items-center justify-center hover:-translate-y-2 transition-transform shadow-[0_0_15px_rgba(234,67,53,0.2)]">
+              <i data-lucide="mail" class="w-6 h-6 text-[#EA4335]"></i>
+            </div>
+            <div
+              class="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center hover:-translate-y-2 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+              <i data-lucide="smartphone" class="w-6 h-6 text-blue-400"></i>
+            </div>
+          </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Schema Section -->
+  <section class="py-32 relative overflow-hidden" id="schema">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-20 reveal">
+        <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">How Zari Works.</h2>
+        <p class="text-gray-400 text-lg">A continuous loop of autonomous intelligence and engagement.</p>
+      </div>
+
+      <div class="relative w-full max-w-5xl mx-auto p-10 glass-panel rounded-[40px] shadow-[0_0_50px_rgba(59,130,246,0.1)] reveal">
+        <!-- Connecting Line Background -->
+        <div class="absolute top-1/2 left-10 right-10 h-1 bg-white/5 -translate-y-1/2 rounded-full hidden md:block"></div>
+        <div class="absolute top-1/2 left-10 right-10 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent -translate-y-1/2 rounded-full hidden md:block opacity-50 pulse-slow"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 relative z-10">
+          
+          <!-- Step 1: Data -->
+          <div class="flex flex-col items-center text-center group">
+            <div class="w-20 h-20 rounded-full glass-card flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all duration-500 group-hover:-translate-y-2">
+              <i data-lucide="database" class="w-8 h-8 text-purple-400"></i>
+            </div>
+            <h3 class="font-bold text-white mb-2">1. Data Ingestion</h3>
+            <p class="text-sm text-gray-400">Connect your Shopify, custom databases, or APIs to feed real-time customer data.</p>
+          </div>
+
+          <!-- Step 2: AI Engine -->
+          <div class="flex flex-col items-center text-center group">
+            <div class="w-20 h-20 rounded-full glass-card flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all duration-500 group-hover:-translate-y-2 relative">
+              <div class="absolute inset-0 rounded-full border-2 border-brand-500/30 animate-spin" style="animation-duration: 3s;"></div>
+              <i data-lucide="brain" class="w-8 h-8 text-brand-400 relative z-10"></i>
+            </div>
+            <h3 class="font-bold text-white mb-2">2. Zari Intelligence</h3>
+            <p class="text-sm text-gray-400">Our LLM agent constantly monitors data, segments users, and identifies revenue opportunities.</p>
+          </div>
+
+          <!-- Step 3: Action -->
+          <div class="flex flex-col items-center text-center group">
+            <div class="w-20 h-20 rounded-full glass-card flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] transition-all duration-500 group-hover:-translate-y-2">
+              <i data-lucide="zap" class="w-8 h-8 text-green-400"></i>
+            </div>
+            <h3 class="font-bold text-white mb-2">3. Autonomous Action</h3>
+            <p class="text-sm text-gray-400">Zari drafts personalized copy and dispatches campaigns via WhatsApp, SMS, or Email.</p>
+          </div>
+
+          <!-- Step 4: Analytics -->
+          <div class="flex flex-col items-center text-center group">
+            <div class="w-20 h-20 rounded-full glass-card flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] transition-all duration-500 group-hover:-translate-y-2">
+              <i data-lucide="line-chart" class="w-8 h-8 text-orange-400"></i>
+            </div>
+            <h3 class="font-bold text-white mb-2">4. Learn & Optimize</h3>
+            <p class="text-sm text-gray-400">Real-time ROI tracking feeds back into the AI to improve future campaign performance.</p>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
@@ -389,8 +502,10 @@
   <!-- CTA Section -->
   <section class="py-40 relative overflow-hidden border-t border-white/5">
     <div class="absolute inset-0 bg-brand-900/10"></div>
-    <div class="glow-orb pulse-slow w-[1000px] h-[1000px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-60 bg-brand-500"></div>
-    
+    <div
+      class="glow-orb pulse-slow w-[1000px] h-[1000px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-60 bg-brand-500">
+    </div>
+
     <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal">
       <h2 class="font-display text-5xl md:text-8xl font-bold text-white mb-8">
         Ready to scale?
@@ -398,7 +513,8 @@
       <p class="text-2xl text-blue-200/80 mb-12 max-w-2xl mx-auto">
         Deploy the ultimate AI marketing workforce in seconds.
       </p>
-      <a href="http://localhost:5173" class="inline-flex items-center gap-3 px-12 py-6 rounded-full bg-white text-black font-bold text-xl hover:bg-gray-200 transition-all hover:scale-105 shadow-[0_0_60px_rgba(255,255,255,0.4)]">
+      <a href="https://agentic-crm-main.vercel.app/"
+        class="inline-flex items-center gap-3 px-12 py-6 rounded-full bg-white text-black font-bold text-xl hover:bg-gray-200 transition-all hover:scale-105 shadow-[0_0_60px_rgba(255,255,255,0.4)]">
         Open Zari CRM <i data-lucide="arrow-right" class="w-6 h-6"></i>
       </a>
     </div>
@@ -413,8 +529,10 @@
       </div>
       <p class="text-gray-500 text-sm">© 2026 Zari CRM. The Future of Customer Engagement.</p>
       <div class="flex gap-4">
-        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="twitter"
+            class="w-5 h-5"></i></a>
+        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="github"
+            class="w-5 h-5"></i></a>
       </div>
     </div>
   </footer>
@@ -436,25 +554,25 @@
       ease: "power4.out",
       delay: 0.2
     })
-    .from(".hero-visuals", {
-      scale: 0.8,
-      opacity: 0,
-      duration: 1.5,
-      ease: "elastic.out(1, 0.5)"
-    }, "-=0.8");
+      .from(".hero-visuals", {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1.5,
+        ease: "elastic.out(1, 0.5)"
+      }, "-=0.8");
 
     // Hero Parallax effect based on mouse movement
     document.addEventListener("mousemove", (e) => {
       const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
       const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
-      
+
       gsap.to("#parallax-main", {
         rotationY: xAxis,
         rotationX: -yAxis,
         ease: "power2.out",
         duration: 1
       });
-      
+
       gsap.to("#parallax-float-1", {
         x: xAxis * 1.5,
         y: yAxis * 1.5,
@@ -591,4 +709,5 @@
     });
   </script>
 </body>
+
 </html>
