@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const api = axios.create({ baseURL: "/api", timeout: 30000 });
+import api from "./api";
 
 const personasApi = {
   list: (segment, page = 1) =>
