@@ -16,13 +16,13 @@ THRESHOLDS = {
 }
 
 DIAGNOSIS_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", """You are a marketing campaign expert for Zari fashion brand.
-A campaign is underperforming. Diagnose WHY and generate an improved message.
-Be direct and specific. Format JSON exactly:
+    ("system", """You are a marketing campaign expert for Aether Void.
+Analyze the campaign's performance metrics. If it's underperforming, diagnose why. If it's performing well, provide professional insights on what is working.
+Format JSON exactly:
 {
-  "diagnosis": "<1-2 sentence explanation of why it's underperforming>",
-  "suggested_copy": "<improved WhatsApp/SMS/email message body, max 160 chars>",
-  "recommended_action": "resend_non_openers|pause|modify_audience"
+  "diagnosis": "<1-2 sentence professional insight and analysis of the performance>",
+  "suggested_copy": "<improved or alternative message body, max 160 chars>",
+  "recommended_action": "continue|resend_non_openers|pause|modify_audience"
 }"""),
     ("human", """Campaign: {campaign_name}
 Channel: {channel}
@@ -31,7 +31,7 @@ Current metrics: {metrics}
 Expected thresholds: {thresholds}
 Failed metric: {metric_failed} (actual: {actual}%, expected: {expected}%)
 
-Generate diagnosis + improved copy."""),
+Generate professional insight + suggested copy."""),
 ])
 
 _mongo_client = None
@@ -76,10 +76,10 @@ def campaign_monitor_node(state: dict) -> dict:
             continue  # too few sends to judge
 
         # Check each metric
-        failed_metric = None
+        failed_metric = "none"
         actual_val = 0.0
         expected_val = 0.0
-        severity = "warning"
+        severity = "healthy"
 
         open_rate = metrics.get("open_rate", 0)
         ctr = metrics.get("ctr", 0)
@@ -100,11 +100,11 @@ def campaign_monitor_node(state: dict) -> dict:
             actual_val = conv
             expected_val = thresholds["conversion_rate"]
             severity = "warning"
+        else:
+            actual_val = conv
+            expected_val = thresholds["conversion_rate"]
 
-        if not failed_metric:
-            continue  # campaign is healthy
-
-        # Generate AI diagnosis
+        # Generate AI diagnosis for ALL campaigns
         try:
             result = chain.invoke({
                 "campaign_name": campaign.get("name", "Campaign"),
@@ -112,12 +112,11 @@ def campaign_monitor_node(state: dict) -> dict:
                 "goal": campaign.get("goal", "re-engage"),
                 "metrics": json.dumps(metrics),
                 "thresholds": json.dumps(thresholds),
-                "metric_failed": failed_metric,
+                "metric_failed": failed_metric if failed_metric != "none" else "None (Performing Well)",
                 "actual": round(actual_val, 1),
                 "expected": round(expected_val, 1),
             })
             content = result.content.strip()
-            # strip markdown code fences if present
             if content.startswith("```"):
                 content = content.split("```")[1]
                 if content.startswith("json"):
@@ -125,9 +124,9 @@ def campaign_monitor_node(state: dict) -> dict:
             diagnosis_data = json.loads(content)
         except Exception as e:
             diagnosis_data = {
-                "diagnosis": f"Campaign {failed_metric} is below target.",
+                "diagnosis": f"Campaign analysis unavailable.",
                 "suggested_copy": campaign.get("copy_variants", [{}])[0].get("body", ""),
-                "recommended_action": "resend_non_openers",
+                "recommended_action": "continue",
             }
 
         alerts.append({
@@ -140,7 +139,7 @@ def campaign_monitor_node(state: dict) -> dict:
             "severity": severity,
             "ai_diagnosis": diagnosis_data.get("diagnosis", ""),
             "suggested_copy": diagnosis_data.get("suggested_copy", ""),
-            "recommended_action": diagnosis_data.get("recommended_action", "resend_non_openers"),
+            "recommended_action": diagnosis_data.get("recommended_action", "continue" if severity == "healthy" else "resend_non_openers"),
         })
 
     return {"alerts": alerts, "monitor_ran_at": datetime.utcnow().isoformat()}

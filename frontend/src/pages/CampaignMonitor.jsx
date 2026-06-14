@@ -6,6 +6,7 @@ import socket from "../services/socket";
 const SEVERITY_STYLE = {
   critical: "bg-red-900/40 border-red-700/40 text-red-400",
   warning:  "bg-amber-900/40 border-amber-700/40 text-amber-400",
+  healthy:  "bg-green-900/40 border-green-700/40 text-green-400",
 };
 
 const METRIC_LABEL = {
@@ -40,7 +41,11 @@ function AlertCard({ alert, onApply, onDismiss }) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <AlertTriangle size={16} className={alert.severity === "critical" ? "text-red-400" : "text-amber-400"} />
+            {alert.severity === "healthy" ? (
+              <CheckCircle size={16} className="text-green-400" />
+            ) : (
+              <AlertTriangle size={16} className={alert.severity === "critical" ? "text-red-400" : "text-amber-400"} />
+            )}
             <span className="font-semibold text-white truncate">{alert.campaign_name || alert.campaign_id}</span>
             <span className="badge bg-gray-800 text-gray-300 capitalize">{alert.channel}</span>
             <span className={`badge ${SEVERITY_STYLE[alert.severity]} capitalize`}>{alert.severity}</span>
