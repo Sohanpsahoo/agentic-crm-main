@@ -193,7 +193,7 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 3001;
 
 connectDB().then(() => {
-  server.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+  server.listen(PORT, "0.0.0.0", () => console.log(`Backend running on port ${PORT}`));
 });
 
 module.exports = { app, io };

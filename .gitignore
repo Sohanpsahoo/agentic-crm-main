@@ -7,3 +7,6 @@ build/
 __pycache__/
 venv/
 .venv/
+
+.vercel
+.env*.local
