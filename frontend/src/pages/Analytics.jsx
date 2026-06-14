@@ -202,15 +202,15 @@ export default function Analytics() {
           <SectionHeader icon={Radio} title="Channel Performance" sub="Open rate · CTR · Conversion by channel" />
           {radarData.length > 0 ? (
             <ResponsiveContainer width="100%" height={380}>
-              <BarChart data={radarData} margin={{ top: 20, right: 10, bottom: 20, left: -10 }}>
+              <BarChart data={radarData} margin={{ top: 20, right: 10, bottom: 20, left: -10 }} barSize={16} barGap={8}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" vertical={false} opacity={0.5} />
-                <XAxis dataKey="channel" tick={{ fill: "#d1d5db", fontSize: 14, fontWeight: "bold" }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="channel" tick={{ fill: "#d1d5db", fontSize: 13, fontWeight: "500" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
                 <Tooltip cursor={{ fill: '#374151', opacity: 0.4 }} content={<CUSTOM_TOOLTIP />} />
-                <Legend wrapperStyle={{ fontSize: 13, color: "#d1d5db" }} iconType="circle" verticalAlign="top" />
-                <Bar dataKey="Open Rate" name="Open Rate %" fill="#0F62FE" radius={[4, 4, 0, 0]} maxBarSize={60} />
-                <Bar dataKey="CTR"       name="CTR %"       fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={60} />
-                <Bar dataKey="Conv Rate" name="Conv %"      fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                <Legend wrapperStyle={{ fontSize: 12, color: "#d1d5db", paddingBottom: "20px" }} iconType="circle" verticalAlign="top" />
+                <Bar dataKey="Open Rate" name="Open Rate %" fill="#a855f7" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="CTR"       name="CTR %"       fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Conv Rate" name="Conv %"      fill="#10b981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
