@@ -50,7 +50,7 @@ export default function AdminPortal() {
 
   useEffect(() => {
     if (initialMoments) {
-      setLiveMoments(initialMoments);
+      setLiveMoments(Array.isArray(initialMoments) ? initialMoments : []);
     }
   }, [initialMoments]);
 
@@ -249,7 +249,7 @@ export default function AdminPortal() {
           </div>
 
           <div className="h-64 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
-            {liveMoments.map((mom, idx) => (
+            {(Array.isArray(liveMoments) ? liveMoments : []).map((mom, idx) => (
               <div key={mom._id || idx} className="bg-gray-950 border border-gray-800 rounded-lg p-3 text-xs space-y-1.5">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-cyan-400 uppercase tracking-wide">{mom.event_type}</span>
