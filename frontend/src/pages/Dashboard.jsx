@@ -275,7 +275,6 @@ export default function Dashboard() {
               isPositive={true}
             />
           </div>
-        </div>
 
         {/* Row 2: Revenue Growth */}
         <div className="premium-card p-6 flex flex-col">
@@ -430,8 +429,6 @@ export default function Dashboard() {
                 </div>
                 <span className="text-[12px] text-zinc-500 whitespace-nowrap ml-4">1 day ago</span>
               </div>
-            </div>
-          </div>
             </div>
           </div>
         </div>
