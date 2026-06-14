@@ -188,10 +188,20 @@ export default function Dashboard() {
       .then(res => {
         try {
            const match = res.data.reply.match(/\[.*\]/s);
+           let parsedData = [];
            if (match) {
-             setSuggestedSegments(JSON.parse(match[0]));
+             parsedData = JSON.parse(match[0]);
            } else {
-             setSuggestedSegments(JSON.parse(res.data.reply));
+             parsedData = JSON.parse(res.data.reply);
+           }
+           // Safety check if AI returned an object instead of an array
+           if (!Array.isArray(parsedData) && parsedData.segments) parsedData = parsedData.segments;
+           if (!Array.isArray(parsedData) && parsedData.recommendations) parsedData = parsedData.recommendations;
+           
+           if (Array.isArray(parsedData)) {
+               setSuggestedSegments(parsedData);
+           } else {
+               throw new Error("AI did not return an array");
            }
         } catch(e) {
            throw e; // trigger catch block
