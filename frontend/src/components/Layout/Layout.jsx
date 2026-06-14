@@ -19,25 +19,25 @@ import {
 } from "lucide-react";
 
 const MAIN_NAV = [
-  { to: "/dashboard",        icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/customers",        icon: Users,           label: "Customers" },
-  { to: "/segments",         icon: PieChart,        label: "Segments" },
-  { to: "/campaigns",        icon: Megaphone,       label: "Campaigns" },
-  { to: "/analytics",        icon: BarChart3,       label: "Analytics" },
-  { to: "/offers",           icon: Tag,             label: "Offers" },
-  { to: "/journeys",         icon: GitBranch,       label: "Journey Builder" },
-  { to: "/agent",            icon: Bot,             label: "AI Agent" },
+  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { to: "/customers", icon: Users, label: "Customers" },
+  { to: "/segments", icon: PieChart, label: "Segments" },
+  { to: "/campaigns", icon: Megaphone, label: "Campaigns" },
+  { to: "/analytics", icon: BarChart3, label: "Analytics" },
+  { to: "/offers", icon: Tag, label: "Offers" },
+  { to: "/journeys", icon: GitBranch, label: "Journey Builder" },
+  { to: "/agent", icon: Bot, label: "AI Agent" },
 ];
 
 const EXTRA_NAV = [
-  { to: "/ai-decisioning",   icon: Zap,             label: "AI Decisioning" },
-  { to: "/personas",         icon: UserCircle2,     label: "RFM Personas" },
-  { to: "/whatsapp",         icon: MessageCircle,   label: "Simulated Messaging" },
+  { to: "/ai-decisioning", icon: Zap, label: "AI Decisioning" },
+  { to: "/personas", icon: UserCircle2, label: "RFM Personas" },
+  { to: "/whatsapp", icon: MessageCircle, label: "Simulated Messaging" },
 ];
 
 const ADMIN_NAV = [
-  { to: "/admin",            icon: ShieldAlert,     label: "Admin Console" },
-  { to: "/monitor",          icon: AlertTriangle,   label: "Campaign Monitor" },
+  { to: "/admin", icon: ShieldAlert, label: "Admin Console" },
+  { to: "/monitor", icon: AlertTriangle, label: "Campaign Monitor" },
 ];
 
 export default function Layout({ children }) {
@@ -50,7 +50,7 @@ export default function Layout({ children }) {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#000000] text-zinc-100 font-sans antialiased">
+    <div className="flex h-screen overflow-hidden bg-[#020202] text-zinc-100 font-sans antialiased">
       {/* Sidebar */}
       <aside className="w-64 flex flex-col bg-[#020202] border-r border-[#18181b] flex-shrink-0 z-10">
         {/* Logo Container */}
@@ -66,21 +66,19 @@ export default function Layout({ children }) {
           <div className="flex gap-1 bg-[#09090b] p-1 rounded-xl border border-[#18181b]">
             <button
               onClick={() => setPortal("company")}
-              className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
-                portal === "company"
-                  ? "bg-zinc-800 text-purple-400 shadow-sm border border-zinc-700/50"
-                  : "text-zinc-500 hover:text-zinc-300"
-              }`}
+              className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${portal === "company"
+                ? "bg-zinc-800 text-purple-400 shadow-sm border border-zinc-700/50"
+                : "text-zinc-500 hover:text-zinc-300"
+                }`}
             >
               Company
             </button>
             <button
               onClick={() => setPortal("admin")}
-              className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
-                portal === "admin"
-                  ? "bg-zinc-800 text-cyan-400 shadow-sm border border-zinc-700/50"
-                  : "text-zinc-500 hover:text-zinc-300"
-              }`}
+              className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${portal === "admin"
+                ? "bg-zinc-800 text-cyan-400 shadow-sm border border-zinc-700/50"
+                : "text-zinc-500 hover:text-zinc-300"
+                }`}
             >
               Admin
             </button>
@@ -96,10 +94,9 @@ export default function Layout({ children }) {
                   key={item.to}
                   to={item.to}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-[14px] font-semibold tracking-wide transition-all duration-300 ${
-                      isActive
-                        ? "bg-purple-950/40 text-purple-400 shadow-sm border border-purple-900/30"
-                        : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
+                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-[14px] font-semibold tracking-wide transition-all duration-300 ${isActive
+                      ? "bg-purple-950/40 text-purple-400 shadow-sm border border-purple-900/30"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
                     }`
                   }
                 >
@@ -115,10 +112,9 @@ export default function Layout({ children }) {
                     key={item.to}
                     to={item.to}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-[13px] font-semibold tracking-wide transition-all duration-300 ${
-                        isActive
-                          ? "bg-purple-950/40 text-purple-400 shadow-sm"
-                          : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
+                      `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-[13px] font-semibold tracking-wide transition-all duration-300 ${isActive
+                        ? "bg-purple-950/40 text-purple-400 shadow-sm"
+                        : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
                       }`
                     }
                   >
@@ -136,10 +132,9 @@ export default function Layout({ children }) {
                   key={item.to}
                   to={item.to}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-[14px] font-semibold tracking-wide transition-all duration-300 ${
-                      isActive
-                        ? "bg-cyan-950/40 text-cyan-400 border border-cyan-900/30"
-                        : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
+                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-[14px] font-semibold tracking-wide transition-all duration-300 ${isActive
+                      ? "bg-cyan-950/40 text-cyan-400 border border-cyan-900/30"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
                     }`
                   }
                 >

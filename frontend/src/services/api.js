@@ -74,6 +74,7 @@ export const journeysApi = {
   create: (data) => api.post("/journeys", data).then((r) => r.data),
   enroll: (id, customerId) => api.post(`/journeys/${id}/enroll`, { customer_id: customerId }).then((r) => r.data),
   setStatus: (id, status) => api.patch(`/journeys/${id}/status`, { status }).then((r) => r.data),
+  addStep: (id, stepData) => api.post(`/journeys/${id}/steps`, stepData).then((r) => r.data),
 };
 
 export const productsApi = {

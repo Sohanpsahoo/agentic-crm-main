@@ -160,7 +160,8 @@ function CampaignDesignerModal({ segment, onClose }) {
       const audDesc = `Name: ${segment.name}. Size: ${segment.size}. Criteria: ${segment.criteria_nl || "All customers"}`;
       agentApi.messagePreview(goalStr, "whatsapp", audDesc)
         .then(res => {
-          setTemplate(res.data.message || "");
+          const aiMsg = res.data.body || res.data.variants?.[0]?.body || "";
+          setTemplate(aiMsg);
           setGenerating(false);
         })
         .catch(err => {
@@ -262,7 +263,34 @@ function CampaignDesignerModal({ segment, onClose }) {
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Message Template</label>
-              {generating && <span className="text-[10px] text-indigo-400 flex items-center gap-1 animate-pulse"><Bot size={12}/> AI Drafting...</span>}
+              <div className="flex items-center gap-2">
+                {generating && <span className="text-[10px] text-indigo-400 flex items-center gap-1 animate-pulse"><Bot size={12}/> AI Drafting...</span>}
+                {!generating && (
+                  <button 
+                    type="button" 
+                    onClick={async () => {
+                      const promptText = prompt("Any specific instructions for the AI?", "Make it highly engaging and personalized");
+                      if (!promptText) return;
+                      setGenerating(true);
+                      try {
+                        const { agentApi } = await import("../services/api");
+                        const goalStr = `${goal} campaign: ${name}. ${promptText}`;
+                        const audDesc = `Name: ${segment.name}. Size: ${segment.size}. Criteria: ${segment.criteria_nl || "All customers"}`;
+                        const res = await agentApi.messagePreview(goalStr, channel, audDesc);
+                        const aiMsg = res.data.body || res.data.variants?.[0]?.body || "";
+                        setTemplate(aiMsg);
+                      } catch(err) {
+                        alert("Failed to generate AI message.");
+                      } finally {
+                        setGenerating(false);
+                      }
+                    }}
+                    className="text-[10px] bg-indigo-900/30 text-indigo-300 hover:bg-indigo-900/50 border border-indigo-700/50 px-2 py-0.5 rounded flex items-center gap-1 transition-colors"
+                  >
+                    <Sparkles size={10} /> Custom AI Draft
+                  </button>
+                )}
+              </div>
             </div>
             <textarea
               rows="4"

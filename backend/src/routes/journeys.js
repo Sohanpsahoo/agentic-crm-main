@@ -51,6 +51,23 @@ router.post("/:id/enroll", async (req, res) => {
   }
 });
 
+// POST /api/journeys/:id/steps
+router.post("/:id/steps", async (req, res) => {
+  try {
+    const { type, config } = req.body;
+    const step_id = "step_" + Date.now();
+    const journey = await Journey.findByIdAndUpdate(
+      req.params.id,
+      { $push: { steps: { step_id, type, config } } },
+      { new: true }
+    );
+    if (!journey) return res.status(404).json({ error: "Journey not found" });
+    res.json(journey);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // PATCH /api/journeys/:id/status
 router.patch("/:id/status", async (req, res) => {
   try {

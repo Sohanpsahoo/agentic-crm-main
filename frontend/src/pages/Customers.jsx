@@ -58,8 +58,13 @@ function Customer360Card({ customerId, onClose }) {
         <h3 className="text-white font-bold text-lg">{customer.name}</h3>
         <p className="text-gray-400 text-sm">{customer.email}</p>
         {customer.phone && <p className="text-gray-500 text-xs mt-0.5">{customer.phone}</p>}
-        {customer.demographics?.age_group && (
-          <p className="text-gray-500 text-xs mt-0.5">Age group: {customer.demographics.age_group}</p>
+        {customer.demographics && (
+          <p className="text-gray-500 text-xs mt-0.5">
+            {[
+              customer.demographics.age_group ? `Age: ${customer.demographics.age_group}` : null,
+              customer.demographics.gender ? `Gender: ${customer.demographics.gender}` : null
+            ].filter(Boolean).join(" | ")}
+          </p>
         )}
       </div>
 
@@ -246,7 +251,7 @@ export default function Customers() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-700">
-                  {["Name", "LTV", "Orders", "Last Purchase", "Tags", "Churn"].map(h => (
+                  {["Name", "Gender", "LTV", "Orders", "Last Purchase", "Tags", "Churn"].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
@@ -255,7 +260,7 @@ export default function Customers() {
                 {loading ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="border-b border-gray-700/50 animate-pulse">
-                      {Array.from({ length: 6 }).map((_, j) => (
+                      {Array.from({ length: 7 }).map((_, j) => (
                         <td key={j} className="px-4 py-3">
                           <div className="h-3 bg-gray-700 rounded w-3/4" />
                         </td>
@@ -273,6 +278,9 @@ export default function Customers() {
                     <td className="px-4 py-3">
                       <div className="font-medium text-white">{c.name}</div>
                       <div className="text-xs text-gray-500">{c.email}</div>
+                    </td>
+                    <td className="px-4 py-3 text-gray-400 text-sm capitalize">
+                      {c.demographics?.gender || "—"}
                     </td>
                     <td className="px-4 py-3 text-white font-medium">₹{(c.ltv || 0).toLocaleString()}</td>
                     <td className="px-4 py-3 text-white">{c.total_orders || 0}</td>
@@ -302,7 +310,7 @@ export default function Customers() {
                 ))}
                 {!loading && customers.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="py-14 text-center text-gray-500">
+                    <td colSpan={7} className="py-14 text-center text-gray-500">
                       No customers found{search ? ` for "${search}"` : activeTag ? ` tagged "${activeTag}"` : ""}.
                     </td>
                   </tr>

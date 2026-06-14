@@ -212,6 +212,43 @@ router.post("/chat", async (req, res, next) => {
   }
 });
 
+// Proxy routes to AI Service
+router.post("/ideate", async (req, res, next) => {
+  try {
+    const r = await axios.post(`${AI_SERVICE_URL}/agent/ideate`, req.body);
+    res.json(r.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/segment-preview", async (req, res, next) => {
+  try {
+    const r = await axios.post(`${AI_SERVICE_URL}/agent/segment-preview`, req.body);
+    res.json(r.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/message-preview", async (req, res, next) => {
+  try {
+    const r = await axios.post(`${AI_SERVICE_URL}/agent/message-preview`, req.body);
+    res.json(r.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/blast-segment", async (req, res, next) => {
+  try {
+    const r = await axios.post(`${AI_SERVICE_URL}/agent/blast-segment`, req.body);
+    res.json(r.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // POST /api/agent/blast — emit messages to simulated devices via socket
 // Called by the AI service tool to push messages to the Simulation Center in real time
 router.post("/blast", async (req, res) => {
