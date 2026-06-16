@@ -11,16 +11,17 @@ def suggest_campaign_ideas(context: str) -> dict:
     Based on this business context: "{context}", suggest exactly 3 creative campaign ideas.
     Return JSON format: {{"campaigns": [{{"name": "...", "audience": "...", "offer": "...", "reasoning": "..."}}]}}"""
     
-    response = llm.invoke(prompt)
-    content = response.content.strip()
-    if content.startswith("```json"):
-        content = content.split("```json")[1].split("```")[0].strip()
-    elif content.startswith("```"):
-        content = content.split("```")[1].split("```")[0].strip()
-        
     try:
+        response = llm.invoke(prompt)
+        content = response.content.strip()
+        if content.startswith("```json"):
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif content.startswith("```"):
+            content = content.split("```")[1].split("```")[0].strip()
+            
         return json.loads(content)
-    except Exception:
+    except Exception as e:
+        print(f"Error in suggest_campaign_ideas: {str(e)}")
         return {"campaigns": []}
 
 def estimate_segment_size(nl_criteria: str) -> dict:
