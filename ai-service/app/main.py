@@ -666,11 +666,13 @@ async def chat_with_device(req: ChatRequest):
         return {"reply": reply}
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         err = str(e)
         if "429" in err or "rate_limit" in err.lower() or "organization_restricted" in err.lower():
             return {"reply": "⏳ API limit or Organization restriction hit — check your Groq API key. (Groq free tier: 6000 tokens/min)"}
+            
+        import traceback
+        traceback.print_exc()
+        
         if "413" in err or "too large" in err.lower():
             return {"reply": "📝 Message too large for free tier. Try a shorter request."}
         return {"reply": f"⚠️ Error: {err[:200]}\n\nMake sure the AI service and backend are both running."}
